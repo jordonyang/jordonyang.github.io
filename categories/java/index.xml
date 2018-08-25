@@ -24,5 +24,19 @@
 private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一个结点 Node&amp;lt;E&amp;gt; next; // 后一个结点 Node&amp;lt;E&amp;gt; prev; Node(Node&amp;lt;E&amp;gt; prev, E element, Node&amp;lt;E&amp;gt; next) { this.</description>
     </item>
     
+    <item>
+      <title>Digging in Sourse Code of ArrayList</title>
+      <link>https://jordonyang.github.io/post/digging-in-sourse-code-of-arraylist/</link>
+      <pubDate>Thu, 23 Aug 2018 22:40:02 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/digging-in-sourse-code-of-arraylist/</guid>
+      <description>一. 继承体系  1.基于数组实现，是一个动态数组，其容量能自动增长。
+2.ArrayList不是线程安全的，建议在单线程中使用，多线程可以选择Vector或CopyOnWriteArrayList。
+3.实现了RandomAccess接口，可以通过下标序号进行快速访问。
+4.实现了Cloneable接口，能被克隆。
+5.实现了Serializable接口，支持序列化。
+ 二. 基本属性 /** * 存储数组默认容量 */ private static final int DEFAULT_CAPACITY = 10; /** * 当使用 new ArrayList(0) 时赋值给elementData * 第一次插入元素时，将重新开辟一个容量为1的存储数组，该引用将被弃用 */ private static final Object[] EMPTY_ELEMENTDATA = {}; /** * 当使用 new ArrayList() 时赋值给elementData * 第一次插入元素时，将重新开辟一个容量为10的存储数组，该引用将被弃用 */ private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}; /** * 该数组用来存放add进ArrayList的元素 */ transient Object[] elementData; /** * 对象数组中已经存放的元素个数，并不是存储数组的容量 */ private int size; /** * 数组可开辟的最大容量，实际上一个数组所能分配的容量大小取决于JVM分配的堆内存大小 * MAX_ARRAY_SIZE只是一个理论值，可能出于对JVM头信息存储的考虑而设计 * 因为在hugeCapacity 方法中 minCapacity &amp;gt; MAX_ARRAY_SIZE) ?</description>
+    </item>
+    
   </channel>
 </rss>
