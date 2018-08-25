@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:image" content="/images/ll.jpg"/>
+    
+
+
+
+<meta name="twitter:title" content="Digging in Sourse Code of LinkedList"/>
+<meta name="twitter:description" content="LinkedList 源码阅读"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Digging in Sourse Code of LinkedList &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/digging-in-sourse-code-of-linkedlist/" />
+
+    
+       <meta property="og:image" content="/images/ll.jpg"/>
+    
+
+    
+    <meta property="og:description" content="LinkedList 源码阅读" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-08-25T16:44:03&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    
+
+    <title>Digging in Sourse Code of LinkedList &middot; 临风博客</title>
+
+    
+    <meta name="description" content="LinkedList 源码阅读" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/digging-in-sourse-code-of-linkedlist/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": 
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Digging in Sourse Code of LinkedList,
+    "name": Digging in Sourse Code of LinkedList,
+    "wordCount": 1067,
+    "timeRequired": "PT6M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/digging-in-sourse-code-of-linkedlist/,
+    "datePublished": 2018-08-25T16:44Z,
+    "dateModified": 2018-08-25T16:44Z,
+    
+    "image": {
+        "@type": "ImageObject",
+        "url": https://jordonyang.github.io/images/ll.jpg,
+        "width": 3000,
+        "height": 1445
+    },
+    
+    "keywords": Java,
+    "description": LinkedList 源码阅读,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/digging-in-sourse-code-of-linkedlist/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">临风博客</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  
+  <header class="main-header post-head" style="background-image: url(/images/ll.jpg)">
+  
+  <nav class="main-nav overlay clearfix">
+
+
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">Digging in Sourse Code of LinkedList</h1>
+        <small>LinkedList 源码阅读</small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2018-08-25T16:44:03&#43;08:00">
+            Aug 25, 2018
+          </time>
+        
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span>
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      
+
+<h1 id="一-概述">一. 概述</h1>
+
+<blockquote>
+<p>LinkedList 是一个继承于AbstractSequentialList的双向链表。它也可以被当作堆栈、队列或双端队列进行操作。
+LinkedList 实现 List 接口，能对它进行队列操作。
+LinkedList 实现 Deque 接口，即能将LinkedList当作双端队列使用。
+LinkedList 实现了Cloneable接口，即覆盖了函数clone()，能克隆。
+LinkedList 实现java.io.Serializable接口，这意味着LinkedList支持序列化，能通过序列化去传输。
+LinkedList 是非同步的。</p>
+</blockquote>
+
+<h1 id="二-基本属性">二. 基本属性</h1>
+
+<p>其中 size 为 LinkedList 的大小，first 和 last 分别为链表的头结点和尾结点。Node 为结点对象。</p>
+
+<pre><code class="language-java">// 表中已有元素个数
+transient int size = 0;
+
+// 头结点指针
+transient Node&lt;E&gt; first;
+
+// 尾结点指针
+transient Node&lt;E&gt; last;
+</code></pre>
+
+<p><code>Node</code>是LinkedList的一个静态内部类，采用典型的双链表结构，定义了存储的数据元素，前一个结点和后一个结点</p>
+
+<pre><code class="language-java">private static class Node&lt;E&gt; {
+    // 结点数据
+    E item;
+    // 前一个结点
+    Node&lt;E&gt; next;
+    // 后一个结点
+    Node&lt;E&gt; prev;
+
+    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) {
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    }
+}	
+</code></pre>
+
+<h1 id="三-构造器">三. 构造器</h1>
+
+<p>LinkedList中包含两个构造方法，一个空的构造构建空链表，另一个用传入的Collection构建一个含有元素的链表。</p>
+
+<pre><code class="language-java">// 构造一个空的链表，size=0，first=null，last=null
+public LinkedList() {
+}
+
+/**
+ * 构建一个list，将Collection中的元素以它们的迭代器返回的顺序添加进去
+ * 如果c为空将抛出 NullPointerException
+ */
+public LinkedList(Collection&lt;? extends E&gt; c) {
+    // 构造一个空的链表
+    this();
+    // 将 c 中的所有元素添加进链表
+    addAll(c);
+}
+</code></pre>
+
+<p>看一眼 <code>addAll</code> 方法的逻辑，发现继续调用另一个addAll的重载方法，传入size（为0）和 Collection 实现类对象</p>
+
+<pre><code class="language-java">public boolean addAll(Collection&lt;? extends E&gt; c) {
+    return addAll(size, c);
+}
+
+public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+    // 检查 index 是否越界
+    checkPositionIndex(index);
+
+    // 将 collection 转换成数组
+    Object[] a = c.toArray();
+    int numNew = a.length;
+    // //如果需要新增元素数量为0，则不增加，并返回false
+    if (numNew == 0)
+        return false;
+
+    // index节点的前置节点，后置节点
+    Node&lt;E&gt; pred, succ;	
+    // 从表尾添加
+    if (index == size) {
+        // size节点（队尾）的后置节点一定是null
+        succ = null;
+        // 前置节点是队尾
+        pred = last;
+    } else {
+        // index结点作为插入新增结点的后置结点
+        succ = node(index);
+        // index结点的前一个结点作为新增结点的前置结点
+        pred = succ.prev;
+    }
+
+    // 遍历数组，将数组里面的元素创建为节点，并按照顺序连起来。
+    for (Object o : a) {
+        @SuppressWarnings(&quot;unchecked&quot;) E e = (E) o;
+        Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, null);
+        // 空表
+        if (pred == null)
+            first = newNode;
+        else
+            pred.next = newNode;
+        pred = newNode;
+    }
+
+    if (succ == null) {
+        last = pred;
+    } else {
+        pred.next = succ;
+        succ.prev = pred;
+    }
+
+    // 修改当前的节点个数 size 的值
+    size += numNew;
+
+    //结构性修改次数加一
+    modCount++;
+    return true;
+}
+</code></pre>
+
+<h1 id="四-添加元素">四. 添加元素</h1>
+
+<h2 id="1-在表尾追加元素">1. 在表尾追加元素</h2>
+
+<pre><code class="language-java">public boolean add(E e) {
+    linkLast(e);
+    return true;
+} 	
+</code></pre>
+
+<p>add 方法直接调用了 <code>linkLast</code>方法，而<code>linkLast</code>方法是不对外开放的。该方法做了三件事情，新增一个节点，改变其前后引用，将 size 和 modCount 自增 1。其中 modCount 是记录对集合操作的次数。</p>
+
+<pre><code class="language-java">// 在表尾追加元素
+void linkLast(E e) {
+    final Node&lt;E&gt; l = last;
+    final Node&lt;E&gt; newNode = new Node&lt;&gt;(l, e, null);
+    last = newNode;
+    // 尾结点为空，说明是空表
+    if (l == null)
+        first = newNode;
+    // 原表至少有一个元素，改变原尾结点的下一个结点指向新插入的结点
+    else
+        l.next = newNode;
+    size++;
+    modCount++;
+}
+</code></pre>
+
+<h2 id="2-在表头插入元素">2.. 在表头插入元素</h2>
+
+<pre><code class="language-java">private void linkFirst(E e) {
+    // 复制头指针
+    final Node&lt;E&gt; f = first;
+    // 构建新的结点
+    final Node&lt;E&gt; newNode = new Node&lt;&gt;(null, e, f);
+    // 改变原头指针指向
+    first = newNode;
+    // 空表，新增一个结点后，将头尾结点指针都指向它
+    if (f == null)
+        last = newNode;
+    // 原表至少有一个元素，改变原头结点的下一个结点指向
+    else
+        f.prev = newNode;
+    size++;
+    modCount++;
+}
+</code></pre>
+
+<h2 id="3-在指定结点前插入">3. 在指定结点前插入</h2>
+
+<pre><code class="language-java">// 在一个非空结点 succ 前面插入一个新的元素值为e的结点
+void linkBefore(E e, Node&lt;E&gt; succ) {
+    // 获取到要插入位置的前一个结点
+    final Node&lt;E&gt; pred = succ.prev;
+    // 构建新的结点
+    final Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, succ);
+    succ.prev = newNode;
+    // 原来链表中只有一个结点，头尾结点都指向该结点，新插入的自然成为新的头结点
+    if (pred == null)
+        first = newNode;
+    else
+        pred.next = newNode;
+    size++;
+    modCount++;
+}
+</code></pre>
+
+<h2 id="4-在指定索引处插入元素">4. 在指定索引处插入元素</h2>
+
+<h3 id="将element插入到index前">将element插入到index前</h3>
+
+<pre><code class="language-java">public void add(int index, E element) {
+    // 索引越界检查
+    checkPositionIndex(index);
+
+    // 索引为表大小，插入表尾
+    if (index == size)
+        linkLast(element);
+    else
+        // 先获取index处的结点，再将element插入到它前面
+        linkBefore(element, node(index));
+}
+</code></pre>
+
+<h3 id="索引越界检查">索引越界检查</h3>
+
+<pre><code class="language-java">private void checkPositionIndex(int index) {
+    if (!isPositionIndex(index))
+        throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+}
+
+// 判断该参数对于迭代和添加元素操作而言是否一个合法的索引
+private boolean isPositionIndex(int index) {
+    return index &gt;= 0 &amp;&amp; index &lt;= size;
+}
+</code></pre>
+
+<h3 id="获取指定位置的结点">获取指定位置的结点</h3>
+
+<p>因为是链表操作，显然会比数组的获取操作复杂得多 ，下面采用简单的分治思想</p>
+
+<pre><code class="language-java">Node&lt;E&gt; node(int index) {
+    // assert isElementIndex(index);
+
+    // 如果index 小于表中元素个数的一半
+    if (index &lt; (size &gt;&gt; 1)) {
+        // 复制头结点
+        Node&lt;E&gt; x = first;
+        // 从表头开始迭代定位
+        for (int i = 0; i &lt; index; i++)
+            x = x.next;
+        return x;
+    } else {
+        // 复制尾结点
+        Node&lt;E&gt; x = last;
+        // 从表尾开始迭代定位
+        for (int i = size - 1; i &gt; index; i--)
+            x = x.prev;
+        return x;
+    }
+}	
+
+// 判断参数是否表中元素的索引
+private boolean isElementIndex(int index) {
+    return index &gt;= 0 &amp;&amp; index &lt; size;
+}
+</code></pre>
+
+<h1 id="五-删除元素">五. 删除元素</h1>
+
+<h2 id="1-删除表头元素">1. 删除表头元素</h2>
+
+<pre><code class="language-java">public E removeFirst() {
+    // 判空
+    final Node&lt;E&gt; f = first;
+    if (f == null)
+        throw new NoSuchElementException();
+    // 真正的删除逻辑
+    return unlinkFirst(f);
+}
+
+// 删除非空的头结点，调用该方法前需要确保  f == first &amp;&amp; f != null;
+private E unlinkFirst(Node&lt;E&gt; f) {
+    // assert f == first &amp;&amp; f != null;
+    // 获取结点元素
+    final E element = f.item;
+    // 下一个结点
+    final Node&lt;E&gt; next = f.next;
+    f.item = null;
+    f.next = null; // help GC
+    // 修改头结点指向源头结点的下一个结点
+    first = next;
+    // 原表中只有一个元素
+    if (next == null)
+        last = null;
+    // 新的头结点的前一个结点为空
+    else
+        next.prev = null;
+    size--;
+    modCount++;
+    // 返回被删除的头结点
+    return element;
+}
+</code></pre>
+
+<h2 id="2-删除表尾元素">2. 删除表尾元素</h2>
+
+<pre><code class="language-java">public E removeLast() {
+    final Node&lt;E&gt; l = last;
+    // 判空
+    if (l == null)
+        throw new NoSuchElementException();
+    // 真正的删除逻辑
+    return unlinkLast(l);
+}
+
+// 删除非空的尾结点，调用该方法前需要确保 l == last &amp;&amp; l != null;
+private E unlinkLast(Node&lt;E&gt; l) {
+    // assert l == last &amp;&amp; l != null;
+    // 获取表尾元素
+    final E element = l.item;
+    // 获取尾结点的前一个结点
+    final Node&lt;E&gt; prev = l.prev;
+    l.item = null;
+    l.prev = null; // help GC
+    // 将原来的尾结点的前一个结点作为新的尾节点
+    last = prev;
+    // 原表只有一个元素
+    if (prev == null)
+        first = null;
+    // 将新的尾节点的下一个结点置空
+    else
+        prev.next = null;
+    size--;
+    modCount++;
+    return element;
+}
+</code></pre>
+
+<h2 id="3-删除特定的元素">3. 删除特定的元素</h2>
+
+<p>删除表中第一个出现的给定元素，如果它存在的话，不存在则没有动作</p>
+
+<pre><code class="language-java">public boolean remove(Object o) {
+    if (o == null) {
+        // 遍历链表
+        for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+            if (x.item == null) {
+                unlink(x);
+                return true;
+            }
+        }
+    } else {
+        // 遍历链表
+        for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+            if (o.equals(x.item)) {
+                unlink(x);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// 删除指定的非空结点，调用该方法前需要确保 x != null;
+E unlink(Node&lt;E&gt; x) {
+    // assert x != null;
+    // 复制将要删除的结点元素到本地
+    final E element = x.item;
+
+    // 复制将要删除的结点的前后结点到本地
+    final Node&lt;E&gt; next = x.next;
+    final Node&lt;E&gt; prev = x.prev;
+
+    // 要删除的是头结点
+    if (prev == null) {
+        first = next;
+        // 将要删除的结点的下一个结点指向要删除元素后一个结点
+    } else {
+        // 处理前一个结点
+        prev.next = next;
+        x.prev = null;
+    }
+
+    // 要删除的是尾结点
+    if (next == null) {
+        last = prev;
+    } else {
+        // 处理后一个结点
+        next.prev = prev;
+        x.next = null;
+    }
+
+    x.item = null;
+    size--;
+    modCount++;
+    return element;
+}
+</code></pre>
+
+<h1 id="六-获取元素">六. 获取元素</h1>
+
+<h2 id="1-获取表头元素">1. 获取表头元素</h2>
+
+<pre><code class="language-java">public E getFirst() {
+    // 复制头指针引用
+    final Node&lt;E&gt; f = first;
+    if (f == null)
+        throw new NoSuchElementException();
+    return f.item;
+}
+</code></pre>
+
+<h2 id="2-获取表尾元素">2. 获取表尾元素</h2>
+
+<pre><code class="language-java">public E getLast() {
+    final Node&lt;E&gt; l = last;
+    if (l == null)
+        throw new NoSuchElementException();
+    return l.item;
+}
+</code></pre>
+
+<h1 id="七-清空表">七. 清空表</h1>
+
+<p>清空链表看似没有必要，不过这样做可以帮助垃圾收集</p>
+
+<pre><code class="language-java">/** 
+ * Clearing all of the links between nodes is &quot;unnecessary&quot;, but
+ * helps a generational GC if the discarded nodes inhabit
+ *  more than one generation
+ *	is sure to free memory even if there is a reachable Iterator
+ */  	
+public void clear() {
+    for (Node&lt;E&gt; x = first; x != null; ) {
+        // 获取当前结点的下一个结点
+        Node&lt;E&gt; next = x.next;
+        // 置空数据
+        x.item = null;
+        x.next = null;
+        x.prev = null;
+        // 指向下一个结点
+        x = next;
+    }
+    // 置空头尾结点
+    first = last = null;
+    size = 0;
+    modCount++;
+}
+</code></pre>
+
+<h1 id="八-问题">八. 问题</h1>
+
+<h2 id="1-local-final">1. local final</h2>
+
+<p><strong>为什么很多方法设计到对头尾指针的操作时，都是先将这些指针复制到本地并声明为final</strong></p>
+
+<p>定义成本地变量的原因</p>
+
+<ul>
+<li>使用虚拟机栈上的引用比使用堆上的引用要快。所以建议这样做，尤其是当你在方法中多次使用该引用时。</li>
+<li>在多线程访问的情况有些操作可能会报空指针异常</li>
+</ul>
+
+<p>用fianl修饰的原因</p>
+
+<ul>
+<li><p>将成员变量复制成本地成员能稍微简化字节码，从宏观上来看使得编码更接近机器本身</p></li>
+
+<li><p>虚拟机会对final变量进行一些优化</p></li>
+</ul>
+
+<p>​</p>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+
+
+
+
+
+
+
+
+
+<section class="author">
+  <h4><a href="https://jordonyang.github.io/">临风</a></h4>
+  
+  <p>Read <a href="https://jordonyang.github.io/">more posts</a> by this author.</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+  </div>
+</section>
+
+
+
+
+    
+<section class="share">
+  <h4>Share this post</h4>
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=Digging%20in%20Sourse%20Code%20of%20LinkedList&nbsp;-&nbsp;%e4%b8%b4%e9%a3%8e%e5%8d%9a%e5%ae%a2&amp;url=https%3a%2f%2fjordonyang.github.io%2fpost%2fdigging-in-sourse-code-of-linkedlist%2f"
+      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+  </a>
+  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fjordonyang.github.io%2fpost%2fdigging-in-sourse-code-of-linkedlist%2f"
+      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+  </a>
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fjordonyang.github.io%2fpost%2fdigging-in-sourse-code-of-linkedlist%2f&amp;description=Digging%20in%20Sourse%20Code%20of%20LinkedList"
+      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
+      <span class="hidden">Pinterest</span>
+  </a>
+  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=https%3a%2f%2fjordonyang.github.io%2fpost%2fdigging-in-sourse-code-of-linkedlist%2f"
+     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+  </a>
+</section>
+
+
+
+    
+
+
+
+
+
+
+
+  </footer>
+</article>
+
+</main>
+
+
+  <aside class="read-next">
+  
+  
+</aside>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+
