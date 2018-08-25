@@ -13,11 +13,11 @@
     
     
     <item>
-      <title>Digging in Sourse Code of LinkedList</title>
-      <link>https://jordonyang.github.io/post/digging-in-sourse-code-of-linkedlist/</link>
+      <title>Digging in Source Code of LinkedList</title>
+      <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
       <pubDate>Sat, 25 Aug 2018 16:44:03 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/digging-in-sourse-code-of-linkedlist/</guid>
+      <guid>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</guid>
       <description>一. 概述  LinkedList 是一个继承于AbstractSequentialList的双向链表。它也可以被当作堆栈、队列或双端队列进行操作。 LinkedList 实现 List 接口，能对它进行队列操作。 LinkedList 实现 Deque 接口，即能将LinkedList当作双端队列使用。 LinkedList 实现了Cloneable接口，即覆盖了函数clone()，能克隆。 LinkedList 实现java.io.Serializable接口，这意味着LinkedList支持序列化，能通过序列化去传输。 LinkedList 是非同步的。
  二. 基本属性 其中 size 为 LinkedList 的大小，first 和 last 分别为链表的头结点和尾结点。Node 为结点对象。
 // 表中已有元素个数 transient int size = 0; // 头结点指针 transient Node&amp;lt;E&amp;gt; first; // 尾结点指针 transient Node&amp;lt;E&amp;gt; last;  Node是LinkedList的一个静态内部类，采用典型的双链表结构，定义了存储的数据元素，前一个结点和后一个结点
@@ -25,11 +25,11 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Digging in Sourse Code of ArrayList</title>
-      <link>https://jordonyang.github.io/post/digging-in-sourse-code-of-arraylist/</link>
+      <title>Digging in Source Code of ArrayList</title>
+      <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
       <pubDate>Thu, 23 Aug 2018 22:40:02 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/digging-in-sourse-code-of-arraylist/</guid>
+      <guid>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</guid>
       <description>一. 继承体系  1.基于数组实现，是一个动态数组，其容量能自动增长。
 2.ArrayList不是线程安全的，建议在单线程中使用，多线程可以选择Vector或CopyOnWriteArrayList。
 3.实现了RandomAccess接口，可以通过下标序号进行快速访问。
