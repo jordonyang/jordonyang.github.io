@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:image" content="/images/hashdetails.jpg"/>
+    
+
+
+
+<meta name="twitter:title" content="Questions and Details About SC of HashMap"/>
+<meta name="twitter:description" content="HashMap源码中实现细节及问题"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Questions and Details About SC of HashMap &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/faq-and-details-about-sc-of-hashmap/" />
+
+    
+       <meta property="og:image" content="/images/hashdetails.jpg"/>
+    
+
+    
+    <meta property="og:description" content="HashMap源码中实现细节及问题" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-08-27T14:09:27&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    
+
+    <title>Questions and Details About SC of HashMap &middot; 临风博客</title>
+
+    
+    <meta name="description" content="HashMap源码中实现细节及问题" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/faq-and-details-about-sc-of-hashmap/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": 
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Questions and Details About SC of HashMap,
+    "name": Questions and Details About SC of HashMap,
+    "wordCount": 215,
+    "timeRequired": "PT2M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/faq-and-details-about-sc-of-hashmap/,
+    "datePublished": 2018-08-27T14:09Z,
+    "dateModified": 2018-08-27T14:09Z,
+    
+    "image": {
+        "@type": "ImageObject",
+        "url": https://jordonyang.github.io/images/hashdetails.jpg,
+        "width": 3000,
+        "height": 1445
+    },
+    
+    "keywords": Java,
+    "description": HashMap源码中实现细节及问题,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/faq-and-details-about-sc-of-hashmap/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">临风博客</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  
+  <header class="main-header post-head" style="background-image: url(/images/hashdetails.jpg)">
+  
+  <nav class="main-nav overlay clearfix">
+
+
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">Questions and Details About SC of HashMap</h1>
+        <small>HashMap源码中实现细节及问题</small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2018-08-27T14:09:27&#43;08:00">
+            Aug 27, 2018
+          </time>
+        
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span>
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      <p>roundUpToPowerOf2</p>
+
+<p>用来返回大于等于最接近number的2的冪数</p>
+
+<pre><code class="language-java">private static int roundUpToPowerOf2(int number) {
+    // assert number &gt;= 0 : &quot;number must be non-negative&quot;;
+    int rounded = number &gt;= MAXIMUM_CAPACITY
+        ? MAXIMUM_CAPACITY
+        : (rounded = Integer.highestOneBit(number)) != 0
+            ? (Integer.bitCount(number) &gt; 1) ? rounded &lt;&lt; 1 : rounded
+            : 1;
+    return rounded;
+} 
+</code></pre>
+
+<p>如果number是2的冪数 b1=1，返回就是number， 如果number不是2的冪数，则highestOneBit&gt;1,因为rounded = Integer.highestOneBit(number)，rounded已经是最接近小于number的2的冪数，故，rounded&lt;&lt;1,左移一位，就成为最接近大于等于number的2的冪数了</p>
+
+<p>实际上相当于</p>
+
+<pre><code class="language-java">private static int roundUpToPowerOf2(int number) {
+    // assert number &gt;= 0 : &quot;number must be non-negative&quot;;
+    int rounded;
+    if(number &gt;= MAXIMUM_CAPACITY) {
+        rounded = MAXIMUM_CAPACITY;
+    }else {
+        rounded = Integer.highestOneBit(number);
+        if(rounded != 0) {
+            int bitCount = Integer.bitCount(number);
+            if(bitCount &gt; 1) {
+                rounded &lt;&lt; 1;
+            }else {
+                
+            }
+        }else {
+            
+        }
+    }
+    return rounded;
+} 
+</code></pre>
+
+<p>highestOneBit</p>
+
+<p>Integer中的highestOneBit方法是用来返回小于等于最接近number的2的冪数， 例如：number=5，对应的二进制为 101， highestOneBit(5)=100,既在number最高位为1的位置开始，后面全部补0</p>
+
+<pre><code class="language-java">public static int highestOneBit(int i) {
+    // HD, Figure 3-1
+    i |= (i &gt;&gt;  1);
+    i |= (i &gt;&gt;  2);
+    i |= (i &gt;&gt;  4);
+    i |= (i &gt;&gt;  8);
+    i |= (i &gt;&gt; 16);
+    return i - (i &gt;&gt;&gt; 1);
+}
+</code></pre>
+
+<p>bitCount</p>
+
+<p>Integer中的bitCount方法返回number二进制中1的个数</p>
+
+<pre><code class="language-java">public static int bitCount(int i) {
+    // HD, Figure 5-2
+    i = i - ((i &gt;&gt;&gt; 1) &amp; 0x55555555);
+    i = (i &amp; 0x33333333) + ((i &gt;&gt;&gt; 2) &amp; 0x33333333);
+    i = (i + (i &gt;&gt;&gt; 4)) &amp; 0x0f0f0f0f;
+    i = i + (i &gt;&gt;&gt; 8);
+    i = i + (i &gt;&gt;&gt; 16);
+    return i &amp; 0x3f;
+}
+</code></pre>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+
+
+
+
+
+
+
+
+
+<section class="author">
+  <h4><a href="https://jordonyang.github.io/">临风</a></h4>
+  
+  <p>Read <a href="https://jordonyang.github.io/">more posts</a> by this author.</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+  </div>
+</section>
+
+
+
+
+    
+<section class="share">
+  <h4>Share this post</h4>
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=Questions%20and%20Details%20About%20SC%20of%20HashMap&nbsp;-&nbsp;%e4%b8%b4%e9%a3%8e%e5%8d%9a%e5%ae%a2&amp;url=https%3a%2f%2fjordonyang.github.io%2fpost%2ffaq-and-details-about-sc-of-hashmap%2f"
+      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+  </a>
+  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fjordonyang.github.io%2fpost%2ffaq-and-details-about-sc-of-hashmap%2f"
+      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+  </a>
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fjordonyang.github.io%2fpost%2ffaq-and-details-about-sc-of-hashmap%2f&amp;description=Questions%20and%20Details%20About%20SC%20of%20HashMap"
+      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
+      <span class="hidden">Pinterest</span>
+  </a>
+  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=https%3a%2f%2fjordonyang.github.io%2fpost%2ffaq-and-details-about-sc-of-hashmap%2f"
+     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+  </a>
+</section>
+
+
+
+    
+
+
+
+
+
+
+
+  </footer>
+</article>
+
+</main>
+
+
+  <aside class="read-next">
+  
+  
+      <a class="read-next-story prev" style="background-image: url(/images/hashMap1.jpg)" href="https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/">
+          <section class="post">
+              <h2>Digging in Source Code of HashMap (JDK1.7)</h2>
+          </section>
+      </a>
+  
+</aside>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

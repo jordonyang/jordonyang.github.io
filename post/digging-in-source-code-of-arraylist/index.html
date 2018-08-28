@@ -31,7 +31,7 @@
     
     <meta property="og:description" content="ArrayList 源码阅读" />
   	<meta property="og:type" content="article" />
-    <meta property="article:published_time" content="2018-08-23T22:40:02&#43;08:00" />
+    <meta property="article:published_time" content="2018-06-23T22:40:02&#43;08:00" />
 
     
     <meta property="article:tag" content="Java" />
@@ -51,7 +51,8 @@
 
     <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
     <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
-
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
     
 
     
@@ -100,15 +101,15 @@
     },
     "headline": Digging in Source Code of ArrayList,
     "name": Digging in Source Code of ArrayList,
-    "wordCount": 1400,
+    "wordCount": 1392,
     "timeRequired": "PT7M",
     "inLanguage": {
       "@type": "Language",
       "alternateName": en
     },
     "url": https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/,
-    "datePublished": 2018-08-23T22:40Z,
-    "dateModified": 2018-08-23T22:40Z,
+    "datePublished": 2018-06-23T22:40Z,
+    "dateModified": 2018-06-23T22:40Z,
     
     "image": {
         "@type": "ImageObject",
@@ -207,8 +208,8 @@
 
         <section class="post-meta">
         
-          <time class="post-date" datetime="2018-08-23T22:40:02&#43;08:00">
-            Aug 23, 2018
+          <time class="post-date" datetime="2018-06-23T22:40:02&#43;08:00">
+            Jun 23, 2018
           </time>
         
          
@@ -667,17 +668,16 @@ private class Itr implements Iterator&lt;E&gt; {
         return cursor != size();
     }
 
-    /**
-     * 首先判断 expectedModCount 和 modCount 是否相等。然后对 cursor 进行判断，
-     * 看是否超过集合大小和数组长度。然后将 cursor 赋值给 lastRet ，并返回下标为 lastRet 的元素。
-     * 最后将 cursor 自增 1。开始时，cursor = 0，lastRet = -1；每调用一次 next 方法， 
-     * cursor 和 lastRet 都会自增 1
-	 */
     public E next() {
         // 判断 expectedModCount 和 modCount 是否相等
         checkForComodification();
         // 获取游标指向的元素，将游标后移
         try {
+            /**
+             * 将 cursor 赋值给 lastRet ，并返回下标为 lastRet 的元素
+             * 最后将 cursor 自增 1。开始时，cursor = 0，lastRet = -1；
+             * 每调用一次 next 方法, cursor 和 lastRet 都会自增 1
+             */
             int i = cursor;
             E next = get(i);
             lastRet = i;
@@ -733,7 +733,7 @@ private class Itr implements Iterator&lt;E&gt; {
 
 <p>我们都知道一个对象只要实现了<code>Serilizable</code>接口，这个对象就可以被序列化，然而在实际开发过程中，我们常常会遇到这样的问题，这个类的有些属性需要序列化，而其他属性不需要被序列化，打个比方，如果一个用户有一些敏感信息（如密码，银行卡号等），为了安全起见，不希望在网络操作（主要涉及到序列化操作，本地序列化缓存也适用）中被传输，这些信息对应的变量就可以加上<code>transient</code>关键字。换句话说，这个字段的生命周期仅存于调用者的内存中而不会写到磁盘里持久化。</p>
 
-<p><strong>总之，java 的transient关键字为我们提供了便利，你只需要实现Serilizable接口，将不需要序列化的属性前添加关键字transient，序列化对象的时候，这个属性就不会序列化到指定的目的地中。</strong></p>
+<p><strong>总之，java的transient关键字为我们提供了便利，只要实现Serilizable接口，将不需要序列化的属性前添加关键字transient，序列化对象时该属性就不会序列化到指定的目的地中。</strong></p>
 
 <p>上面的<strong>elementData</strong> 属性采用了<strong>transient</strong>来修饰，<strong>表明其不使用Java默认的序列化机制来序列化</strong>，但是该属性是ArrayList的底层数据结构，在网络传输或磁盘读写中一定需要将其序列化，之后使用的时候还需要反序列化，</p>
 
@@ -900,6 +900,12 @@ for (int i=0; i&lt;size; i++)
           </section>
       </a>
   
+  
+      <a class="read-next-story prev" style="background-image: url(/images/tr.jpg)" href="https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/">
+          <section class="post">
+              <h2>Thread Run Method Execution Process Tracking and Thinking</h2>
+          </section>
+      </a>
   
 </aside>
 

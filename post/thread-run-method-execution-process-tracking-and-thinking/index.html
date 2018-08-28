@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:image" content="/images/tr.jpg"/>
+    
+
+
+
+<meta name="twitter:title" content="Thread Run Method Execution Process Tracking and Thinking"/>
+<meta name="twitter:description" content="Thread.run()方法的执行过程追踪与思考"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Thread Run Method Execution Process Tracking and Thinking &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/" />
+
+    
+       <meta property="og:image" content="/images/tr.jpg"/>
+    
+
+    
+    <meta property="og:description" content="Thread.run()方法的执行过程追踪与思考" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-03-25T21:46:51&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    <meta property="article:tag" content="并发" />
+    
+    
+
+    <title>Thread Run Method Execution Process Tracking and Thinking &middot; 临风博客</title>
+
+    
+    <meta name="description" content="Thread.run()方法的执行过程追踪与思考" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": 
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Thread Run Method Execution Process Tracking and Thinking,
+    "name": Thread Run Method Execution Process Tracking and Thinking,
+    "wordCount": 84,
+    "timeRequired": "PT1M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/,
+    "datePublished": 2018-03-25T21:46Z,
+    "dateModified": 2018-03-25T21:46Z,
+    
+    "image": {
+        "@type": "ImageObject",
+        "url": https://jordonyang.github.io/images/tr.jpg,
+        "width": 3000,
+        "height": 1445
+    },
+    
+    "keywords": Java, 并发,
+    "description": Thread.run()方法的执行过程追踪与思考,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">临风博客</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  
+  <header class="main-header post-head" style="background-image: url(/images/tr.jpg)">
+  
+  <nav class="main-nav overlay clearfix">
+
+
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">Thread Run Method Execution Process Tracking and Thinking</h1>
+        <small>Thread.run()方法的执行过程追踪与思考</small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2018-03-25T21:46:51&#43;08:00">
+            Mar 25, 2018
+          </time>
+        
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span>
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/%E5%B9%B6%E5%8F%91/">#并发</a></span>
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      
+
+<p><strong>前言</strong>
+之前听到很多说法都是:“单纯地执行Thread子类的run方法并没有多线程的效果，正确的做法是，用Thread子类对象执行Thread的start方法，这样start方法会自动执行子类的run方法。” 我对这种神奇的说法将信将疑，心里总感觉不踏实，于是点进Thread的源码了解了一下。</p>
+
+<h3 id="一-入坑过程">一. 入坑过程</h3>
+
+<p>然而，纵观 <code>start</code> 方法，并没有找到 <code>run</code> 这个词，那<code>run</code>方法又是在哪里被调用的呢？其中最有嫌疑的地方就是<code>native方法start0</code>。</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/run.png" alt="img" /></p>
+
+<!-- more -->
+
+<p>Thread 类有个 <code>registerNatives</code> 本地方法，该方法主要的作用就是注册一些本地方法供 Thread 类使用，如 start0()，stop0() 等等，可以说，所有操作本地线程的本地方法都是由它注册的。这个方法放在一个静态代码块中，当 <code>Thread</code> 类被加载到 <code>JVM</code> 中的时候，它就会被调用，进而注册相应的本地方法。
+而本地方法 <code>registerNatives</code> 是定义在 <code>openjdk\jdk\src\share\native\java\lang\Thread.c文件</code> 中的。<code>Thread.c</code> 是个很小的文件，它定义了各个操作系统平台都要用到的关于线程的公用数据和操作，如下：</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/theadcpp.png" alt="img" /></p>
+
+<p>可以容易的看出 Java 线程调用<code>start-&gt;start0</code>的方法，实际上会调用到 <code>JVM_StartThread</code> 方法，而 <code>JVM_StartThread</code> 方法则是在<code>openjdk\hotspot\src\share\vm\prims\jvm.cpp</code>中定义的</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/jvmcpp1.png" alt="img" /></p>
+
+<p><code>JVM_ENTRY</code> 作为一个宏，用来定义 <code>JVM_StartThread</code> 函数，可以看到函数内创建了真正的平台相关的本地线程，其线程函数是 <code>thread_entry</code>，如下：</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/jvmcpp2.png" alt="img" /></p>
+
+<p>可见其中调用了 <code>vmSymbols::run_method_name</code> 方法，
+而 <code>run_method_name</code> 是在 <code>openjdk\hotspot\src\share\vm\classfile\vmSymbols.hpp</code> 中用宏定义的：</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/vmSymbolshpp.png" alt="img" /></p>
+
+<p>这样不难想象到执行 <code>Thread.start()</code> 后的底层调用过程</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/presson2.png" alt="img" /></p>
+
+<h3 id="二-拓展">二. 拓展</h3>
+
+<p>理解到 <code>statrt0</code> 方法为我们做了哪些事情后就很容易理解Java中线程启动的大致过程。</p>
+
+<h4 id="1-thread子类">1. Thread子类</h4>
+
+<p>任务类继承Thread类，并覆盖它的run方法</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/subthread.png" alt="img" /></p>
+
+<p>当 <code>subThread</code> 调用父类的start方法时，由上面的过程可以知道，在JVM申请CPU线程资源并开启线程后，会执行 <code>Thread类</code> 的 <code>run</code> 方法,而由于<code>JVM</code>多态支持，最终调用的是 <code>SubThread</code> 的 <code>run</code> 方法，从而实现在一个线程中完成任务。</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/presson3.png" alt="img" /></p>
+
+<h4 id="2-实现runnable接口">2. 实现Runnable接口</h4>
+
+<p>任务类实现 <code>Runnable</code> 接口，然后直接用该任务类对象来创建线程</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/runnableImpl.png" alt="img" /></p>
+
+<p>在Thread类中有一个私有的<code>Runnable</code>类型的<code>target</code>属性，该属性在调用<code>Thread(Runnable target)</code>后将指向传入任务类对象</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/threadtarget.png" alt="img" /></p>
+
+<p>同样地，在调用完<code>Thread</code>的<code>start</code>方法后，将执行<code>Thread</code>的<code>run</code>方法，由于<code>RunnableImpl</code>和<code>Thread</code>并没有继承关系，最终还是执行<code>Thread.run()</code>：</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/threadrun.png" alt="img" /></p>
+
+<p>可见通过在Thread中代理Runnable接口，可以处理任何线程任务，只要它们继承了<code>Runnable</code>接口，最终JVM都会通过<code>Thread</code>的<code>run</code>方法找到<code>RunnableImpl</code>的<code>run</code>方法，将其中的任务加入线程中。</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/presson4.png" alt="img" /></p>
+
+<h4 id="3-考虑一次性线程">3. 考虑一次性线程</h4>
+
+<p>有些线程只需执行一次便被回收，这时可以使用匿名内部类的方式创建线程，以上的两者中方式可以换做</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/at1.png" alt="img" /></p>
+
+<p>其执行过程与上面的基本类似，但是如果同时使用这两钟方式创建线程呢？到底谁的<code>run</code>方法会执行？</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/at2.png" alt="iimg" /></p>
+
+<p>虽然<code>Thread</code>的<code>target</code>属性指向了<code>Runnable</code>的匿名实现类对象，但是由于<code>JVM</code>的多态实现，最终并没有执行<code>Thread</code>的<code>run</code>方法，而是执行<code>Thread</code>的匿名子类中的<code>run</code>方法。</p>
+
+<p><img src="http://p9xt4vbqr.bkt.clouddn.com/presson5.png" alt="img" /></p>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+
+
+
+
+
+
+
+
+
+<section class="author">
+  <h4><a href="https://jordonyang.github.io/">临风</a></h4>
+  
+  <p>Read <a href="https://jordonyang.github.io/">more posts</a> by this author.</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+  </div>
+</section>
+
+
+
+
+    
+<section class="share">
+  <h4>Share this post</h4>
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=Thread%20Run%20Method%20Execution%20Process%20Tracking%20and%20Thinking&nbsp;-&nbsp;%e4%b8%b4%e9%a3%8e%e5%8d%9a%e5%ae%a2&amp;url=https%3a%2f%2fjordonyang.github.io%2fpost%2fthread-run-method-execution-process-tracking-and-thinking%2f"
+      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+  </a>
+  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fjordonyang.github.io%2fpost%2fthread-run-method-execution-process-tracking-and-thinking%2f"
+      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+  </a>
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fjordonyang.github.io%2fpost%2fthread-run-method-execution-process-tracking-and-thinking%2f&amp;description=Thread%20Run%20Method%20Execution%20Process%20Tracking%20and%20Thinking"
+      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
+      <span class="hidden">Pinterest</span>
+  </a>
+  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=https%3a%2f%2fjordonyang.github.io%2fpost%2fthread-run-method-execution-process-tracking-and-thinking%2f"
+     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+  </a>
+</section>
+
+
+
+    
+
+
+
+
+
+
+
+  </footer>
+</article>
+
+</main>
+
+
+  <aside class="read-next">
+  
+      <a class="read-next-story" style="background-image: url(http://attach.bbs.miui.com/forum/201305/16/185250rp6ccrb6swe872wu.jpg)" href="https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/">
+          <section class="post">
+              <h2>Digging in Source Code of ArrayList</h2>
+              
+          </section>
+      </a>
+  
+  
+      <a class="read-next-story prev" style="background-image: url(/images/foreach.jpg)" href="https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/">
+          <section class="post">
+              <h2>Understanding the Foreach Syntax Sugar by Decompilation</h2>
+          </section>
+      </a>
+  
+</aside>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

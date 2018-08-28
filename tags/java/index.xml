@@ -7,15 +7,38 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Sat, 25 Aug 2018 16:44:03 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 27 Aug 2018 14:09:27 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Questions and Details About SC of HashMap</title>
+      <link>https://jordonyang.github.io/post/faq-and-details-about-sc-of-hashmap/</link>
+      <pubDate>Mon, 27 Aug 2018 14:09:27 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/faq-and-details-about-sc-of-hashmap/</guid>
+      <description>roundUpToPowerOf2
+用来返回大于等于最接近number的2的冪数
+private static int roundUpToPowerOf2(int number) { // assert number &amp;gt;= 0 : &amp;quot;number must be non-negative&amp;quot;; int rounded = number &amp;gt;= MAXIMUM_CAPACITY ? MAXIMUM_CAPACITY : (rounded = Integer.highestOneBit(number)) != 0 ? (Integer.bitCount(number) &amp;gt; 1) ? rounded &amp;lt;&amp;lt; 1 : rounded : 1; return rounded; }  如果number是2的冪数 b1=1，返回就是number， 如果number不是2的冪数，则highestOneBit&amp;gt;1,因为rounded = Integer.highestOneBit(number)，rounded已经是最接近小于number的2的冪数，故，rounded&amp;lt;&amp;lt;1,左移一位，就成为最接近大于等于number的2的冪数了
+实际上相当于
+private static int roundUpToPowerOf2(int number) { // assert number &amp;gt;= 0 : &amp;quot;number must be non-negative&amp;quot;; int rounded; if(number &amp;gt;= MAXIMUM_CAPACITY) { rounded = MAXIMUM_CAPACITY; }else { rounded = Integer.</description>
+    </item>
+    
+    <item>
+      <title>Digging in Source Code of HashMap (JDK1.7)</title>
+      <link>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</link>
+      <pubDate>Mon, 27 Aug 2018 12:01:48 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</guid>
+      <description>概述  横向维护一个Entry数组，用来存放最近一次添加的(key,value)形式的元素 每个数组元素纵向维护一个Entry链表，当发生哈希冲突时，将原先的Entry往后挪，即链地址法解决哈希冲突  方法签名 public class HashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt; implements Map&amp;lt;K,V&amp;gt;, Cloneable, Serializable  具有Map的基本方法，可克隆、可序列化（自定义的序列化规则）
+基本属性 // 默认容量为16 static final int DEFAULT_INITIAL_CAPACITY = 1 &amp;lt;&amp;lt; 4; // 最大容量 static final int MAXIMUM_CAPACITY = 1 &amp;lt;&amp;lt; 30; // 默认加载因子，值为0.75，扩容时用 static final float DEFAULT_LOAD_FACTOR = 0.75f; // 空的入口数组 static final Entry&amp;lt;?,?&amp;gt;[] EMPTY_TABLE = {}; /** * 入口数组，用来存储链表的头结点 * 一开始将它指向 EMPTY_TABLE，这样的意图直到在第一次添加元素时 * 才正式将table指向大小接近threshold的Entry对象 */ transient Entry&amp;lt;K,V&amp;gt;[] table = (Entry&amp;lt;K,V&amp;gt;[]) EMPTY_TABLE; // 当前表中的元素个数 transient int size; /** * 阈值，超过后扩容，值为capacity * load factor * 一开始table为 EMPTY_TABLE，即创建HashMap对象但未往其中添加元素， * 当第一次往其中添加元素时，表的大小会膨胀到这个值 */ int threshold; // 加载因子 final float loadFactor; // 结构性修改的次数，与fail-fast机制有关 transient int modCount;  构造方法 1.</description>
+    </item>
+    
+    <item>
       <title>Digging in Source Code of LinkedList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
-      <pubDate>Sat, 25 Aug 2018 16:44:03 +0800</pubDate>
+      <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</guid>
       <description>一. 概述  LinkedList 是一个继承于AbstractSequentialList的双向链表。它也可以被当作堆栈、队列或双端队列进行操作。 LinkedList 实现 List 接口，能对它进行队列操作。 LinkedList 实现 Deque 接口，即能将LinkedList当作双端队列使用。 LinkedList 实现了Cloneable接口，即覆盖了函数clone()，能克隆。 LinkedList 实现java.io.Serializable接口，这意味着LinkedList支持序列化，能通过序列化去传输。 LinkedList 是非同步的。
@@ -27,7 +50,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     <item>
       <title>Digging in Source Code of ArrayList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
-      <pubDate>Thu, 23 Aug 2018 22:40:02 +0800</pubDate>
+      <pubDate>Sat, 23 Jun 2018 22:40:02 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</guid>
       <description>一. 继承体系  1.基于数组实现，是一个动态数组，其容量能自动增长。
@@ -36,6 +59,49 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
 4.实现了Cloneable接口，能被克隆。
 5.实现了Serializable接口，支持序列化。
  二. 基本属性 /** * 存储数组默认容量 */ private static final int DEFAULT_CAPACITY = 10; /** * 当使用 new ArrayList(0) 时赋值给elementData * 第一次插入元素时，将重新开辟一个容量为1的存储数组，该引用将被弃用 */ private static final Object[] EMPTY_ELEMENTDATA = {}; /** * 当使用 new ArrayList() 时赋值给elementData * 第一次插入元素时，将重新开辟一个容量为10的存储数组，该引用将被弃用 */ private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}; /** * 该数组用来存放add进ArrayList的元素 */ transient Object[] elementData; /** * 对象数组中已经存放的元素个数，并不是存储数组的容量 */ private int size; /** * 数组可开辟的最大容量，实际上一个数组所能分配的容量大小取决于JVM分配的堆内存大小 * MAX_ARRAY_SIZE只是一个理论值，可能出于对JVM头信息存储的考虑而设计 * 因为在hugeCapacity 方法中 minCapacity &amp;gt; MAX_ARRAY_SIZE) ?</description>
+    </item>
+    
+    <item>
+      <title>Thread Run Method Execution Process Tracking and Thinking</title>
+      <link>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</link>
+      <pubDate>Sun, 25 Mar 2018 21:46:51 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</guid>
+      <description>前言 之前听到很多说法都是:“单纯地执行Thread子类的run方法并没有多线程的效果，正确的做法是，用Thread子类对象执行Thread的start方法，这样start方法会自动执行子类的run方法。” 我对这种神奇的说法将信将疑，心里总感觉不踏实，于是点进Thread的源码了解了一下。
+一. 入坑过程 然而，纵观 start 方法，并没有找到 run 这个词，那run方法又是在哪里被调用的呢？其中最有嫌疑的地方就是native方法start0。
+Thread 类有个 registerNatives 本地方法，该方法主要的作用就是注册一些本地方法供 Thread 类使用，如 start0()，stop0() 等等，可以说，所有操作本地线程的本地方法都是由它注册的。这个方法放在一个静态代码块中，当 Thread 类被加载到 JVM 中的时候，它就会被调用，进而注册相应的本地方法。 而本地方法 registerNatives 是定义在 openjdk\jdk\src\share\native\java\lang\Thread.c文件 中的。Thread.c 是个很小的文件，它定义了各个操作系统平台都要用到的关于线程的公用数据和操作，如下：
+可以容易的看出 Java 线程调用start-&amp;gt;start0的方法，实际上会调用到 JVM_StartThread 方法，而 JVM_StartThread 方法则是在openjdk\hotspot\src\share\vm\prims\jvm.cpp中定义的
+JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到函数内创建了真正的平台相关的本地线程，其线程函数是 thread_entry，如下：
+可见其中调用了 vmSymbols::run_method_name 方法， 而 run_method_name 是在 openjdk\hotspot\src\share\vm\classfile\vmSymbols.hpp 中用宏定义的：
+这样不难想象到执行 Thread.start() 后的底层调用过程
+二. 拓展 理解到 statrt0 方法为我们做了哪些事情后就很容易理解Java中线程启动的大致过程。
+1. Thread子类 任务类继承Thread类，并覆盖它的run方法
+当 subThread 调用父类的start方法时，由上面的过程可以知道，在JVM申请CPU线程资源并开启线程后，会执行 Thread类 的 run 方法,而由于JVM多态支持，最终调用的是 SubThread 的 run 方法，从而实现在一个线程中完成任务。</description>
+    </item>
+    
+    <item>
+      <title>Understanding the Foreach Syntax Sugar by Decompilation</title>
+      <link>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</link>
+      <pubDate>Sun, 25 Feb 2018 22:03:56 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</guid>
+      <description>前言 最近一直在看TiJ，在持有对象那章，Bruce Eckel说到Collection的内容可以用foreach遍历，原因是Java SE%引入了Iterable接口，该接口包含一个能够产生Iterator的iterator方法，并且Iterable接口被foreach用来在序列中移动。因此任何Iterable的实现类都可以用于foreach语句。那么我们在尝着这一语法糖的甜头时，JDK底层帮我们做了哪些事情呢？
+实验 环境：IntelliJ IDEA 2018.1、jdk1.7.0_80
+下面例子的Java代码中使用了两个foreach分别遍历数组和ArrayList：
+package reversecompile; import java.util.ArrayList; import java.util.List; public class TestForEach { public static void main(String[] args) { String[] arr = &amp;quot;I am a coder&amp;quot;.split(&amp;quot; &amp;quot;); List&amp;lt;String&amp;gt; strings = new ArrayList&amp;lt;&amp;gt;(); for (String s : arr){ strings.add(s); System.out.println(s); } for (String s : strings){ System.out.println(s); } } }  通过IDEA反编译后的·TestForEach.class：
+// // Source code recreated from a .class file by IntelliJ IDEA // (powered by Fernflower decompiler) // package reversecompile; import java.</description>
+    </item>
+    
+    <item>
+      <title>Constructing Binary Heap With Java</title>
+      <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
+      <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</guid>
+      <description>前言 最近在看《算法导论》，从中感受到了算法世界的神奇，看完二叉堆后觉得实现起来应该不难，所以试着根据书中的伪代码用Java实现一遍。
+概念 基本定义 二叉堆是一个数组，可近似看成完全二叉树，表示堆的数组A通常包含两个属性：A.length（数组长度）和A.heap-size（堆的有效元素）
+private int[] heap; private int heapSize; public MyHeap(int[] array) { this.heap = array; this.heapSize = array.length; }  通过下标定位亲属节点 由于堆可看做完全二叉树，所以可以通过某节点的下标获取其左右子节点和父节点
+private int left(int i) { return 2 * i + 1; } private int right(int i) { return 2 * i + 2; } private int parent(int i) { return (i - 1) / 2; }  堆的一些性质  最大堆性质：A[PARENT[i] &amp;gt;= A[i]] 最小堆性质：A[PARENT[i] &amp;lt;= A[i]] 含有n个元素的堆的高为：小于等于lgn的最大整数 当用数组表示存储了n个元素的堆时，叶节点下标分别为 (n/2) + 1, (n / 2) + 2, &amp;hellip;, n（下标从１开始）  维持堆的性质 使下标为i的节点所构成的堆成为最大堆</description>
     </item>
     
   </channel>
