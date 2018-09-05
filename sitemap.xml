@@ -18,6 +18,11 @@
   </url>
   
   <url>
+    <loc>https://jordonyang.github.io/post/garbage-collection-of-jvm/</loc>
+    <lastmod>2018-08-04T23:25:14+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</loc>
     <lastmod>2018-06-25T16:44:03+08:00</lastmod>
   </url>

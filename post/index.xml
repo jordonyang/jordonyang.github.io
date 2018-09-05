@@ -36,6 +36,26 @@ private static int roundUpToPowerOf2(int number) { // assert number &amp;gt;= 0 
     </item>
     
     <item>
+      <title>Garbage Collection of JVM</title>
+      <link>https://jordonyang.github.io/post/garbage-collection-of-jvm/</link>
+      <pubDate>Sat, 04 Aug 2018 23:25:14 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/garbage-collection-of-jvm/</guid>
+      <description>一. 概念 什么是垃圾收集?
+垃圾收集（Garbage Collection，GC），指的是对Java堆和方法区的死对象进行回收。它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，现已十分成熟。
+二. 收集的范围 哪些内存需要回收
+在Java内存运行时区域中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，栈帧随着方法的进入和退出做入栈和出栈操作，加上基本认为栈帧所分配的大小随类的结构确定而保持不变，因此这些区域的的内存分配和回收都具有确定性，所以我们的内存垃圾回收主要集中于 Java 堆和方法区中，在程序运行期间，这部分内存的分配和回收都是动态的 。
+三. 收集目标  Java堆：回收目标为死对象，即那些不会不可能再被任何途径使用的对象。 方法区，即Hotspot VM中的永久代（Permanet Generation）：收集效率非常低，其中进行内存垃圾回收的两个主要内容是废弃常量和无用的类。  四. 判活算法 怎么判断一个对象是否死对象？
+1. 引用计数（Reference Counting） 即每个对象都有一个引用计数器，当有引用连接至对象时，引用计数加1；当有引用离开作用域或被置为null时，引用计数减1。此方法简单、高效，但无法解决对象相互循环引用的问题。
+ 若对象间存在循环引用，可能出现“对象应该被回收，但引用计数却不为零”的情况。定位这样的交互自引用的对象组所需的工作量极大。引用记数常用来说明垃圾收集的工作方式，但似乎从未被应用于任何一种Java虚拟机实现中。
+ 2. 可达性分析（Reachability Analysis） 从GC Roots开始向下搜索，搜索所走过的路径称为引用链。当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。不可达对象。
+GC停顿：亦称Stop The World（STW），即在整个可达性分析期间，整个执行系统看起来就像是被冻结在某个时间点上，不能出现在分析过程中对象引用关系还在不断变化的情况。
+在Java语言中，GC Roots包括：
+ 虚拟机栈中引用的对象 方法区中类静态属性实体引用的对象 方法区中常量引用的对象 本地方法栈中JNI引用的对象  五. 收集方法 有哪些垃圾收集算法？它们各有什么特点？
+1. 标记 - 清除算法（Mark-Sweep） （ 1 ）原始标记-清除算法 （Naïve mark-and-sweep） 每个对象在内存中都有一个标记位用于垃圾回收，标记该对象到 GC roots 是否可达，然后进行 标记-清理 过程</description>
+    </item>
+    
+    <item>
       <title>Digging in Source Code of LinkedList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
       <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
