@@ -7,23 +7,10 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Mon, 27 Aug 2018 14:09:27 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 27 Aug 2018 12:01:48 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Questions and Details About SC of HashMap</title>
-      <link>https://jordonyang.github.io/post/faq-and-details-about-sc-of-hashmap/</link>
-      <pubDate>Mon, 27 Aug 2018 14:09:27 +0800</pubDate>
-      
-      <guid>https://jordonyang.github.io/post/faq-and-details-about-sc-of-hashmap/</guid>
-      <description>roundUpToPowerOf2
-用来返回大于等于最接近number的2的冪数
-private static int roundUpToPowerOf2(int number) { // assert number &amp;gt;= 0 : &amp;quot;number must be non-negative&amp;quot;; int rounded = number &amp;gt;= MAXIMUM_CAPACITY ? MAXIMUM_CAPACITY : (rounded = Integer.highestOneBit(number)) != 0 ? (Integer.bitCount(number) &amp;gt; 1) ? rounded &amp;lt;&amp;lt; 1 : rounded : 1; return rounded; }  如果number是2的冪数 b1=1，返回就是number， 如果number不是2的冪数，则highestOneBit&amp;gt;1,因为rounded = Integer.highestOneBit(number)，rounded已经是最接近小于number的2的冪数，故，rounded&amp;lt;&amp;lt;1,左移一位，就成为最接近大于等于number的2的冪数了
-实际上相当于
-private static int roundUpToPowerOf2(int number) { // assert number &amp;gt;= 0 : &amp;quot;number must be non-negative&amp;quot;; int rounded; if(number &amp;gt;= MAXIMUM_CAPACITY) { rounded = MAXIMUM_CAPACITY; }else { rounded = Integer.</description>
-    </item>
     
     <item>
       <title>Digging in Source Code of HashMap (JDK1.7)</title>
