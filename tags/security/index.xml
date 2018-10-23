@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Security on 临风博客</title>
+    <link>https://jordonyang.github.io/tags/security/</link>
+    <description>Recent content in Security on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Thu, 18 Oct 2018 22:23:44 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>AES加密算法原理及实现</title>
+      <link>https://jordonyang.github.io/post/impl-of-aes/</link>
+      <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/impl-of-aes/</guid>
+      <description>一、概述 美国政府在1997年9月12日公开征集更高效更安全的替代DES加密算法，第一轮共有15种算法入选，其中5种算法入围了决赛，分别是MARS，RC6，Rijndael，Serpent和Twofish。又经过3年的验证、评测及公众讨论之后Rijndael算法最终入选。
+Rijndael算法之所以最终能够被选为AES的原因是其安全、性能好、效率高、实用灵活。
+Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。
+二、AES算法的数学基础 Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。
+1. AES的基础域是有限域 GF(28)  一个字节的全体256种取值构成一个GF(28) 一个GF(2)上的8次既约多项式可生成一个 GF(28)
+ GF(28)的全体元素构成加法交换群、线性空间。 GF(28)的非零元素构成乘法循环群。  2. AES的GF(28)表示 有限域GF(2^8)上的元素有多种表示方法，为了方便，Rijndaels算法采用多项式表示法，下面是与还表示方法相关的几个定义
+定义1 : 一个由比特位b7b6b5b4b3b2b1b0 组成的字节可表示成系数为(0, 1)的二进制多项式：b7X7 + b6X6 + b5X5 + b4X4 + b3X3 + b2X2 + b1X + b0
+例：字节57＝01010111的多项式表示为: $$x^6 + x^4 + x^2 + x + 1$$
+定义2 : 在GF(28)上的加法定义为二进制多项式的加法，其系数按位模2加。
+例： 57＋83＝D4等价于 $$(x6+x4+x2+x+1)⊕(x7+x+1)= x7+x6+x4+x2$$
+定义3 : 在GF(28)上的乘法定义为二进制多项式的乘积模一个次数为8的不可约多项式 $$m(x) = x^8+x^4+x^3+x+1$$
+其系数的十六进制表示为11B
+例： 57×83＝C1等价于
+$$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x^4+x^3+1 \ mod \ x^8+x^4+x^3+x+1 = x^7+x^6+1 $$</description>
+    </item>
+    
+    <item>
+      <title>DES加密算法原理及实现</title>
+      <link>https://jordonyang.github.io/post/impl-of-des/</link>
+      <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/impl-of-des/</guid>
+      <description>一. DES概述 数据加密标准（Data Encryption Standard），一种使用密钥加密的块算法，1977年被美国联邦政府的国家标准局确定为联邦资料处理标准（FIPS），并授权在非密级政府通信中使用，随后该算法在国际上广泛流传开来。需要注意的是，在某些文献中，作为算法的DES称为数据加密算法（Data Encryption Algorithm,DEA），已与作为标准的DES区分开来。
+1. 几个重要的历史时间  1973年美国国家标准局（NBS）向社会公开征集加 密算法，以制定加密算法标准； 1974年第二次征集； 1975年选中IBM的算法，并公布征求意见； 1977年1月15日正式颁布； 1998年底以后停用； 1999年颁布3DES为新标准。  2. 标准加密算法的目标  用于加密保护政府机构和商业部门的非机密的敏感 数据。 用于加密保护静态存储和传输信道中的数据。 安全使用10 ~ 15年。
+  3.密码的整体特点  分组密码，明文、密文和密钥的分组长度都是64位。 面向二进制的密码算法，因而能够加解密任何形式的计算机数据。 对合运算:
+ f = f–1 加密和解密共用同一算法，使工程实现的工作量减半。
+  综合运用了置换、代替、代数等基本密码技术。 基本结构属于Feistel结构。
+  4. 应用  在全世界范围得到广泛应用。 许多国际组织采用为标准。 产品形式：软件（嵌入式，应用软件） 硬件（芯片，插卡）  5. 结论  用于其设计目标是安全的。 设计精巧、实现容易、使用方便，堪称典范。 为国际信息安全发挥了重要作用。
+  二. 加密过程  64位密钥经子密钥产生算法产生出16个子密钥： K1, K2, &amp;hellip;, K16 ， 分别供第一次, 第二次, &amp;hellip;, 第十六次加密迭代使用。 64位明文经初始置换IP， 将数据打乱重排并分成左右两半。左边32位构成L0 ， 右边2位构成R0 。 第一次加密迭代：由加密函数f实现子密钥k1对R0的加密，得到32位的f(R0, K1)，然后L0⊕f(R0, K1)，32位的结果作为第二次加密迭代的R1，以R0作为第二次加密迭代的L1。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -7,10 +7,32 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Tue, 09 Oct 2018 22:06:42 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 18 Oct 2018 22:23:44 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AES加密算法原理及实现</title>
+      <link>https://jordonyang.github.io/post/impl-of-aes/</link>
+      <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/impl-of-aes/</guid>
+      <description>一、概述 美国政府在1997年9月12日公开征集更高效更安全的替代DES加密算法，第一轮共有15种算法入选，其中5种算法入围了决赛，分别是MARS，RC6，Rijndael，Serpent和Twofish。又经过3年的验证、评测及公众讨论之后Rijndael算法最终入选。
+Rijndael算法之所以最终能够被选为AES的原因是其安全、性能好、效率高、实用灵活。
+Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。
+二、AES算法的数学基础 Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。
+1. AES的基础域是有限域 GF(28)  一个字节的全体256种取值构成一个GF(28) 一个GF(2)上的8次既约多项式可生成一个 GF(28)
+ GF(28)的全体元素构成加法交换群、线性空间。 GF(28)的非零元素构成乘法循环群。  2. AES的GF(28)表示 有限域GF(2^8)上的元素有多种表示方法，为了方便，Rijndaels算法采用多项式表示法，下面是与还表示方法相关的几个定义
+定义1 : 一个由比特位b7b6b5b4b3b2b1b0 组成的字节可表示成系数为(0, 1)的二进制多项式：b7X7 + b6X6 + b5X5 + b4X4 + b3X3 + b2X2 + b1X + b0
+例：字节57＝01010111的多项式表示为: $$x^6 + x^4 + x^2 + x + 1$$
+定义2 : 在GF(28)上的加法定义为二进制多项式的加法，其系数按位模2加。
+例： 57＋83＝D4等价于 $$(x6+x4+x2+x+1)⊕(x7+x+1)= x7+x6+x4+x2$$
+定义3 : 在GF(28)上的乘法定义为二进制多项式的乘积模一个次数为8的不可约多项式 $$m(x) = x^8+x^4+x^3+x+1$$
+其系数的十六进制表示为11B
+例： 57×83＝C1等价于
+$$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x^4+x^3+1 \ mod \ x^8+x^4+x^3+x+1 = x^7+x^6+1 $$</description>
+    </item>
     
     <item>
       <title>DES加密算法原理及实现</title>
@@ -71,7 +93,7 @@ Follow Github 豆瓣</description>
     </item>
     
     <item>
-      <title>Garbage Collection of JVM</title>
+      <title>JVM垃圾收集机制</title>
       <link>https://jordonyang.github.io/post/garbage-collection-of-jvm/</link>
       <pubDate>Sat, 04 Aug 2018 23:25:14 +0800</pubDate>
       
@@ -91,7 +113,7 @@ GC停顿：亦称Stop The World（STW），即在整个可达性分析期间，�
     </item>
     
     <item>
-      <title>Digging in Source Code of LinkedList</title>
+      <title>LinkedList源码阅读与分析</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
       <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
       
@@ -103,7 +125,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Digging in Source Code of ArrayList</title>
+      <title>ArrayList源码阅读与分析</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
       <pubDate>Sat, 23 Jun 2018 22:40:02 +0800</pubDate>
       
@@ -117,7 +139,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Thread Run Method Execution Process Tracking and Thinking</title>
+      <title>Thread类的run()方法执行过程跟踪和思考</title>
       <link>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</link>
       <pubDate>Sun, 25 Mar 2018 21:46:51 +0800</pubDate>
       
@@ -135,7 +157,7 @@ JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到�
     </item>
     
     <item>
-      <title>Understanding the Foreach Syntax Sugar by Decompilation</title>
+      <title>通过反编译理解Java foreach 语法糖</title>
       <link>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</link>
       <pubDate>Sun, 25 Feb 2018 22:03:56 +0800</pubDate>
       
@@ -148,7 +170,7 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>My Reading Records of 2017</title>
+      <title>2017年阅读记录</title>
       <link>https://jordonyang.github.io/post/my-reading-records-of-2017/</link>
       <pubDate>Wed, 27 Dec 2017 12:21:05 +0800</pubDate>
       
@@ -187,7 +209,7 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>Constructing Binary Heap With Java</title>
+      <title>二叉堆的Java实现</title>
       <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       

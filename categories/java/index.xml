@@ -7,10 +7,58 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Mon, 27 Aug 2018 12:01:48 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 18 Oct 2018 22:23:44 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AES加密算法原理及实现</title>
+      <link>https://jordonyang.github.io/post/impl-of-aes/</link>
+      <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/impl-of-aes/</guid>
+      <description>一、概述 美国政府在1997年9月12日公开征集更高效更安全的替代DES加密算法，第一轮共有15种算法入选，其中5种算法入围了决赛，分别是MARS，RC6，Rijndael，Serpent和Twofish。又经过3年的验证、评测及公众讨论之后Rijndael算法最终入选。
+Rijndael算法之所以最终能够被选为AES的原因是其安全、性能好、效率高、实用灵活。
+Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。
+二、AES算法的数学基础 Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。
+1. AES的基础域是有限域 GF(28)  一个字节的全体256种取值构成一个GF(28) 一个GF(2)上的8次既约多项式可生成一个 GF(28)
+ GF(28)的全体元素构成加法交换群、线性空间。 GF(28)的非零元素构成乘法循环群。  2. AES的GF(28)表示 有限域GF(2^8)上的元素有多种表示方法，为了方便，Rijndaels算法采用多项式表示法，下面是与还表示方法相关的几个定义
+定义1 : 一个由比特位b7b6b5b4b3b2b1b0 组成的字节可表示成系数为(0, 1)的二进制多项式：b7X7 + b6X6 + b5X5 + b4X4 + b3X3 + b2X2 + b1X + b0
+例：字节57＝01010111的多项式表示为: $$x^6 + x^4 + x^2 + x + 1$$
+定义2 : 在GF(28)上的加法定义为二进制多项式的加法，其系数按位模2加。
+例： 57＋83＝D4等价于 $$(x6+x4+x2+x+1)⊕(x7+x+1)= x7+x6+x4+x2$$
+定义3 : 在GF(28)上的乘法定义为二进制多项式的乘积模一个次数为8的不可约多项式 $$m(x) = x^8+x^4+x^3+x+1$$
+其系数的十六进制表示为11B
+例： 57×83＝C1等价于
+$$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x^4+x^3+1 \ mod \ x^8+x^4+x^3+x+1 = x^7+x^6+1 $$</description>
+    </item>
+    
+    <item>
+      <title>DES加密算法原理及实现</title>
+      <link>https://jordonyang.github.io/post/impl-of-des/</link>
+      <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/impl-of-des/</guid>
+      <description>一. DES概述 数据加密标准（Data Encryption Standard），一种使用密钥加密的块算法，1977年被美国联邦政府的国家标准局确定为联邦资料处理标准（FIPS），并授权在非密级政府通信中使用，随后该算法在国际上广泛流传开来。需要注意的是，在某些文献中，作为算法的DES称为数据加密算法（Data Encryption Algorithm,DEA），已与作为标准的DES区分开来。
+1. 几个重要的历史时间  1973年美国国家标准局（NBS）向社会公开征集加 密算法，以制定加密算法标准； 1974年第二次征集； 1975年选中IBM的算法，并公布征求意见； 1977年1月15日正式颁布； 1998年底以后停用； 1999年颁布3DES为新标准。  2. 标准加密算法的目标  用于加密保护政府机构和商业部门的非机密的敏感 数据。 用于加密保护静态存储和传输信道中的数据。 安全使用10 ~ 15年。
+  3.密码的整体特点  分组密码，明文、密文和密钥的分组长度都是64位。 面向二进制的密码算法，因而能够加解密任何形式的计算机数据。 对合运算:
+ f = f–1 加密和解密共用同一算法，使工程实现的工作量减半。
+  综合运用了置换、代替、代数等基本密码技术。 基本结构属于Feistel结构。
+  4. 应用  在全世界范围得到广泛应用。 许多国际组织采用为标准。 产品形式：软件（嵌入式，应用软件） 硬件（芯片，插卡）  5. 结论  用于其设计目标是安全的。 设计精巧、实现容易、使用方便，堪称典范。 为国际信息安全发挥了重要作用。
+  二. 加密过程  64位密钥经子密钥产生算法产生出16个子密钥： K1, K2, &amp;hellip;, K16 ， 分别供第一次, 第二次, &amp;hellip;, 第十六次加密迭代使用。 64位明文经初始置换IP， 将数据打乱重排并分成左右两半。左边32位构成L0 ， 右边2位构成R0 。 第一次加密迭代：由加密函数f实现子密钥k1对R0的加密，得到32位的f(R0, K1)，然后L0⊕f(R0, K1)，32位的结果作为第二次加密迭代的R1，以R0作为第二次加密迭代的L1。</description>
+    </item>
+    
+    <item>
+      <title>ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器</title>
+      <link>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</link>
+      <pubDate>Tue, 18 Sep 2018 20:25:43 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</guid>
+      <description>Github仓库
+前言 : 学校软件工程课程作业， 需求大概是根据参数随机产生n道算术表达式，将表达式及结果写到文件中，将用户提交的答案文件与正确答案进行比对，输出比对结果。
+一. PSP2.1表格    PSP2.1 Personal Software Process Stages 预估耗时（分钟） 实际耗时（分钟）     Planning 计划 20 25   · Estimate · 估计这个任务需要多少时间 20 25   Development 开发 1280 1740   · Analysis · 需求分析 (包括学习新技术) 40 55   · Design Spec · 生成设计文档 40 41   · Design Review · 设计复审 (和同事审核设计文档) 30 20   · Coding Standard · 代码规范 (为目前的开发制定合适的规范) 30 31   · Design · 具体设计 40 66   · Coding · 具体编码 1000 1422   · Code Review · 代码复审 40 41   · Test · 测试（自我测试，修改代码，提交修改） 60 64   Reporting 报告 70 103   · Test Report · 测试报告 20 24   · Size Measurement · 计算工作量 20 21   · Postmortem &amp;amp; Process Improvement Plan · 事后总结, 并提出过程改进计划 30 58   合计  1370 1868    二.</description>
+    </item>
     
     <item>
       <title>Digging in Source Code of HashMap (JDK1.7)</title>
@@ -23,7 +71,27 @@
     </item>
     
     <item>
-      <title>Digging in Source Code of LinkedList</title>
+      <title>JVM垃圾收集机制</title>
+      <link>https://jordonyang.github.io/post/garbage-collection-of-jvm/</link>
+      <pubDate>Sat, 04 Aug 2018 23:25:14 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/garbage-collection-of-jvm/</guid>
+      <description>一. 概念 什么是垃圾收集?
+垃圾收集（Garbage Collection，GC），指的是对Java堆和方法区的死对象进行回收。它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，现已十分成熟。
+二. 收集的范围 哪些内存需要回收
+在Java内存运行时区域中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，栈帧随着方法的进入和退出做入栈和出栈操作，加上基本认为栈帧所分配的大小随类的结构确定而保持不变，因此这些区域的的内存分配和回收都具有确定性，所以我们的内存垃圾回收主要集中于 Java 堆和方法区中，在程序运行期间，这部分内存的分配和回收都是动态的 。
+三. 收集目标  Java堆：回收目标为死对象，即那些不会不可能再被任何途径使用的对象。 方法区，即Hotspot VM中的永久代（Permanet Generation）：收集效率非常低，其中进行内存垃圾回收的两个主要内容是废弃常量和无用的类。  四. 判活算法 怎么判断一个对象是否死对象？
+1. 引用计数（Reference Counting） 即每个对象都有一个引用计数器，当有引用连接至对象时，引用计数加1；当有引用离开作用域或被置为null时，引用计数减1。此方法简单、高效，但无法解决对象相互循环引用的问题。
+ 若对象间存在循环引用，可能出现“对象应该被回收，但引用计数却不为零”的情况。定位这样的交互自引用的对象组所需的工作量极大。引用记数常用来说明垃圾收集的工作方式，但似乎从未被应用于任何一种Java虚拟机实现中。
+ 2. 可达性分析（Reachability Analysis） 从GC Roots开始向下搜索，搜索所走过的路径称为引用链。当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。不可达对象。
+GC停顿：亦称Stop The World（STW），即在整个可达性分析期间，整个执行系统看起来就像是被冻结在某个时间点上，不能出现在分析过程中对象引用关系还在不断变化的情况。
+在Java语言中，GC Roots包括：
+ 虚拟机栈中引用的对象 方法区中类静态属性实体引用的对象 方法区中常量引用的对象 本地方法栈中JNI引用的对象  五. 收集方法 有哪些垃圾收集算法？它们各有什么特点？
+1. 标记 - 清除算法（Mark-Sweep） （ 1 ）原始标记-清除算法 （Naïve mark-and-sweep） 每个对象在内存中都有一个标记位用于垃圾回收，标记该对象到 GC roots 是否可达，然后进行 标记-清理 过程</description>
+    </item>
+    
+    <item>
+      <title>LinkedList源码阅读与分析</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
       <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
       
@@ -35,7 +103,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Digging in Source Code of ArrayList</title>
+      <title>ArrayList源码阅读与分析</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
       <pubDate>Sat, 23 Jun 2018 22:40:02 +0800</pubDate>
       
@@ -49,7 +117,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Thread Run Method Execution Process Tracking and Thinking</title>
+      <title>Thread类的run()方法执行过程跟踪和思考</title>
       <link>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</link>
       <pubDate>Sun, 25 Mar 2018 21:46:51 +0800</pubDate>
       
@@ -67,7 +135,7 @@ JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到�
     </item>
     
     <item>
-      <title>Understanding the Foreach Syntax Sugar by Decompilation</title>
+      <title>通过反编译理解Java foreach 语法糖</title>
       <link>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</link>
       <pubDate>Sun, 25 Feb 2018 22:03:56 +0800</pubDate>
       
@@ -80,7 +148,7 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>Constructing Binary Heap With Java</title>
+      <title>二叉堆的Java实现</title>
       <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       
