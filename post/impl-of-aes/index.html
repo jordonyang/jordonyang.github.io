@@ -103,7 +103,7 @@
     },
     "headline": AES加密算法原理及实现,
     "name": AES加密算法原理及实现,
-    "wordCount": 1963,
+    "wordCount": 1969,
     "timeRequired": "PT10M",
     "inLanguage": {
       "@type": "Language",
@@ -263,7 +263,7 @@
 
 <p><strong>定义2</strong> : 在GF(2<sup>8</sup>)上的加法定义为二进制多项式的加法，其系数按位模2加。</p>
 
-<p>例： 57＋83＝D4等价于 $$(x6+x4+x2+x+1)⊕(x7+x+1)= x7+x6+x4+x2$$</p>
+<p>例： 57＋83＝D4等价于 $$(x^6+x^4+x^2+x+1)⊕(x^7+x+1)= x^7+x^6+x^4+x^2$$</p>
 
 <p><strong>定义3</strong> : 在GF(2<sup>8</sup>)上的乘法定义为二进制多项式的乘积模一个次数为8的不可约多项式 $$m(x) = x^8+x^4+x^3+x+1$$</p>
 
@@ -309,7 +309,9 @@
 
 <p><strong>字x乘法</strong> ：</p>
 
-<p>$$p(x)=xb(x)  \ mod \ x^4+1$$  矩阵形式如下图所示，因为模x<sup>4</sup>+1，字x乘法相当于按字节循环移位<img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/nb3.png" alt="img" /></p>
+<p>$$p(x)=xb(x)  \ mod \ x^4+1$$  矩阵形式如下图所示，因为模x<sup>4</sup>+1，字x乘法相当于按字节循环移位</p>
+
+<p>​                                            <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/nb3.png" alt="img" /></p>
 
 <h2 id="三-aes的加密过程">三、 AES的加密过程</h2>
 
@@ -410,7 +412,9 @@ private short[][] xor(short[][] first, short[][] second) {
 
 <h4 id="2-轮密钥的选择">( 2 ) 轮密钥的选择</h4>
 
-<p>根据分组的大小，依次从扩展密钥中取出轮密钥。 前面的Nb个字作为轮密钥0，接下来的Nb个字作为轮密钥1，以此类推                             <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/keySelection1.png" alt="img" /></p>
+<p>根据分组的大小，依次从扩展密钥中取出轮密钥。 前面的Nb个字作为轮密钥0，接下来的Nb个字作为轮密钥1，以此类推</p>
+
+<p>​                                   <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/keySelection1.png" alt="img" /></p>
 
 <h4 id="3-代码实现">( 3 ) 代码实现</h4>
 
@@ -1076,6 +1080,11 @@ plaintext                     passwordTextCase
 <li><a href="http://www.formaestudio.com/rijndaelinspector/">http://www.formaestudio.com/rijndaelinspector/</a></li>
 <li>《密码学引论》（第三版，张焕国、唐明编著，武汉大学出版社）</li>
 </ul>
+
+<pre><code>作者：jordonyang
+出处：http://geekeye.cc/post/impl-of-aes/
+本文版权归作者所有，欢迎转载，但未经作者同意必须在文章页面给出原文连接，否则保留追究法律责任的权利。
+</code></pre>
 
     </section>
 

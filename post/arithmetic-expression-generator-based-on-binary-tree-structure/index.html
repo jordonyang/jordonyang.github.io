@@ -103,7 +103,7 @@
     },
     "headline": ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器,
     "name": ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器,
-    "wordCount": 245,
+    "wordCount": 248,
     "timeRequired": "PT2M",
     "inLanguage": {
       "@type": "Language",
@@ -512,15 +512,24 @@
 
 <p><img src="http://pezmn9eoj.bkt.clouddn.com/ANALY.png" alt="img" /></p>
 
-<p>影响效能的因素：</p>
+<p><strong>影响效能的因素：</strong></p>
 
-<p>递归</p>
+<ol>
+<li>递归</li>
+</ol>
 
 <p>本项目中很多二叉树的操作使用了递归，而在递归的时候会进行很深层次的调用函数，所以需要调用很多函数递归（即为调用自身），需要建立许多的访问链和控制链，占用大量内存。而且调用时传递参数，申请空间，返回时恢复现场，都有时间的开销</p>
 
-<p>IO读写</p>
+<ol>
+<li>IO读写</li>
+</ol>
 
 <p>写入题目和答案等文件、比对答案中的文件读写操作会增加程序执行时间</p>
+
+<pre><code>作者：jordonyang
+出处：http://geekeye.cc/post/arithmetic-expression-generator-based-on-binary-tree-structure/
+本文版权归作者所有，欢迎转载，但未经作者同意必须在文章页面给出原文连接，否则保留追究法律责任的权利。
+</code></pre>
 
     </section>
 
