@@ -7,13 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Tue, 18 Sep 2018 20:25:43 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 09 Oct 2018 22:06:42 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Arithmetic Expression Generator Based on Binary Tree Structure</title>
+      <title>DES加密算法原理及实现</title>
+      <link>https://jordonyang.github.io/post/impl-of-des/</link>
+      <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/impl-of-des/</guid>
+      <description>一. DES概述 数据加密标准（Data Encryption Standard），一种使用密钥加密的块算法，1977年被美国联邦政府的国家标准局确定为联邦资料处理标准（FIPS），并授权在非密级政府通信中使用，随后该算法在国际上广泛流传开来。需要注意的是，在某些文献中，作为算法的DES称为数据加密算法（Data Encryption Algorithm,DEA），已与作为标准的DES区分开来。
+1. 几个重要的历史时间  1973年美国国家标准局（NBS）向社会公开征集加 密算法，以制定加密算法标准； 1974年第二次征集； 1975年选中IBM的算法，并公布征求意见； 1977年1月15日正式颁布； 1998年底以后停用； 1999年颁布3DES为新标准。  2. 标准加密算法的目标  用于加密保护政府机构和商业部门的非机密的敏感 数据。 用于加密保护静态存储和传输信道中的数据。 安全使用10 ~ 15年。
+  3.密码的整体特点  分组密码，明文、密文和密钥的分组长度都是64位。 面向二进制的密码算法，因而能够加解密任何形式的计算机数据。 对合运算:
+ f = f–1 加密和解密共用同一算法，使工程实现的工作量减半。
+  综合运用了置换、代替、代数等基本密码技术。 基本结构属于Feistel结构。
+  4. 应用  在全世界范围得到广泛应用。 许多国际组织采用为标准。 产品形式：软件（嵌入式，应用软件） 硬件（芯片，插卡）  5. 结论  用于其设计目标是安全的。 设计精巧、实现容易、使用方便，堪称典范。 为国际信息安全发挥了重要作用。
+  二. 加密过程  64位密钥经子密钥产生算法产生出16个子密钥： K1, K2, &amp;hellip;, K16 ， 分别供第一次, 第二次, &amp;hellip;, 第十六次加密迭代使用。 64位明文经初始置换IP， 将数据打乱重排并分成左右两半。左边32位构成L0 ， 右边2位构成R0 。 第一次加密迭代：由加密函数f实现子密钥k1对R0的加密，得到32位的f(R0, K1)，然后L0⊕f(R0, K1)，32位的结果作为第二次加密迭代的R1，以R0作为第二次加密迭代的L1。</description>
+    </item>
+    
+    <item>
+      <title>ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器</title>
       <link>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</link>
       <pubDate>Tue, 18 Sep 2018 20:25:43 +0800</pubDate>
       
@@ -24,7 +39,7 @@
     </item>
     
     <item>
-      <title>Code File Analyser and Counter Based on Chain of Responsibility Disgn Pattern</title>
+      <title>WordCounter - 基于责任链设计模式的代码文件分析统计器</title>
       <link>https://jordonyang.github.io/post/code-file-analyser-and-counter-based-on-chain-of-responsibility-disgn-pattern/</link>
       <pubDate>Fri, 14 Sep 2018 12:23:56 +0800</pubDate>
       
