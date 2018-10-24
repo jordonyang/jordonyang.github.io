@@ -61,7 +61,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>Digging in Source Code of HashMap (JDK1.7)</title>
+      <title>基于JDK1.7的HashMap源码阅读</title>
       <link>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</link>
       <pubDate>Mon, 27 Aug 2018 12:01:48 +0800</pubDate>
       
