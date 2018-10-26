@@ -58,11 +58,6 @@
   </url>
   
   <url>
-    <loc>https://jordonyang.github.io/post/my-reading-records-of-2017/</loc>
-    <lastmod>2017-12-27T12:21:05+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</loc>
     <lastmod>2017-09-25T22:32:08+08:00</lastmod>
   </url>
@@ -109,12 +104,6 @@
   </url>
   
   <url>
-    <loc>https://jordonyang.github.io/categories/life/</loc>
-    <lastmod>2017-12-27T12:21:05+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://jordonyang.github.io/post/</loc>
     <lastmod>2018-10-18T22:23:44+08:00</lastmod>
     <priority>0</priority>
@@ -123,12 +112,6 @@
   <url>
     <loc>https://jordonyang.github.io/categories/project/</loc>
     <lastmod>2018-09-18T20:25:43+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://jordonyang.github.io/tags/reading/</loc>
-    <lastmod>2017-12-27T12:21:05+08:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -159,45 +159,6 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>2017年阅读记录</title>
-      <link>https://jordonyang.github.io/post/my-reading-records-of-2017/</link>
-      <pubDate>Wed, 27 Dec 2017 12:21:05 +0800</pubDate>
-      
-      <guid>https://jordonyang.github.io/post/my-reading-records-of-2017/</guid>
-      <description>&lt;h3 id=&#34;已读&#34;&gt;已读&lt;/h3&gt;
-
-&lt;h4 id=&#34;七月&#34;&gt;七月&lt;/h4&gt;
-
-&lt;p&gt;​                                                      &lt;img src=&#34;https://img3.doubanio.com/lpic/s28063701.jpg&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;很感人的书，情节紧凑到我一天看完，感触最深最虐心的莫过于看到迪伦和崔斯坦在结界处分别的场景，边看边担忧着主人公的命运，幸好最后还是等到了那句“原来你在这里”。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&#34;九月&#34;&gt;九月&lt;/h4&gt;
-
-&lt;p&gt;​&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://img3.doubanio.com/lpic/s27177415.jpg&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;叛逆、睥睨一切甚至厌恶一切但又保持着追求对世间美好事物的热情，这何尝不是年少的你我？读完这本混乱得曾让我想扔掉不读的书，我想到的是，或许我们无法选择与谁相遇，但我们可以选择让那些人留在自己的世界里，或许我们改变环境让它变得如愿美好，但至少我们可以改变自己，去追求自己想要的生活。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;​&lt;/p&gt;
-
-&lt;h4 id=&#34;十一月&#34;&gt;十一月&lt;/h4&gt;
-
-&lt;p&gt;​&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://img3.doubanio.com/lpic/s1081291.jpg&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;”鹅“、“梦想储蓄罐”、“梦想相册”、“成功日记”、&amp;rdquo;收入的50%用来让鹅长大，40%放进梦想储蓄罐，10%用作日常开销“、一个个自己以往闻所未闻的概念在书中出现，正是在这样一个科学的理财体系下，当钱钱、金先生等人说出一些赚钱或者一些对问题的解决方案时，你会下意识地相信其可行，自己也会深受鼓舞想要去实践一番。同时你会发现作者在鼓励读者相信和突破自己去管理自己地金钱，规划自己地未来，过上一种对物质从容不迫地生活。&lt;/p&gt;
-&lt;/blockquote&gt;</description>
-    </item>
-    
-    <item>
       <title>二叉堆的Java实现</title>
       <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>

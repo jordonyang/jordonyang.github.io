@@ -58,7 +58,7 @@
     
 
     
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/atom-one-light.min.css">
         <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
         
         <script>hljs.initHighlightingOnLoad();</script>
@@ -83,11 +83,19 @@
     "@type": "Article",
     "publisher": {
         "@type": "Organization",
-        "name": 
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
     },
     "author": {
         "@type": "Person",
         "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
         
         "url": https://jordonyang.github.io/,
         "sameAs": [
@@ -193,9 +201,11 @@
   
   <header class="main-header post-head" style="background-image: url(/images/post-images/gc.jpg)">
   
-  <nav class="main-nav overlay clearfix">
 
+<nav class="main-nav overlay clearfix">
 
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
   
   
       <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
@@ -438,6 +448,10 @@
 
 
 
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
 
 <section class="author">
   <h4><a href="https://jordonyang.github.io/">临风</a></h4>
@@ -492,7 +506,7 @@
 
   <aside class="read-next">
   
-      <a class="read-next-story" style="background-image: url(/images/post-images/hashMap1.jpg)" href="https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/">
+      <a class="read-next-story" style="no-cover" href="https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/">
           <section class="post">
               <h2>基于JDK1.7的HashMap源码阅读</h2>
               
