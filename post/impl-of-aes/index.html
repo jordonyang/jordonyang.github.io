@@ -14,13 +14,13 @@
 
 
 
-<meta name="twitter:title" content="AES加密算法原理及实现"/>
+<meta name="twitter:title" content="基于原理逐步实现AES加密算法"/>
 <meta name="twitter:description" content="implementation of AES algorithm"/>
 <meta name="twitter:site" content="@"/>
 
 
 
-  	<meta property="og:title" content="AES加密算法原理及实现 &middot; 临风博客" />
+  	<meta property="og:title" content="基于原理逐步实现AES加密算法 &middot; 临风博客" />
   	<meta property="og:site_name" content="临风博客" />
   	<meta property="og:url" content="https://jordonyang.github.io/post/impl-of-aes/" />
 
@@ -40,7 +40,7 @@
     
     
 
-    <title>AES加密算法原理及实现 &middot; 临风博客</title>
+    <title>基于原理逐步实现AES加密算法 &middot; 临风博客</title>
 
     
     <meta name="description" content="implementation of AES algorithm" />
@@ -101,9 +101,9 @@
             
         ]
     },
-    "headline": AES加密算法原理及实现,
-    "name": AES加密算法原理及实现,
-    "wordCount": 1969,
+    "headline": 基于原理逐步实现AES加密算法,
+    "name": 基于原理逐步实现AES加密算法,
+    "wordCount": 1973,
     "timeRequired": "PT10M",
     "inLanguage": {
       "@type": "Language",
@@ -201,6 +201,42 @@
       <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
   
   </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">基于原理逐步实现AES加密算法</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
 </header>
 
 
@@ -211,25 +247,28 @@
 
 
   <article class="post post">
-
+    
     <header class="post-header">
-        <h1 class="post-title">AES加密算法原理及实现</h1>
-        <small>implementation of AES algorithm</small>
+        <h1 class="post-title">基于原理逐步实现AES加密算法</h1>
+        <em style="color: blue">implementation of AES algorithm</em>
 
         <section class="post-meta">
         
-          <time class="post-date" datetime="2018-10-18T22:23:44&#43;08:00">
-            Oct 18, 2018
-          </time>
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span> &nbsp; &nbsp;  
+         
         
-         
-          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span>
-         
-          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span>
-         
-        </section>
-    </header>
 
+          <time class="post-date" datetime="2018-10-18T22:23:44&#43;08:00">
+            2018/Oct/18
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
     <section class="post-content">
       
 
@@ -324,7 +363,7 @@
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/state1.png" alt="img" /></p>
 
-<p>根据Rinjdael算法的定义，加密轮数会针对不同的分组及不同的密钥长度选择不同的数值</p>
+<p>根据Rijndael算法的定义，加密轮数会针对不同的分组及不同的密钥长度选择不同的数值</p>
 
 <p><img src="https://github.com/threeworld/encrypt/raw/master/AES/pic/10.png" alt="img" /></p>
 
@@ -451,7 +490,7 @@ private short[][] generateRoundKeys(short[][] originalKey) {
 <ul>
 <li><p>将输入字节用其GF(2<sup>8</sup>)上的逆来代替</p></li>
 
-<li><p>对上面的结果作如下的仿射变换： （以x0－ x7作输入，以y0－ y7作输出）</p></li>
+<li><p>对上面的结果作如下的仿射变换： （以x<sub>0</sub>－ x<sub>7</sub>作输入，以y<sub>0</sub>－ y<sub>7</sub>作输出）</p></li>
 </ul>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/sbb.png" alt="img" /></p>
@@ -471,7 +510,7 @@ private short[][] generateRoundKeys(short[][] originalKey) {
 
 <p>​         <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/subbytes1.png" alt="img" /></p>
 
-<p>实现S盒最快的方法就是，直接算出S盒的变换结果并造表存储，使用时直接查表（表大小为256个字节）。查表的方法是：取一个字节的高低4位分别作为行号和列号，通过行列号定位到的表中的元素即为新的替代字节。如下图左表中的32，</p>
+<p>实现S盒最快的方法就是，直接算出S盒的变换结果并造表存储，使用时直接查表（表大小为256个字节）。查表的方法是：取一个字节的高低4位分别作为行号和列号，通过行列号定位到的表中的元素即为新的替代字节。如下图左表中的d4，</p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/sbsb.png" alt="img" /></p>
 
@@ -524,7 +563,7 @@ private short substituteByte(short originalByte, short[][] substituteTable) {
 
 <p>​                               <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/ShiftRows.png" alt="img" /></p>
 
-<p>行移位变换对状态的行进行循环移位。 第 0行不移位，第1行移C1字节， 第2行移C2字节， 第3行移C3字节。C1， C2， C3按表取值:</p>
+<p>行移位变换对状态的行进行循环移位。 第0行不移位，第1行移C<sub>1</sub>字节， 第2行移C<sub>2</sub>字节， 第3行移C<sub>3</sub>字节。C<sub>1</sub>， C<sub>2</sub>， C<sub>3</sub>按表取值:</p>
 
 <table>
 <thead>
@@ -560,7 +599,7 @@ private short substituteByte(short originalByte, short[][] substituteTable) {
 </tbody>
 </table>
 
-<p>行移位变换属于置换，属于线性变换，本质在于把数据打乱 重排，起扩散作用。</p>
+<p>行移位变换属于置换，属于线性变换，本质在于把数据打乱、重排，起扩散作用。</p>
 
 <p><strong>代码实现</strong></p>
 
@@ -675,9 +714,9 @@ private short multiply(short a, short b) {
 <h3 id="6-对外加密接口">6. 对外加密接口</h3>
 
 <ul>
-<li>将字符串形式的明文和密钥分别转换为Nb个字长的状态和Nk个字长的主密钥数组</li>
+<li>将字符串形式的明文和密钥分别转换为N<sub>b</sub>个字长的状态和N<sub>k</sub>个字长的主密钥数组</li>
 <li>通过主密钥数组生成轮密钥数组</li>
-<li>将二维轮密钥数组转换成三维数组方便以Nk个字长为单位获取轮密钥</li>
+<li>将二维轮密钥数组转换成三维数组方便以N<sub>k</sub>个字长为单位获取轮密钥</li>
 <li>调用coreEncrypt方法，指定S盒运算表，列混合中用到的CX运算表和行变换每个字节的移位规则表</li>
 <li>将最后获取到密文状态用Base64编码</li>
 </ul>
@@ -756,7 +795,7 @@ private short[][] coreEncrypt(short[][] initialPTState,
 
 <h4 id="2-shiftrows">( 2 ) ShiftRows</h4>
 
-<p>行移位变换的逆是状态的后三行分别移位Nb-C1， Nb-C2， Nb-C3个字节。</p>
+<p>行移位变换的逆是状态的后三行分别移位N<sub>b</sub> - C<sub>1</sub>， N</sub>b</sub> - C<sub>2</sub>， N<sub>b</sub> - C<sub>3</sub>个字节。</p>
 
 <h4 id="3-mixcolumns">( 3 ) MixColumns</h4>
 
@@ -770,7 +809,7 @@ private short[][] coreEncrypt(short[][] initialPTState,
 
 <h4 id="4-subbytes">( 4 ) SubBytes</h4>
 
-<p>S盒变换的逆要先进行逆仿射变换，再把每个字节用其在GF(28)中的逆来代替。</p>
+<p>S盒变换的逆要先进行逆仿射变换，再把每个字节用其在GF(2<sup>8</sup>)中的逆来代替。</p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/inversesb.png" alt="img" /></p>
 
@@ -1069,7 +1108,7 @@ plaintext                     passwordTextCase
 <h3 id="2-todo">2. TODO</h3>
 
 <ul>
-<li>本例子以AES-128为例，明文小于128位应该进行填充; 大于64位应该进行分组，待加密完成后进行密文的合并</li>
+<li>本例子以AES-128为例，明文小于128位应该进行填充; 大于128位应该进行分组，待加密完成后进行密文的合并</li>
 <li>没有就数据编码进行扩展，暂不支持中文数据加密</li>
 <li>实现的是最简单的电码本（ECB）工作模式，暂不支持其他模式明文数据模式</li>
 </ul>
@@ -1120,7 +1159,7 @@ plaintext                     passwordTextCase
     
 <section class="share">
   <h4>Share this post</h4>
-  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=AES%e5%8a%a0%e5%af%86%e7%ae%97%e6%b3%95%e5%8e%9f%e7%90%86%e5%8f%8a%e5%ae%9e%e7%8e%b0&nbsp;-&nbsp;%e4%b8%b4%e9%a3%8e%e5%8d%9a%e5%ae%a2&amp;url=https%3a%2f%2fjordonyang.github.io%2fpost%2fimpl-of-aes%2f"
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=%e5%9f%ba%e4%ba%8e%e5%8e%9f%e7%90%86%e9%80%90%e6%ad%a5%e5%ae%9e%e7%8e%b0AES%e5%8a%a0%e5%af%86%e7%ae%97%e6%b3%95&nbsp;-&nbsp;%e4%b8%b4%e9%a3%8e%e5%8d%9a%e5%ae%a2&amp;url=https%3a%2f%2fjordonyang.github.io%2fpost%2fimpl-of-aes%2f"
       onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
       <span class="hidden">Twitter</span>
   </a>
@@ -1128,7 +1167,7 @@ plaintext                     passwordTextCase
       onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
       <span class="hidden">Facebook</span>
   </a>
-  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fjordonyang.github.io%2fpost%2fimpl-of-aes%2f&amp;description=AES%e5%8a%a0%e5%af%86%e7%ae%97%e6%b3%95%e5%8e%9f%e7%90%86%e5%8f%8a%e5%ae%9e%e7%8e%b0"
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fjordonyang.github.io%2fpost%2fimpl-of-aes%2f&amp;description=%e5%9f%ba%e4%ba%8e%e5%8e%9f%e7%90%86%e9%80%90%e6%ad%a5%e5%ae%9e%e7%8e%b0AES%e5%8a%a0%e5%af%86%e7%ae%97%e6%b3%95"
       onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
       <span class="hidden">Pinterest</span>
   </a>

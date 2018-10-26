@@ -201,6 +201,42 @@
       <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
   
   </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">DES加密算法原理及实现</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
 </header>
 
 
@@ -211,25 +247,28 @@
 
 
   <article class="post post">
-
+    
     <header class="post-header">
         <h1 class="post-title">DES加密算法原理及实现</h1>
-        <small>implementation of DES algorithm</small>
+        <em style="color: blue">implementation of DES algorithm</em>
 
         <section class="post-meta">
         
-          <time class="post-date" datetime="2018-10-09T22:06:42&#43;08:00">
-            Oct 9, 2018
-          </time>
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span> &nbsp; &nbsp;  
+         
         
-         
-          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span>
-         
-          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span>
-         
-        </section>
-    </header>
 
+          <time class="post-date" datetime="2018-10-09T22:06:42&#43;08:00">
+            2018/Oct/9
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
     <section class="post-content">
       
 
@@ -292,7 +331,7 @@
 <ul>
 <li>64位密钥经子密钥产生算法产生出16个子密钥： K<sub>1</sub>, K<sub>2</sub>, &hellip;, K<sub>16</sub> ， 分别供第一次, 第二次, &hellip;, 第十六次加密迭代使用。</li>
 <li>64位明文经初始置换IP， 将数据打乱重排并分成左右两半。左边32位构成L<sub>0</sub> ， 右边2位构成R<sub>0 </sub>。</li>
-<li>第一次加密迭代：由加密函数f实现子密钥k<sub>1</sub>对R<sub>0</sub>的加密，得到32位的f(R<sub>0</sub>, K<sub>1</sub>)，然后L0⊕f(R<sub>0</sub>, K<sub>1</sub>)，32位的结果作为第二次加密迭代的R<sub>1</sub>，以R<sub>0</sub>作为第二次加密迭代的L<sub>1</sub>。<br /></li>
+<li>第一次加密迭代：由加密函数f实现子密钥k<sub>1</sub>对R<sub>0</sub>的加密，得到32位的f(R<sub>0</sub>, K<sub>1</sub>)，然后L<sub>0</sub>⊕f(R<sub>0</sub>, K<sub>1</sub>)，32位的结果作为第二次加密迭代的R<sub>1</sub>，以R<sub>0</sub>作为第二次加密迭代的L<sub>1</sub>。<br /></li>
 <li>第二次加密迭代至第十六次加密迭代分别用子密钥K<sub>2</sub> ,&hellip;, K<sub>16</sub>进行，其过程与第一次加密迭代相同。</li>
 <li>第十六次加密迭代结束后，产生一个64位的数据组，以其左边32位作为R<sub>16</sub>， 以其右边32位作为L<sub>16</sub> 。</li>
 <li>R<sub>16</sub>与L<sub>16</sub>合并，再经过逆初始置换IP， 将数据重新排列，便得到64位密文。<br /></li>
@@ -314,28 +353,28 @@
 
 <ul>
 <li>去掉密钥中的8个奇偶校验位。</li>
-<li>把其余的56位打乱重排，将前28位作为C0， 后28位作为D<sub>0</sub>。<br /></li>
+<li>把其余的56位打乱重排，将前28位作为C<sub>0</sub>， 后28位作为D<sub>0</sub>。<br /></li>
 </ul>
 
-<p>置换规则：C0的各位依次为原密钥的第57, 49, &hellip;, 1, &hellip;, 44, 36位；D0的各位依次为原密钥的第63, 55, &hellip;, 7, &hellip;, 12, 4位。</p>
+<p>置换规则：C<sub>0</sub>的各位依次为原密钥的第57, 49, &hellip;, 1, &hellip;, 44, 36位；D<sub>0</sub>的各位依次为原密钥的第63, 55, &hellip;, 7, &hellip;, 12, 4位。</p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/replaceselect1.png" alt="img" /></p>
 
 <h4 id="2-循环左移-left-shift">( 2 ). 循环左移 （Left Shift）</h4>
 
-<p>对Ci ， Di分别循环左移n位，其中n是会随着迭代次数变化的，其与迭代次数映射表如下所示</p>
+<p>对C<sub>i</sub> ， D<sub>i</sub>分别循环左移n位，其中n是会随着迭代次数变化的，其与迭代次数映射表如下所示</p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/is.png" alt="img" /></p>
 
 <h4 id="3-置换选择2-permuted-choice-2">( 3 ). 置换选择2 （Permuted Choice 2）</h4>
 
-<p>64位的密钥分成32位的两份，进过置换选择后各成为28位的数据（即C<sub>0</sub>和D<sub>0</sub>），就是说Ci和Di都是28位的数据。将Ci和Di合并成一个56位的数据，置换选择2从中选出一个48位的子密钥K<sub>i</sub>。规定子密钥Ki的56位依次是该56位中间数据的第14, 17, &hellip;, 5, 3, &hellip;, 29, 32位，其置换表如下所示</p>
+<p>64位的密钥分成32位的两份，进过置换选择后各成为28位的数据（即C<sub>0</sub>和D<sub>0</sub>），就是说C<sub>i</sub>和D<sub>i</sub>都是28位的数据。将C<sub>i</sub>和D<sub>i</sub>合并成一个56位的数据，置换选择2从中选出一个48位的子密钥K<sub>i</sub>。规定子密钥Ki的56位依次是该56位中间数据的第14, 17, &hellip;, 5, 3, &hellip;, 29, 32位，其置换表如下所示</p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/R23.png" alt="img" /></p>
 
 <h4 id="4-代码实现">( 4 ). 代码实现</h4>
 
-<p>为了方便理清生成子密钥的逻辑，其中的打印输出的代码并没有给出，完整源码见该项目Github仓库</p>
+<p>为了方便理清生成子密钥的逻辑，其中的打印输出的代码并没有给出，完整源码见项目Github仓库</p>
 
 <pre><code class="language-java">/**
  * 生成16个48位的子密钥
@@ -372,7 +411,7 @@ private char[][] generateSubKeys(char[] keyBytes) {
 
 <h3 id="3-加密函数">3. 加密函数</h3>
 
-<p>加密函数是DES的核心，它的租用是在第i次迭代中用子密钥Ki对R<sub>i-1</sub>进行加密。其运行规则是：在第i次迭代加密中选择运算E对32位的R<sub>i-1</sub>的各位进行选择排列，产生48位的结果，此结果与48位的子密钥进行异或运算，然后送入替代函数组S。S由8个替代函数（替代盒，Substitute Box）组成，每个S盒有6位输入和4位输出。8个S盒的输出合并得到一个32位的数组，此数据组经过置换运算P，将各位打乱重排，得到的结果便是加密函数的返回值f(R<sub>i-1</sub>, K<sub>i</sub>)。</p>
+<p>加密函数是DES的核心，它的租用是在第i次迭代中用子密钥K<sub>i</sub>对R<sub>i-1</sub>进行加密。其运行规则是：在第i次迭代加密中选择运算E对32位的R<sub>i-1</sub>的各位进行选择排列，产生48位的结果，此结果与48位的子密钥进行异或运算，然后送入替代函数组S。S由8个替代函数（替代盒，Substitute Box）组成，每个S盒有6位输入和4位输出。8个S盒的输出合并得到一个32位的数组，此数据组经过置换运算P，将各位打乱重排，得到的结果便是加密函数的返回值f(R<sub>i-1</sub>, K<sub>i</sub>)。</p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/sbox.png" alt="img" /></p>
 
@@ -445,7 +484,7 @@ private char[] coreEncrypt(char[] right, char[] subKey) {
 <ul>
 <li>64位密钥经子密钥产生算法产生出16个子密钥： K<sub>1</sub>, K<sub>2</sub>, &hellip;, K<sub>16</sub> ， 分别供第一次, 第二次, &hellip;, 第十六次加密迭代使用。</li>
 <li>64位明文经初始置换IP， 将数据打乱重排并分成左右两半。左边32位构成L<sub>0</sub> ， 右边2位构成R<sub>0 </sub>。</li>
-<li>第一次加密迭代：由加密函数f实现子密钥k<sub>1</sub>对R<sub>0</sub>的加密，得到32位的f(R<sub>0</sub>, K<sub>1</sub>)，然后L0⊕f(R<sub>0</sub>, K<sub>1</sub>)，32位的结果作为第二次加密迭代的R<sub>1</sub>，以R<sub>0</sub>作为第二次加密迭代的L<sub>1</sub>。<br /></li>
+<li>第一次加密迭代：由加密函数f实现子密钥k<sub>1</sub>对R<sub>0</sub>的加密，得到32位的f(R<sub>0</sub>, K<sub>1</sub>)，然后L<sub>0</sub>⊕f(R<sub>0</sub>, K<sub>1</sub>)，32位的结果作为第二次加密迭代的R<sub>1</sub>，以R<sub>0</sub>作为第二次加密迭代的L<sub>1</sub>。<br /></li>
 <li>第二次加密迭代至第十六次加密迭代分别用子密钥K<sub>2</sub> ,&hellip;, K<sub>16</sub>进行，其过程与第一次加密迭代相同。</li>
 <li>第十六次加密迭代结束后，产生一个64位的数据组，以其左边32位作为R<sub>16</sub>， 以其右边32位作为L<sub>16</sub> 。</li>
 <li>R<sub>16</sub>与L<sub>16</sub>合并，再经过逆初始置换IP， 将数据重新排列，便得到64位密文。<br /></li>
@@ -455,7 +494,7 @@ private char[] coreEncrypt(char[] right, char[] subKey) {
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/desMain.png" alt="img" /></p>
 
-<p>整体的加密过程函数</p>
+<p>整体的加密过程主要函数的代码实现如下</p>
 
 <pre><code class="language-java">/**
  * 对外的加密接口，主要逻辑封装在encode方法中
@@ -1151,7 +1190,7 @@ decrypt plaintext text        01234567
   
       <a class="read-next-story" style="background-image: url(/images/post-images/aes.jpg)" href="https://jordonyang.github.io/post/impl-of-aes/">
           <section class="post">
-              <h2>AES加密算法原理及实现</h2>
+              <h2>基于原理逐步实现AES加密算法</h2>
               
           </section>
       </a>
