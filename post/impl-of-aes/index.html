@@ -56,6 +56,17 @@
     <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
     
     
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+    
 
     
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/atom-one-light.min.css">
@@ -111,7 +122,7 @@
     },
     "headline": 基于原理逐步实现AES加密算法,
     "name": 基于原理逐步实现AES加密算法,
-    "wordCount": 1968,
+    "wordCount": 1973,
     "timeRequired": "PT10M",
     "inLanguage": {
       "@type": "Language",
@@ -486,7 +497,14 @@ private short[][] generateRoundKeys(short[][] originalKey) {
 
 <h4 id="1-s盒变换-bytesub">（1）S盒变换 (ByteSub)</h4>
 
-<p>一种作用在状态中每一个字节上的非线性变换，按以下两步进行：</p>
+<p>一种作用在状态中每一个字节上的非线性变换，对比于DES</p>
+
+<ul>
+<li>因为AES-126明文数据块为16个字节，所以AES使用16个相同的S盒(其实是可重复16次使用同一个)；DES使用8个不相同的S盒。</li>
+<li>AES的S盒有8位输入8位输出，是一种非线性置换；DES的S盒有6位输入4位输出，是一种非线性压缩。<br /></li>
+</ul>
+
+<p>AES的S盒变换可按以下两步进行：</p>
 
 <ul>
 <li><p>将输入字节用其GF(2<sup>8</sup>)上的逆来代替</p></li>
@@ -622,7 +640,7 @@ private static short[][] shiftRows(short[][] state, short[][] shiftingTable) {
 }
 </code></pre>
 
-<h4 id="3-列混合变换-mixcolumn">（3）列混合变换      (MixColumn )</h4>
+<h4 id="3-列混合变换-mixcolumn">（3）列混合变换      (MixColumn)</h4>
 
 <p>​                                                      <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/mc.png" alt="img" /></p>
 
@@ -632,7 +650,7 @@ private static short[][] shiftRows(short[][] state, short[][] shiftingTable) {
 
 <ul>
 <li>列混合变换属于线性变换，起扩散作用。</li>
-<li>c(x)与x<sup>4</sup> +1互素，从而保证c(x)存在逆多项式d(x),而 c(x)d(x) = 1 mod x<sup>4</sup>+1 。 只有逆多项式d(x)存在，才能正确进行解密<br /></li>
+<li>c(x)与x<sup>4</sup> + 1互素，从而保证c(x)存在逆多项式d(x),而 c(x)d(x) = 1 mod x<sup>4</sup> + 1 。 只有逆多项式d(x)存在，才能正确进行解密<br /></li>
 </ul>
 
 <p><strong>代码实现</strong></p>
@@ -1162,25 +1180,15 @@ plaintext                     passwordTextCase
 
 
     
-<section class="share">
-  <h4>Share this post</h4>
-  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=%e5%9f%ba%e4%ba%8e%e5%8e%9f%e7%90%86%e9%80%90%e6%ad%a5%e5%ae%9e%e7%8e%b0AES%e5%8a%a0%e5%af%86%e7%ae%97%e6%b3%95&nbsp;-&nbsp;%e4%b8%b4%e9%a3%8e%e5%8d%9a%e5%ae%a2&amp;url=https%3a%2f%2fjordonyang.github.io%2fpost%2fimpl-of-aes%2f"
-      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-      <span class="hidden">Twitter</span>
-  </a>
-  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fjordonyang.github.io%2fpost%2fimpl-of-aes%2f"
-      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-      <span class="hidden">Facebook</span>
-  </a>
-  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fjordonyang.github.io%2fpost%2fimpl-of-aes%2f&amp;description=%e5%9f%ba%e4%ba%8e%e5%8e%9f%e7%90%86%e9%80%90%e6%ad%a5%e5%ae%9e%e7%8e%b0AES%e5%8a%a0%e5%af%86%e7%ae%97%e6%b3%95"
-      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
-      <span class="hidden">Pinterest</span>
-  </a>
-  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=https%3a%2f%2fjordonyang.github.io%2fpost%2fimpl-of-aes%2f"
-     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-      <span class="hidden">Google+</span>
-  </a>
-</section>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+	<a href="#" class="bds_tqq" data-cmd="tqq"></a>
+	<a href="#" class="bds_renren" data-cmd="renren"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin"></a>
+</div>
 
 
 
