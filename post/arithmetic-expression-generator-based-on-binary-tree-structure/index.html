@@ -410,7 +410,7 @@
 
 <p>一个算术表达式可以由多个子表达式组成，一个子表达式运算完的结果又可以作为操作数参与另一个子表达式的运算，这样的结构让人很容易想到二叉树，而事实上通过谷歌搜索关于表达式方面的编程信息时，更多被提及的是<code>Expression Tree</code> ， 而<code>Expression Tree</code> 的经典实现就是使用二叉树（参见<a href="https://en.wikipedia.org/wiki/Binary_expression_tree">Wikipedia </a>）</p>
 
-<p><img src="https://cdncontribute.geeksforgeeks.org/wp-content/uploads/expression-tree.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//expression-tree.png" alt="img" /></p>
 
 <p>二叉表达式树的特点有：</p>
 
@@ -449,29 +449,29 @@
 
 <p>二叉表达式树及其结点的类签名如下</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/base.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//base.png" alt="img" /></p>
 
 <h4 id="2-构建二叉表达式树">( 2 ) 构建二叉表达式树</h4>
 
 <p>在构造方法中随机生成一个操作符作为根结点的数据，指定操作符的个数为下面插入操作符结点做准备，指定<code>range</code> 限制书中数据结点的数据范围， 然后调用初始化方法<code>init()</code> ；而初始化方法中主要是随机插入<code>operatorCount</code> 个操作符结点以及根据这些操作符结点的位置插入数据结点。</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/init1.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//init1.png" alt="img" /></p>
 
 <h4 id="3-递归插入运算符结点">( 3 ) 递归插入运算符结点</h4>
 
 <p>随机决定插入操作符的位置是当前处理结点的左或者右结点，通过操作符类型的随机性及操作符位置的随机性减少构造出来表达式出现重复的概率</p>
 
-<p>​      <img src="http://pezmn9eoj.bkt.clouddn.com/insertOperators.png" alt="img" /></p>
+<p>​      <img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//insertOperators.png" alt="img" /></p>
 
 <p>以含有三个操作符的二叉表达式树为例，假如随机产生的操作符依次为<code>+</code> 、<code>÷</code>、<code>-</code>，则进行完当前操作后，可能出现的树形结构有：</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/bt2.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//bt2.png" alt="img" /></p>
 
 <h4 id="4-插入数据结点">( 4 ) 插入数据结点</h4>
 
 <p>逻辑比较简单，看注释即可</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/in.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//in.png" alt="img" /></p>
 
 <h4 id="5-中序递归遍历二叉树">( 5 ) 中序递归遍历二叉树</h4>
 
@@ -484,33 +484,33 @@
 <li>如果当前处理结点是操作符结点，通过<code>parent</code> 引用获取当前处理结点的父结点，判断当前处理结点的的优先级是否低于父结点操作符的优先级，若是，在子表达式加上左右括号</li>
 </ul>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/it1.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//it1.png" alt="img" /></p>
 
 <p>每个结点的遍历结果都存放到一个<code>TraverseResult</code> 对象中，其中包含了该结点对应的子表达式（形如1、1 + 2、(1 + 2) x 3 ）及其运算结果，想获取表达式树的完整表达式，只需调用该树对象的<code>getResult()</code>方法即可</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/tr.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//tr.png" alt="img" /></p>
 
 <p>假设随机产生的数字序列为<code>7</code>、<code>8</code>、<code>5</code>、<code>4</code> ，则在上述构造的树形基础上插入数字后得到的完整表达式树结构及其中序遍历的结果如下图所示：</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/inorder.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//inorder.png" alt="img" /></p>
 
 <h4 id="6-运算">( 6 ) 运算</h4>
 
 <p>数据结点的数据类型全为分数</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/fraction.png" alt="IMG" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//fraction.png" alt="IMG" /></p>
 
 <p>通过随机函数产生分子和分母，然后构造<code>Fraction</code> 对象，在构造中当内部属性赋值完之后调用<code>reduce</code> 方法进行化简；重写<code>toString()</code> 方法，主要用于分数的打印展示，处理带分数和整数的情况。</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/ru.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//ru.png" alt="img" /></p>
 
 <p>使用操作符枚举类定义操作符号与计算器的对应规则</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/symbol.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//symbol.png" alt="img" /></p>
 
 <p>具体的运算逻辑封装在<code>Calculator</code> 类中，只需通过<code>Symbol</code> 枚举类获取到当前操作符对应的计算器然后调用<code>calculate</code>方法即可。</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/Calculator.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//Calculator.png" alt="img" /></p>
 
 <h4 id="7-程序入口">( 7 ) 程序入口</h4>
 
@@ -518,11 +518,11 @@
 
 <p><strong>写入题目和答案</strong> ：随机产生运算符个数（最大为3个），结合指定的数据最大取值范围及题目数量构造若干表达式树，获取这些表达式树的中序遍历结果塞进集合<code>results</code>， 将<code>results</code>丢给<code>writeList</code>函数处理写入文件逻辑</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/write.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//write.png" alt="img" /></p>
 
 <p><strong>比对答案</strong> ：同时打开正确答案文件和用户提交的答案文件，逐行比对，用集合记录正误的题目标号，然后对集合中的数据进行格式输出处理，将得到的正误情况写入文件。</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/com.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//com.png" alt="img" /></p>
 
 <h2 id="三-测试运行">三. 测试运行</h2>
 
@@ -539,7 +539,7 @@
 <li>Grade.txt ：对答案结果文件</li>
 </ul>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/res.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//res.png" alt="img" /></p>
 
 <p>测试用例在项目的<a href="https://github.com/jordonyang/ExpressionGenerator/tree/master/test-result">test-result</a>文件夹中</p>
 
@@ -547,13 +547,13 @@
 
 <p>使用<code>maven</code>插件对<a href="https://github.com/jordonyang/ExpressionGenerator/blob/master/src/test/java/github/pair/generator/AppTest.java">测试文件</a>进行代码覆盖率统计，结果如下所示，有些地方（比如要将入口程序类实例化）并没有必要写进测试文件，所以统计达到的覆盖会比实际需要用到的样例测试低。</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/coverage.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//coverage.png" alt="img" /></p>
 
 <h2 id="四-效能分析">四. 效能分析</h2>
 
 <p>在i5-3230M处理器，win10 64位操作系统，12GB主存的机器上，简单统计生成10、100、1000、10000、100000道操作符数为3、操作数最大取值为100的题目并进行遍历的所用的时间</p>
 
-<p><img src="http://pezmn9eoj.bkt.clouddn.com/ANALY.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//ANALY.png" alt="img" /></p>
 
 <p><strong>影响效能的因素：</strong></p>
 
