@@ -289,31 +289,31 @@
 
 <p>然而，纵观 <code>start</code> 方法，并没有找到 <code>run</code> 这个词，那<code>run</code>方法又是在哪里被调用的呢？其中最有嫌疑的地方就是<code>native方法start0</code>。</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/run.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/run.png" alt="img" /></p>
 
 <!-- more -->
 
 <p>Thread 类有个 <code>registerNatives</code> 本地方法，该方法主要的作用就是注册一些本地方法供 Thread 类使用，如 start0()，stop0() 等等，可以说，所有操作本地线程的本地方法都是由它注册的。这个方法放在一个静态代码块中，当 <code>Thread</code> 类被加载到 <code>JVM</code> 中的时候，它就会被调用，进而注册相应的本地方法。
 而本地方法 <code>registerNatives</code> 是定义在 <code>openjdk\jdk\src\share\native\java\lang\Thread.c文件</code> 中的。<code>Thread.c</code> 是个很小的文件，它定义了各个操作系统平台都要用到的关于线程的公用数据和操作，如下：</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/theadcpp.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/theadcpp.png" alt="img" /></p>
 
 <p>可以容易的看出 Java 线程调用<code>start-&gt;start0</code>的方法，实际上会调用到 <code>JVM_StartThread</code> 方法，而 <code>JVM_StartThread</code> 方法则是在<code>openjdk\hotspot\src\share\vm\prims\jvm.cpp</code>中定义的</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/jvmcpp1.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/jvmcpp1.png" alt="img" /></p>
 
 <p><code>JVM_ENTRY</code> 作为一个宏，用来定义 <code>JVM_StartThread</code> 函数，可以看到函数内创建了真正的平台相关的本地线程，其线程函数是 <code>thread_entry</code>，如下：</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/jvmcpp2.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/jvmcpp2.png" alt="img" /></p>
 
 <p>可见其中调用了 <code>vmSymbols::run_method_name</code> 方法，
 而 <code>run_method_name</code> 是在 <code>openjdk\hotspot\src\share\vm\classfile\vmSymbols.hpp</code> 中用宏定义的：</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/vmSymbolshpp.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/vmSymbolshpp.png" alt="img" /></p>
 
 <p>这样不难想象到执行 <code>Thread.start()</code> 后的底层调用过程</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/presson2.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/presson2.png" alt="img" /></p>
 
 <h3 id="二-拓展">二. 拓展</h3>
 
@@ -323,43 +323,43 @@
 
 <p>任务类继承Thread类，并覆盖它的run方法</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/subthread.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/subthread.png" alt="img" /></p>
 
 <p>当 <code>subThread</code> 调用父类的start方法时，由上面的过程可以知道，在JVM申请CPU线程资源并开启线程后，会执行 <code>Thread类</code> 的 <code>run</code> 方法,而由于<code>JVM</code>多态支持，最终调用的是 <code>SubThread</code> 的 <code>run</code> 方法，从而实现在一个线程中完成任务。</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/presson3.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/presson3.png" alt="img" /></p>
 
 <h4 id="2-实现runnable接口">2. 实现Runnable接口</h4>
 
 <p>任务类实现 <code>Runnable</code> 接口，然后直接用该任务类对象来创建线程</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/runnableImpl.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/runnableImpl.png" alt="img" /></p>
 
 <p>在Thread类中有一个私有的<code>Runnable</code>类型的<code>target</code>属性，该属性在调用<code>Thread(Runnable target)</code>后将指向传入任务类对象</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/threadtarget.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/threadtarget.png" alt="img" /></p>
 
 <p>同样地，在调用完<code>Thread</code>的<code>start</code>方法后，将执行<code>Thread</code>的<code>run</code>方法，由于<code>RunnableImpl</code>和<code>Thread</code>并没有继承关系，最终还是执行<code>Thread.run()</code>：</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/threadrun.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/threadrun.png" alt="img" /></p>
 
 <p>可见通过在Thread中代理Runnable接口，可以处理任何线程任务，只要它们继承了<code>Runnable</code>接口，最终JVM都会通过<code>Thread</code>的<code>run</code>方法找到<code>RunnableImpl</code>的<code>run</code>方法，将其中的任务加入线程中。</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/presson4.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/presson4.png" alt="img" /></p>
 
 <h4 id="3-考虑一次性线程">3. 考虑一次性线程</h4>
 
 <p>有些线程只需执行一次便被回收，这时可以使用匿名内部类的方式创建线程，以上的两者中方式可以换做</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/at1.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/at1.png" alt="img" /></p>
 
 <p>其执行过程与上面的基本类似，但是如果同时使用这两钟方式创建线程呢？到底谁的<code>run</code>方法会执行？</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/at2.png" alt="iimg" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/at2.png" alt="iimg" /></p>
 
 <p>虽然<code>Thread</code>的<code>target</code>属性指向了<code>Runnable</code>的匿名实现类对象，但是由于<code>JVM</code>的多态实现，最终并没有执行<code>Thread</code>的<code>run</code>方法，而是执行<code>Thread</code>的匿名子类中的<code>run</code>方法。</p>
 
-<p><img src="http://p9xt4vbqr.bkt.clouddn.com/presson5.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/thread/presson5.png" alt="img" /></p>
 
     </section>
 
@@ -419,13 +419,25 @@
 
 
     
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
 
+       if (typeof LivereTower === 'function') { return; }
 
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
 
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
 
-
-
-
+    
   </footer>
 </article>
 

@@ -111,7 +111,7 @@
     },
     "headline": 基于原理逐步实现AES加密算法,
     "name": 基于原理逐步实现AES加密算法,
-    "wordCount": 1973,
+    "wordCount": 1968,
     "timeRequired": "PT10M",
     "inLanguage": {
       "@type": "Language",
@@ -415,7 +415,7 @@ private short[][] xor(short[][] first, short[][] second) {
 }
 </code></pre>
 
-<h3 id="4-轮密钥生成-generateroundkeys">4.  轮密钥生成 （GenerateRoundKeys ）</h3>
+<h3 id="4-轮密钥生成-generateroundkeys">4.  轮密钥生成 （GenerateRoundKeys）</h3>
 
 <p>轮密钥根据密钥产生算法通过主密钥得到。密钥产生分两步进行： 密钥扩展和轮密钥选择，且郡守以下规则</p>
 
@@ -425,7 +425,7 @@ private short[][] xor(short[][] first, short[][] second) {
 <li>再从扩展密钥中选出轮密钥：第一个轮密钥由扩展中的前Nb个字组成（即原主密钥），第二个轮密钥是接下来的Nb个字，以此类推。</li>
 </ul>
 
-<h4 id="1-密钥扩展-keyexpansion">( 1 ) 密钥扩展  （KeyExpansion ）</h4>
+<h4 id="1-密钥扩展-keyexpansion">( 1 ) 密钥扩展  （KeyExpansion）</h4>
 
 <p>用一个字元素的一维数组<code>W[Nb*(Nr+1)]</code>表示扩展密钥。把密钥放在该数组最开始的Nk个字中，其它的字由它前面的字经过处理后得到。分Nk≤6 和Nk&gt;6两种密钥扩展算法：</p>
 
@@ -449,7 +449,7 @@ private short[][] xor(short[][] first, short[][] second) {
 
 <p>与Nk≤6 的密钥扩展相比， Nk&gt;6 的密钥扩展的不同之处在于：如果j被Nk除的余数＝4，则在异或之前，对W[j-1]进行ByteSub变换。</p>
 
-<p>增加ByteSub变换，是因为当Nk&gt;6时密钥很长， 仅仅对Nk的整数倍的位置处的字进行ByteSub变换，就显得ByteSub变换的密度较稀，安全程度不够强。</p>
+<p>增加ByteSub变换，是因为当Nk&gt;6时密钥很长，仅仅对Nk的整数倍的位置处的字进行ByteSub变换，就显得ByteSub变换的密度较稀，安全程度不够强。</p>
 
 <h4 id="2-轮密钥的选择">( 2 ) 轮密钥的选择</h4>
 
@@ -551,16 +551,16 @@ private short[] substituteWord(short[] aWord) {
  * @return substitution result, a new byte
  */
 private short substituteByte(short originalByte, short[][] substituteTable) {
-    // low 4 bits in a originByte
+    // low 4 bits in originByte
     int low4Bits = originalByte &amp; 0x000f;
-    // high 4 bits in a originByte
+    // high 4 bits in originByte
     int high4Bits = (originalByte &gt;&gt; 4) &amp; 0x000f;
     // obtain value in &lt;tt&gt;AESConstants.SUBSTITUTE_BOX&lt;/tt&gt;
     return substituteTable[high4Bits][low4Bits];
 }
 </code></pre>
 
-<h4 id="2-行移位变换-shiftrow">（2）行移位变换  (ShiftRow()</h4>
+<h4 id="2-行移位变换-shiftrows">（2）行移位变换  (ShiftRows)</h4>
 
 <p>​                               <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/ShiftRows.png" alt="img" /></p>
 
@@ -1185,13 +1185,25 @@ plaintext                     passwordTextCase
 
 
     
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
 
+       if (typeof LivereTower === 'function') { return; }
 
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
 
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
 
-
-
-
+    
   </footer>
 </article>
 

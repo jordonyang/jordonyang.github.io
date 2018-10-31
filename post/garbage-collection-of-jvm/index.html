@@ -7,9 +7,7 @@
 
     
     
-        
-        <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:image" content="/images/post-images/gc.jpg"/>
+        <meta name="twitter:card" content="summary"/>
     
 
 
@@ -25,7 +23,9 @@
   	<meta property="og:url" content="https://jordonyang.github.io/post/garbage-collection-of-jvm/" />
 
     
-       <meta property="og:image" content="/images/post-images/gc.jpg"/>
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
     
 
     
@@ -121,13 +121,6 @@
     "datePublished": 2018-08-04T23:25Z,
     "dateModified": 2018-08-04T23:25Z,
     
-    "image": {
-        "@type": "ImageObject",
-        "url": https://jordonyang.github.io/images/post-images/gc.jpg,
-        "width": 3000,
-        "height": 1445
-    },
-    
     "keywords": Java, JVM,
     "description": The Garbage Collection Mechanism of the Java Virtual Machine,
     "mainEntityOfPage": {
@@ -198,9 +191,7 @@
 
 
 
-  
-  <header class="main-header post-head" style="background-image: url(/images/post-images/gc.jpg)">
-  
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
 
 <nav class="main-nav overlay clearfix">
 
@@ -315,7 +306,7 @@
 
 <h3 id="2-可达性分析-reachability-analysis">2. 可达性分析（Reachability Analysis）</h3>
 
-<p><img src="http://pej9nyjbx.bkt.clouddn.com/gcroots.jpg" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/gcroots.jpg" alt="img" /></p>
 
 <p>从GC Roots开始向下搜索，搜索所走过的路径称为引用链。当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。不可达对象。</p>
 
@@ -338,7 +329,7 @@
 
 <h4 id="1-原始标记-清除算法-naïve-mark-and-sweep">（ 1 ）原始标记-清除算法 （Naïve mark-and-sweep）</h4>
 
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Animation_of_the_Naive_Mark_and_Sweep_Garbage_Collector_Algorithm.gif" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/ms.gif" alt="img" /></p>
 
 <p>每个对象在内存中都有一个标记位用于垃圾回收，标记该对象到 <code>GC roots</code> 是否可达，然后进行 <code>标记-清理</code> 过程</p>
 
@@ -349,7 +340,7 @@
 
 <p>之所以说它是最基础的收集算法，是因为后续的收集算法都是基于这种思路并对其缺点进行改进而得到的。</p>
 
-<p><img src="http://pej9nyjbx.bkt.clouddn.com/MARK-SWEEP.jpg" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/MARK-SWEEP.jpg" alt="img" /></p>
 
 <h4 id="2-三色标记-tri-color-marking">（ 2 ）三色标记 （Tri-color marking）</h4>
 
@@ -365,7 +356,7 @@
 
 <p>算法步骤：</p>
 
-<p><img src="http://pej9nyjbx.bkt.clouddn.com/tri-color.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/tri-color.png" alt="img" /></p>
 
 <ol>
 <li>从灰色集合中取出一个对象放入黑色集合</li>
@@ -384,7 +375,7 @@
 
 <h3 id="2-复制算法-copying">2. 复制算法（Copying）</h3>
 
-<p><img src="http://pej9nyjbx.bkt.clouddn.com/Copying.jpg" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/Copying.jpg" alt="img" /></p>
 
 <p>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。</p>
 
@@ -400,7 +391,7 @@
 
 <p><strong>目前大部分垃圾收集器对于新生代都采取Copying算法</strong>，因为新生代中每次垃圾回收都要回收大部分对象，也就是说需要复制的操作次数较少，但是实际中并不是按照1：1的比例来划分新生代的空间的，一般来说是将新生代划分为三块：一块较大的<code>Eden空间</code>和<code>两块较小的 Survivor空间</code>，这两块Survivor空间分别是<code>From区</code>和<code>To区</code> ，顾名思义分别是内存复制的源头和终点，但From与To又是相对的，它们会随着每次垃圾收集而发生变化。</p>
 
-<p><img src="http://pej9nyjbx.bkt.clouddn.com/younggc.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/younggc.png" alt="img" /></p>
 
 <p>大体上年轻代的清理过程如下</p>
 
@@ -418,7 +409,7 @@
 
 <p>不管怎样，都会保证 <code>Survivor空间的To区</code> 是空的。Minor GC会一直重复这样的过程，直到 <code>To</code> 区被填满，<code>To区</code> 被填满之后，会将所有对象移动到年老代中。</p>
 
-<p><img src="http://pej9nyjbx.bkt.clouddn.com/fendai.png" alt="img" /></p>
+<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/fendai.png" alt="img" /></p>
 
 <h4 id="2-老年代中的gc">( 2 ) 老年代中的GC</h4>
 
@@ -491,13 +482,25 @@
 
 
     
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
 
+       if (typeof LivereTower === 'function') { return; }
 
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
 
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
 
-
-
-
+    
   </footer>
 </article>
 
@@ -514,7 +517,7 @@
       </a>
   
   
-      <a class="read-next-story prev" style="background-image: url(/images/post-images/ll.jpg)" href="https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/">
+      <a class="read-next-story prev" style="no-cover" href="https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/">
           <section class="post">
               <h2>LinkedList源码阅读与分析</h2>
           </section>
