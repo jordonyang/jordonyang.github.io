@@ -306,7 +306,7 @@
 
 <h3 id="2-可达性分析-reachability-analysis">2. 可达性分析（Reachability Analysis）</h3>
 
-<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/gcroots.jpg" alt="img" /></p>
+<p><img src="./../images/gc/gcroots.jpg" alt="img" /></p>
 
 <p>从GC Roots开始向下搜索，搜索所走过的路径称为引用链。当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。不可达对象。</p>
 
@@ -329,7 +329,7 @@
 
 <h4 id="1-原始标记-清除算法-naïve-mark-and-sweep">（ 1 ）原始标记-清除算法 （Naïve mark-and-sweep）</h4>
 
-<p><img src="https://github.com/jordonyang/jordonyang.github.io/tree/master/images/gc/ms.gif" alt="img" /></p>
+<p><img src="./../../gc/ms.gif" alt="img" /></p>
 
 <p>每个对象在内存中都有一个标记位用于垃圾回收，标记该对象到 <code>GC roots</code> 是否可达，然后进行 <code>标记-清理</code> 过程</p>
 
