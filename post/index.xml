@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Thu, 18 Oct 2018 22:23:44 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 10 Nov 2018 10:01:04 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>流密码原理及RC4算法的实现</title>
+      <link>https://jordonyang.github.io/post/security/crypto/symmetry/rc4/</link>
+      <pubDate>Sat, 10 Nov 2018 10:01:04 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/symmetry/rc4/</guid>
+      <description>前言 分组密码每次处理一个输入分组，并为每个输入分组产生一个输出分组。流密码连续处理输入元素，在运行过程中，一次产生一个输出元素。尽管分组密码普遍得多，但对于一些特定的应用，使用流密码更合适。
+一. 流密码结构 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;典型的流密码一次加密一个字节的明文，尽管流密码可能设计成一次操作一个比特或者比字节大的单位。图2.7是流密码结构的示意图。在这个结构里，密钥输入到一个伪随机字节生成器，产生一个表面随机的8比特数据流。如果不知道输入密钥，伪随机流就不可预测的，而且它具有表面上随机的性质。这个生成器的输出称为密钥流，使用位异或操作与明文流结合，一次一个字节。例如，如果生成器产生的下一字节是01101100，明文的下一字节是11001100，那么得到的密文字节是： $$11001100 ⊕ 01101100 \ = \ 10100000$$ 解密需要同一伪随机序列： $$10100000 ⊕ 01101100 \ = \ 11001100 $$
+[KUMA97]列出了下列设计流密码时需要重要考虑的因素：
+ 加密序列应该有一个长周期。伪随机数生成器使用一个函数产生一个实际上不断重复的确定比特流。这个重复的周期越长，密码破解就越困难。 密钥流应该尽可能地接近真随机数流的性质。例如， 1和0的数目应该近似相等。如果将密钥流视作字节流，那么字节的256种可能值出现的频率应该近似相等。密钥流表现得越随机，密文就越随机化，密码破译就越困难。 图2.6指出了伪随机数生成器的输出受输入密钥值控制。为了抵抗穷举攻击，这个密钥必须非常长。分组密码中的考虑因素在这里同样适用。因此，就当前的科技水平而言，需要至少128比特长度的密钥。  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果伪随机数生成器设计合理，对同样的密钥长度，流密码和分组密码一样安全。流密码的主要优点是流密码与分组密码相比几乎总是更快，使用更少的代码。本文中的示例RC4能用仅仅几行代码实现。最近几年，随着AES的引进，这个优势己经消失了，因为AES可以用软件方式高效实现。比如，Intel AES指令集含有一轮加解密和密钥产生过程使用的机器指令。使用硬件指令实现AES跟仅使用软件方式相比，速度提高了一个数M级。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;分组密码的优点是可以重复使用密钥。但是如果两个明文使用同一密钥进行流密码加密，密码破译常常会非常容易[DAWS96]。如果将这两个密文流进行异或，结果就是原始明文的异或值。如果明文是文本字符串、信用卡号或者其他己知其性质的字节流，密码破解可能会成功。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;对于需要加密/解密数据流的应用，比如在数据通信信道或者浏览器/网络链路上，流密码也许是更好的选择。对于处理数据分组的应用，比如文件传递、电子邮件和数据库，分组密码可能更合适。但是，这两种密码都可以在几乎所有的应用中使用。
+二. RC4算法 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;RC4是Ron Rivest在1987年为RSA Security公司设计的流密码。它是密钥大小可变的流密码，使用面向字节的操作。这个算法基于随机交换的使用。通过分析指出，这个密码的周期完全可能大于10100[ROBS95a]。每输出一个字节需要8~16个机器操作，并且此密码用软件实现运行速度非常快。为网络浏览器和服务器之间的通信定义的SS17TLS (安全套接字层/传输层安全）标准中使用了RC4。它也被用于属于IEEE 802.11无线LAN标准一部分的WEP (有线等效保密）协议及更新的Wi-Fi保护访问（WPA) 协议 。 RC4原本被RSA Security公司当作商业秘密。1994年9月，RC4算法通过Cypherpunks匿名邮件转发列表匿名地公布在因特网上。
+1. 算法细节 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;RC4算法非常简单，易于描述。用一个可变长度为1〜256字节(8-2048比特）的密钥来初始化256字节的状态向S，其元素为S[0], S[l] , …, S[255]。从始至终置换后的S包含从0到255的所有8位数。加密和解密时，字节k（见上图）是从S的255个元素中按一种系统的方式选出的。每次k值产生之后，要重新排列S的元素。
+2. 初始化S &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;开始时， S的元素按升序被置为0〜255；即S[0] = 0, S[l] = l, S[255] = 255。同时创建一个临时向量T。如果密钥K的长度为256字节，就把K直接赋给T，否则，对于keylen字节长度的密钥，将K赋值给T的前keylen个元素，并循环重复用K的值赋给T剩下的元素，直到T的所有元素都被赋值。这些预操作可被概括为
+/* 初始化 */ for i = 0 to 255 do S[i] = i； T[i] = K[i mod keylen];  然后用T产生S的初始置换，从S[0]〜S[255]，对每个S[i],根据由T[i]确定的方案，并将S[i]置换为S的另一字节：</description>
+    </item>
     
     <item>
       <title>基于原理逐步实现AES加密算法</title>
@@ -156,6 +174,41 @@ JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到�
 下面例子的Java代码中使用了两个foreach分别遍历数组和ArrayList：
 package reversecompile; import java.util.ArrayList; import java.util.List; public class TestForEach { public static void main(String[] args) { String[] arr = &amp;quot;I am a coder&amp;quot;.split(&amp;quot; &amp;quot;); List&amp;lt;String&amp;gt; strings = new ArrayList&amp;lt;&amp;gt;(); for (String s : arr){ strings.add(s); System.out.println(s); } for (String s : strings){ System.out.println(s); } } }  通过IDEA反编译后的·TestForEach.class：
 // // Source code recreated from a .class file by IntelliJ IDEA // (powered by Fernflower decompiler) // package reversecompile; import java.</description>
+    </item>
+    
+    <item>
+      <title>Redis api使用学习笔记</title>
+      <link>https://jordonyang.github.io/post/db/nosql/redis/redis_api/</link>
+      <pubDate>Mon, 20 Nov 2017 19:50:14 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/db/nosql/redis/redis_api/</guid>
+      <description>Redis简介及安装 简介 Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。从2010年3月15日起，Redis的开发工作由VMware主持。从2013年5月开始，Redis的开发由Pivotal赞助。
+特点：
+ 可以用来储存字符串，哈希结构，链表，集合，有序集合、 具有“持久化”功能，用来存储  安装 官网：https://redis.io
+cd /usr/local/src $ wget http://download.redis.io/releases/redis-4.0.2.tar.gz $ tar xzf redis-4.0.2.tar.gz $ cd redis-4.0.2 $ make make PREFIX=/usr/local/redis install  启动服务
+cd /usr/local/redis cp /usr/local/src/redis-4.0.2/redis.conf ./ cd .. ./bin/redis-server ./redis.conf  设置redis服务后台运行
+vim redis.conf  将daemonize选项值改为yes
+基本数据类型 通用键值操作 增加键
+set keyname value  获取键的值
+get keyname  查找键
+keys pattern:
+ h?llo matches hello, hallo and hxllo h*llo matches hllo and heeeello h[ae]llo matches hello and hallo, but not hillo h[^e]llo matches hallo, hbllo, &amp;hellip; but not hello h[a-b]llo matches hallo and hbllo  删除键</description>
+    </item>
+    
+    <item>
+      <title>使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播</title>
+      <link>https://jordonyang.github.io/post/network/nginx/nginx-rtmp/</link>
+      <pubDate>Wed, 15 Nov 2017 19:46:54 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/network/nginx/nginx-rtmp/</guid>
+      <description>理论基础 RTMP （Real Time Messaging Protocol）实时消息传输协议，基于TCP，是一个协议族，包括RTMP基本协议及RTMPT/RTMPS/RTMPE等多种变种。RTMP是一种设计用来进行实时数据通信的网络协议，它就像一个用来装数据包的容器,这些数据既可以是AMF格式的数据,也可以是FLV中的视/音频数据，主要用来在Flash /AIR平台和支持RTMP协议的流媒体/交互服务器之间进行音视频和数据通信。支持该协议的软件包括Adobe Media Server/Ultrant Media Server/red5等。
+FFmpeg （Fast Forward Mpeg）是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源计算机程序。采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。
+ 主要功能：视频采集，视频格式转换，视频截图，给视频加水印等。 支持的视频编码为Snow和FFV1。 支持的视频格式包括ASF、AVI、BFI[7]、IFF[8]、RL2[9]、FLV、MXF, Material eXchange Format,、SMPTE 377M、Matroska、Maxis XA[10]、MSN Webcam stream[11]、MPEG transport stream、TXD[6]、OMA[12]、GXF,、General eXchange Format, SMPTE 360M、mov,mp4、m4a、3gp等。 支持的协议：HTTP、RTP、RTSP、RealMedia RTSP/RDT、TCP、UDP、Gopher、RTMP 、RTMPT, RTMPE, RTMPTE, RTMPS (via librtmp)、SDP、MMS over TCP  Nginx 是一个高性能的HTTP和反向代理服务器，是一款轻量级的Web服务器及电子邮件（IMAP/POP3）代理服务器，并在一个BSD-like 协议下发行。其特点是占有内存少，并发能力强，事实上nginx的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。
+应用场景
+ http服务器，可以做静态网页的http服务器。 配置虚拟机  ​ 一个域名可以被多个ip绑定。可以根据域名的不同把请求转发给运行在不同端口的服务器。（一台服务器用来部署多个项目）
+ 反向代理，负载均衡。把请求转发给不同的服务器。  ​ 反向代理服务器Ip地址域名绑定ip使用方向代理软件解决服务器集群问题。服务器1服务器1服务器
+nginx-rtmp-module ：一个由俄罗斯人Roman Arutyunyan开发出来的支持rtmp协议的Nginx模块，特征：
+ 支持RTMP / HLS / MPEG-DASH直播 通过RTMP视频点播FLV / MP4格式文件，从本地文件系统或HTTP播放 流中继支持分布式流式传输：推拉式模式 在多个FLV中录制流 H264 / AAC支持 使用FFmpeg在线转码 HTTP回调（发布/播放/记录/更新等） 在某些事件上运行外部程序（exec） 用于录制音频/视频和丢弃客户端的HTTP控制模块 先进的缓冲技术可以将内存分配保持在最低水平，从而实现更快的数据流和更小的内存占用 可以与Wirecast，FMS，Wowza，JWPlayer，FlowPlayer，StrobeMediaPlayback，ffmpeg ，avconv，rtmpdump，flvstreamer等一起工作 以机器和人类可读的形式在XML / XSL中进行统计 Linux的/ FreeBSD的/ MacOS的/视窗  Video.</description>
     </item>
     
     <item>

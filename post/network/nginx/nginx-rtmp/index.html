@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播"/>
+<meta name="twitter:description" content="achieving video live broadcasting with Nginx and RTMP, FFmpeg and video.Js to "/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播 &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/network/nginx/nginx-rtmp/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="achieving video live broadcasting with Nginx and RTMP, FFmpeg and video.Js to " />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2017-11-15T19:46:54&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Nginx" />
+    
+    <meta property="article:tag" content="rtmp" />
+    
+    
+
+    <title>使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播 &middot; 临风博客</title>
+
+    
+    <meta name="description" content="achieving video live broadcasting with Nginx and RTMP, FFmpeg and video.Js to " />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/atom-one-light.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/network/nginx/nginx-rtmp/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": 使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播,
+    "name": 使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播,
+    "wordCount": 436,
+    "timeRequired": "PT3M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/network/nginx/nginx-rtmp/,
+    "datePublished": 2017-11-15T19:46Z,
+    "dateModified": 2017-11-15T19:46Z,
+    
+    "keywords": Nginx, rtmp,
+    "description": achieving video live broadcasting with Nginx and RTMP, FFmpeg and video.Js to ,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/network/nginx/nginx-rtmp/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            </br></br><strong>学习大纲</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/hierarchy-java">Java</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播</h1>
+        <em style="color: blue">achieving video live broadcasting with Nginx and RTMP, FFmpeg and video.Js to </em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/nginx/">#Nginx</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/rtmp/">#rtmp</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2017-11-15T19:46:54&#43;08:00">
+            2017/Nov/15
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h2 id="理论基础">理论基础</h2>
+
+<p><strong>RTMP</strong> （Real Time Messaging Protocol）实时消息传输协议，基于TCP，是一个协议族，包括RTMP基本协议及RTMPT/RTMPS/RTMPE等多种变种。RTMP是一种设计用来进行实时数据通信的网络协议，它就像一个用来装数据包的容器,这些数据既可以是AMF格式的数据,也可以是FLV中的视/音频数据，主要用来在<strong>Flash</strong> /AIR平台和支持RTMP协议的流媒体/交互服务器之间进行音视频和数据通信。支持该协议的软件包括Adobe Media Server/Ultrant Media Server/red5等。</p>
+
+<p><strong>FFmpeg</strong> （Fast Forward Mpeg）是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源计算机程序。采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。</p>
+
+<ul>
+<li>主要功能：视频采集，视频格式转换，视频截图，给视频加水印等。</li>
+<li>支持的视频编码为Snow和FFV1。</li>
+<li>支持的视频格式包括ASF、AVI、BFI[7]、IFF[8]、RL2[9]、FLV、MXF, Material eXchange Format,、SMPTE 377M、Matroska、Maxis XA[10]、MSN Webcam stream[11]、MPEG transport stream、TXD[6]、OMA[12]、GXF,、General eXchange Format, SMPTE 360M、mov,mp4、m4a、3gp等。</li>
+<li>支持的协议：HTTP、RTP、RTSP、RealMedia RTSP/RDT、TCP、UDP、Gopher、<strong>RTMP</strong> 、RTMPT, RTMPE, RTMPTE, RTMPS (via librtmp)、SDP、MMS over TCP</li>
+</ul>
+
+<p><strong>Nginx</strong> 是一个高性能的HTTP和反向代理服务器，是一款轻量级的Web服务器及电子邮件（IMAP/POP3）代理服务器，并在一个BSD-like 协议下发行。其特点是占有内存少，并发能力强，事实上nginx的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。</p>
+
+<p>应用场景</p>
+
+<ul>
+<li>http服务器，可以做静态网页的http服务器。</li>
+<li>配置虚拟机</li>
+</ul>
+
+<p>​       一个域名可以被多个ip绑定。可以根据域名的不同把请求转发给运行在不同端口的服务器。（一台服务器用来部署多个项目）</p>
+
+<ul>
+<li>反向代理，负载均衡。把请求转发给不同的服务器。</li>
+</ul>
+
+<p>​       反向代理服务器Ip地址域名绑定ip使用方向代理软件解决服务器集群问题。服务器1服务器1服务器</p>
+
+<p><strong>nginx-rtmp-module</strong> ：一个由俄罗斯人Roman Arutyunyan开发出来的支持<strong>rtmp</strong>协议的Nginx模块，特征：</p>
+
+<ul>
+<li>支持<strong>RTMP</strong>  / HLS / MPEG-DASH直播</li>
+<li>通过RTMP视频点播FLV / MP4格式文件，从本地文件系统或HTTP播放</li>
+<li>流中继支持分布式流式传输：推拉式模式</li>
+<li>在多个FLV中录制流</li>
+<li>H264 / AAC支持</li>
+<li><strong>使用FFmpeg在线转码</strong></li>
+<li>HTTP回调（发布/播放/记录/更新等）</li>
+<li>在某些事件上运行外部程序（exec）</li>
+<li>用于录制音频/视频和丢弃客户端的HTTP控制模块</li>
+<li>先进的缓冲技术可以将内存分配保持在最低水平，从而实现更快的数据流和更小的内存占用</li>
+<li>可以与Wirecast，FMS，Wowza，JWPlayer，FlowPlayer，StrobeMediaPlayback，<strong>ffmpeg</strong> ，avconv，rtmpdump，flvstreamer等一起工作</li>
+<li>以机器和人类可读的形式在XML / XSL中进行统计</li>
+<li>Linux的/ FreeBSD的/ MacOS的/视窗</li>
+</ul>
+
+<p><strong>Video.js</strong> 是一个基于HTML5的网络视频播放器，兼容ie8。它支持HTML5和<strong>Flash</strong> 视频，以及YouTube和Vimeo（通过插件）。它支持桌面和移动设备上的视频(比如微信网页)播放。这个项目是在2010年中期开始的，目前已被应用于至少 400,000个网站。</p>
+
+<p><strong>流程：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/nextwork/nginx/process.png" alt="img" /></p>
+
+<h2 id="实现过程">实现过程</h2>
+
+<h4 id="安装nginx">安装Nginx</h4>
+
+<p>gcc：因为Nginx是用C语言开发的，所以要配置gcc环境将Nginx源码进行编译，ubuntu自带，无需安装</p>
+
+<p>PCRE：</p>
+
+<p>PCRE(Perl Compatible Regular Expressions)是一个Perl库，包括perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。</p>
+
+<pre><code class="language-shell">$ sudo apt-get install libpcre3 libpcre3-dev
+</code></pre>
+
+<p>注：pcre-devel是使用pcre开发的一个二次开发库。nginx也需要此库。</p>
+
+<p><strong>zlib</strong></p>
+
+<p>zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，</p>
+
+<p>所以需要在linux上安装zlib库</p>
+
+<pre><code class="language-shell">$ sudo apt-get install zlib1g-dev
+</code></pre>
+
+<p><strong>openssl</strong></p>
+
+<p>一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证</p>
+
+<p>书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。</p>
+
+<p>nginx不仅支持http协议，还支持https（即在ssl协议上传输http），所以需要在linux安装openssl库。</p>
+
+<pre><code class="language-shell">$ sudo apt-get install openssl libssl-dev
+</code></pre>
+
+<p><strong>Nginx下载编译安装</strong></p>
+
+<p>下载  <a href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></p>
+
+<p>解压</p>
+
+<pre><code class="language-shell">tar -zxvf nginx-1.12.2.tar.gz -C /usr/local/src
+cd /usr/local/src/nginx-1.12.2
+</code></pre>
+
+<p>使用configure命令创建makeFile</p>
+
+<pre><code class="language-shell">./configure \--prefix=/usr/local/nginx \--pid-path=/var/run/nginx/nginx.pid \--lock-path=/var/lock/nginx.lock \--error-log-path=/var/log/nginx/error.log \--http-log-path=/var/log/nginx/access.log \--with-http_gzip_static_module \--http-client-body-temp-path=/var/temp/nginx/client \--http-proxy-temp-path=/var/temp/nginx/proxy \--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \--http-scgi-temp-path=/var/temp/nginx/scgi
+</code></pre>
+
+<p>编译和安装</p>
+
+<pre><code class="language-shell">make
+make install
+</code></pre>
+
+<p><strong>使用</strong></p>
+
+<p>配置文件</p>
+
+<pre><code class="language-shell">http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen       8081;
+        server_name  localhost;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+   }
+</code></pre>
+
+<p>启动</p>
+
+<pre><code class="language-shell">cd /usr/local/nginx/sbin
+sudo ./nginx 
+
+ps aux|grep nginx
+root     24104  0.0  0.0  24984   420 ?        Ss   16:57   0:00 nginx: master process ./nginx
+nobody   24105  0.0  0.0  25432  2128 ?        S    16:57   0:00 nginx: worker process
+</code></pre>
+
+<p>这时通过http访问本地8081端口， 会看到<code>Welcome to nginx</code>的欢迎信息</p>
+
+<h3 id="安装nginx-rtmp-module">安装nginx-rtmp-module</h3>
+
+<p><strong>下载</strong></p>
+
+<pre><code class="language-shell">cd /usr/local/src
+sudo mkdir nginx-modules
+cd nginx-modules
+git clone https://github.com/arut/nginx-rtmp-module
+cd /usr/local/src/nginx
+</code></pre>
+
+<p><strong>重新编译，编译参数为</strong></p>
+
+<pre><code class="language-shell">./configure \--prefix=/usr/local/nginx \--pid-path=/var/run/nginx/nginx.pid \--lock-path=/var/lock/nginx.lock \--error-log-path=/var/log/nginx/error.log \--http-log-path=/var/log/nginx/access.log \--with-http_gzip_static_module \--http-client-body-temp-path=/var/temp/nginx/client \--http-proxy-temp-path=/var/temp/nginx/proxy \--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \--http-scgi-temp-path=/var/temp/nginx/scgi \--add-module=/usr/local/nmodules/nginx-rtmp-module
+</code></pre>
+
+<p><strong>坑点</strong> ：因为ubuntu17.10使用GCC7作为默认编译器，而nginx-rtmp-module的master分支使用的还是GCC6编译，虽然dev解决这一问题但还没合并到master,解决方法：</p>
+
+<p>1.安装GCC6环境</p>
+
+<p>2.重装Ubuntu17.04</p>
+
+<h3 id="安装ffmpeg">安装FFmpeg</h3>
+
+<p><a href="https://gist.github.com/wlzla000/bbc6a6f4cf5499a52108a75e73e46af9">坑点较少的教程</a></p>
+
+<h3 id="配置nginx-conf">配置nginx.conf</h3>
+
+<pre><code class="language-shell">  rtmp {
+        server {
+            listen 1935;
+
+            application rtmplive {
+                live on;
+            }
+            application hls {
+                live on;
+                hls on;
+                hls_path /usr/local/var/www/hls;
+                hls_fragment 1s;
+            }
+        }
+    }
+
+  location /hls {
+        types {
+               application/vnd.apple.mpegurl m3u8;
+               video/mp2t ts;
+               }
+               root /tmp;
+               add_header Cache-Control no-cache;
+ }
+</code></pre>
+
+<p>更多配置：<a href="https://github.com/arut/nginx-rtmp-module/wiki/Directives">https://github.com/arut/nginx-rtmp-module/wiki/Directives</a></p>
+
+<h3 id="使用ffmpeg推流">使用ffmpeg推流</h3>
+
+<pre><code class="language-shell">ffmpeg -re -i &quot;/home/linfeng/shalon.mp4&quot; -vcodec libx264 -vprofile baseline -acodec aac -ar 44100 -strict -2 -ac 1 -f flv -s 1280x720 -q 10 rtmp://localhost:1935/rtmplive/home
+</code></pre>
+
+<p>参数说明：</p>
+
+<ul>
+<li><p>-re 代表-re 以本地帧频读数据，主要用于模拟捕获设备，没有该参数ffmpeg会默认按最高的效率发送数据。</p></li>
+
+<li><p>-i 设定输入流</p></li>
+
+<li><p>-vcodec 设定视频压缩的方式</p></li>
+
+<li><p>-vprofile 设置视频画质为baseline， 即基本画质。支持I/P 帧，只支持无交错（Progressive）和CAVLC</p></li>
+
+<li><p>-acodec 设定声音编解码器，未设定时则使用与输入流相同的编解码器</p></li>
+
+<li><p>-ar 设定声音采样率</p></li>
+
+<li><p>-strict  跟标准的严格性，-strict -2 之前是实验参数表示 aac音频编码 如果不使用aac音频编码使用使其的编码还需要导入第三方的音频编码库 比较麻烦 使用FFmpeg自带的aac音频编码要带上-strict -2 参数即可</p></li>
+
+<li><p>-ac 设定声音的Channel数</p></li>
+
+<li><p>-f 设定输出格式</p></li>
+
+<li><p>-s 设定画面的宽与高</p></li>
+
+<li><p>-q  &lt;数值&gt; 以&lt;数值&gt;质量为基础的VBR，取值0.01-255，约小质量越好</p></li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/nextwork/nginx/push.png" alt="img" /></p>
+
+<p>更多：<a href="http://linux.51yip.com/search/ffmpeg">http://linux.51yip.com/search/ffmpeg</a></p>
+
+<h3 id="拉流">拉流</h3>
+
+<ul>
+<li>使用vlc拉流，设置拉流地址</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/nextwork/nginx/vlc.png" alt="img" /></p>
+
+<ul>
+<li>使用videojs在网页端拉流</li>
+</ul>
+
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+  &lt;title&gt;Document&lt;/title&gt;
+  &lt;link href=&quot;http://vjs.zencdn.net/5.8.8/video-js.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;video id=&quot;example_video_1&quot; class=&quot;video-js vjs-default-skin&quot; controls preload=&quot;auto&quot; width=&quot;640&quot; height=&quot;264&quot; loop=&quot;loop&quot; webkit-playsinline&gt;
+  &lt;source src=&quot;rtmp://localhost:1935/rtmplive/home&quot; type=&quot;rtmp/mp4&quot;&gt;
+  &lt;!--&lt;source src=&quot;/mp4/shalon.mp4&quot; type=&quot;video/mp4&quot;&gt;--&gt;
+&lt;/video&gt;
+
+
+&lt;script src=&quot;./js/video.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+    videojs.options.flash.swf = './js/video-js.swf';
+    videojs('example_video_1').ready(function() {
+        this.play();
+    });
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>注意用文件方式打开该html请求不了rtmp视频流，解决方法是新建一个Java web项目，直接将该html设置为welcome-file</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/nextwork/nginx/web.png" alt="img" /></p>
+
+<h3 id="备注">备注</h3>
+
+<p><strong>问题集</strong></p>
+
+<ul>
+<li>nginx-rtmp-module与Ubuntu17.10的GCC版本冲突</li>
+</ul>
+
+<p>解决：重装Ubuntu17.04</p>
+
+<ul>
+<li>FFmpeg依赖安装冲突</li>
+</ul>
+
+<p>解决：<a href="https://gist.github.com/wlzla000/bbc6a6f4cf5499a52108a75e73e46af9">https://gist.github.com/wlzla000/bbc6a6f4cf5499a52108a75e73e46af9</a></p>
+
+<ul>
+<li>video-js.swf老版本问题</li>
+</ul>
+
+<p>解决：<a href="https://github.com/videojs/video.js/issues/4299">https://github.com/videojs/video.js/issues/4299</a></p>
+
+<ul>
+<li>用file方式打开html文件无法在网页端获取到视频流</li>
+</ul>
+
+<p>解决：将html部署到tomcat</p>
+
+<ul>
+<li>ERROR: (CODE:4 MEDIA_ERR_SRC_NOT_SUPPORTED) No compatible source was found for this media</li>
+</ul>
+
+<p>解决：将chrome浏览器的flash插件的启动状态设置为always</p>
+
+<p><strong>参考资料</strong></p>
+
+<ul>
+<li><a href="http://www.jianshu.com/p/d541b317f71c">http://www.jianshu.com/p/d541b317f71c</a></li>
+<li><a href="http://blog.csdn.net/redstarofsleep/article/details/45092147">http://blog.csdn.net/redstarofsleep/article/details/45092147</a></li>
+<li><a href="https://www.cnblogs.com/tinywan/p/6202345.html">https://www.cnblogs.com/tinywan/p/6202345.html</a></li>
+<li><a href="https://www.cnblogs.com/tinywan/p/6404411.html">https://www.cnblogs.com/tinywan/p/6404411.html</a></li>
+<li><a href="https://www.cnblogs.com/chen1987lei/archive/2010/12/03/1895242.html">https://www.cnblogs.com/chen1987lei/archive/2010/12/03/1895242.html</a></li>
+<li><a href="http://blog.csdn.net/jeffasd/article/details/71194263">http://blog.csdn.net/jeffasd/article/details/71194263</a></li>
+</ul>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <h4><a href="https://jordonyang.github.io/">临风</a></h4>
+  
+  <p>Read <a href="https://jordonyang.github.io/">more posts</a> by this author.</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+  </div>
+</section>
+
+
+
+
+    
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+	<a href="#" class="bds_tqq" data-cmd="tqq"></a>
+	<a href="#" class="bds_renren" data-cmd="renren"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin"></a>
+</div>
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+</main>
+
+
+  <aside class="read-next">
+  
+      <a class="read-next-story" style="no-cover" href="https://jordonyang.github.io/post/db/nosql/redis/redis_api/">
+          <section class="post">
+              <h2>Redis api使用学习笔记</h2>
+              
+          </section>
+      </a>
+  
+  
+      <a class="read-next-story prev" style="no-cover" href="https://jordonyang.github.io/post/constructing-binary-heap-with-java/">
+          <section class="post">
+              <h2>二叉堆的Java实现</h2>
+          </section>
+      </a>
+  
+</aside>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nginx on 临风博客</title>
+    <link>https://jordonyang.github.io/categories/nginx/</link>
+    <description>Recent content in Nginx on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Wed, 15 Nov 2017 19:46:54 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/categories/nginx/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播</title>
+      <link>https://jordonyang.github.io/post/network/nginx/nginx-rtmp/</link>
+      <pubDate>Wed, 15 Nov 2017 19:46:54 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/network/nginx/nginx-rtmp/</guid>
+      <description>理论基础 RTMP （Real Time Messaging Protocol）实时消息传输协议，基于TCP，是一个协议族，包括RTMP基本协议及RTMPT/RTMPS/RTMPE等多种变种。RTMP是一种设计用来进行实时数据通信的网络协议，它就像一个用来装数据包的容器,这些数据既可以是AMF格式的数据,也可以是FLV中的视/音频数据，主要用来在Flash /AIR平台和支持RTMP协议的流媒体/交互服务器之间进行音视频和数据通信。支持该协议的软件包括Adobe Media Server/Ultrant Media Server/red5等。
+FFmpeg （Fast Forward Mpeg）是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源计算机程序。采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。
+ 主要功能：视频采集，视频格式转换，视频截图，给视频加水印等。 支持的视频编码为Snow和FFV1。 支持的视频格式包括ASF、AVI、BFI[7]、IFF[8]、RL2[9]、FLV、MXF, Material eXchange Format,、SMPTE 377M、Matroska、Maxis XA[10]、MSN Webcam stream[11]、MPEG transport stream、TXD[6]、OMA[12]、GXF,、General eXchange Format, SMPTE 360M、mov,mp4、m4a、3gp等。 支持的协议：HTTP、RTP、RTSP、RealMedia RTSP/RDT、TCP、UDP、Gopher、RTMP 、RTMPT, RTMPE, RTMPTE, RTMPS (via librtmp)、SDP、MMS over TCP  Nginx 是一个高性能的HTTP和反向代理服务器，是一款轻量级的Web服务器及电子邮件（IMAP/POP3）代理服务器，并在一个BSD-like 协议下发行。其特点是占有内存少，并发能力强，事实上nginx的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。
+应用场景
+ http服务器，可以做静态网页的http服务器。 配置虚拟机  ​ 一个域名可以被多个ip绑定。可以根据域名的不同把请求转发给运行在不同端口的服务器。（一台服务器用来部署多个项目）
+ 反向代理，负载均衡。把请求转发给不同的服务器。  ​ 反向代理服务器Ip地址域名绑定ip使用方向代理软件解决服务器集群问题。服务器1服务器1服务器
+nginx-rtmp-module ：一个由俄罗斯人Roman Arutyunyan开发出来的支持rtmp协议的Nginx模块，特征：
+ 支持RTMP / HLS / MPEG-DASH直播 通过RTMP视频点播FLV / MP4格式文件，从本地文件系统或HTTP播放 流中继支持分布式流式传输：推拉式模式 在多个FLV中录制流 H264 / AAC支持 使用FFmpeg在线转码 HTTP回调（发布/播放/记录/更新等） 在某些事件上运行外部程序（exec） 用于录制音频/视频和丢弃客户端的HTTP控制模块 先进的缓冲技术可以将内存分配保持在最低水平，从而实现更快的数据流和更小的内存占用 可以与Wirecast，FMS，Wowza，JWPlayer，FlowPlayer，StrobeMediaPlayback，ffmpeg ，avconv，rtmpdump，flvstreamer等一起工作 以机器和人类可读的形式在XML / XSL中进行统计 Linux的/ FreeBSD的/ MacOS的/视窗  Video.</description>
+    </item>
+    
+  </channel>
+</rss>

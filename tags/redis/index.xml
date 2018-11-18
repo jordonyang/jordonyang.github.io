@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Redis on 临风博客</title>
+    <link>https://jordonyang.github.io/tags/redis/</link>
+    <description>Recent content in Redis on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Mon, 20 Nov 2017 19:50:14 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/tags/redis/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Redis api使用学习笔记</title>
+      <link>https://jordonyang.github.io/post/db/nosql/redis/redis_api/</link>
+      <pubDate>Mon, 20 Nov 2017 19:50:14 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/db/nosql/redis/redis_api/</guid>
+      <description>Redis简介及安装 简介 Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。从2010年3月15日起，Redis的开发工作由VMware主持。从2013年5月开始，Redis的开发由Pivotal赞助。
+特点：
+ 可以用来储存字符串，哈希结构，链表，集合，有序集合、 具有“持久化”功能，用来存储  安装 官网：https://redis.io
+cd /usr/local/src $ wget http://download.redis.io/releases/redis-4.0.2.tar.gz $ tar xzf redis-4.0.2.tar.gz $ cd redis-4.0.2 $ make make PREFIX=/usr/local/redis install  启动服务
+cd /usr/local/redis cp /usr/local/src/redis-4.0.2/redis.conf ./ cd .. ./bin/redis-server ./redis.conf  设置redis服务后台运行
+vim redis.conf  将daemonize选项值改为yes
+基本数据类型 通用键值操作 增加键
+set keyname value  获取键的值
+get keyname  查找键
+keys pattern:
+ h?llo matches hello, hallo and hxllo h*llo matches hllo and heeeello h[ae]llo matches hello and hallo, but not hillo h[^e]llo matches hallo, hbllo, &amp;hellip; but not hello h[a-b]llo matches hallo and hbllo  删除键</description>
+    </item>
+    
+  </channel>
+</rss>

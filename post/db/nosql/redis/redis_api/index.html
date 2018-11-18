@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Redis api使用学习笔记"/>
+<meta name="twitter:description" content="notes for Redis api learning"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Redis api使用学习笔记 &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/db/nosql/redis/redis_api/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="notes for Redis api learning" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2017-11-20T19:50:14&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Redis" />
+    
+    
+
+    <title>Redis api使用学习笔记 &middot; 临风博客</title>
+
+    
+    <meta name="description" content="notes for Redis api learning" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/atom-one-light.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/db/nosql/redis/redis_api/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Redis api使用学习笔记,
+    "name": Redis api使用学习笔记,
+    "wordCount": 2780,
+    "timeRequired": "PT14M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/db/nosql/redis/redis_api/,
+    "datePublished": 2017-11-20T19:50Z,
+    "dateModified": 2017-11-20T19:50Z,
+    
+    "keywords": Redis,
+    "description": notes for Redis api learning,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/db/nosql/redis/redis_api/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            </br></br><strong>学习大纲</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/hierarchy-java">Java</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Redis api使用学习笔记</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Redis api使用学习笔记</h1>
+        <em style="color: blue">notes for Redis api learning</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/redis/">#Redis</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2017-11-20T19:50:14&#43;08:00">
+            2017/Nov/20
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h2 id="redis简介及安装">Redis简介及安装</h2>
+
+<h3 id="简介">简介</h3>
+
+<p>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。从2010年3月15日起，Redis的开发工作由VMware主持。从2013年5月开始，Redis的开发由Pivotal赞助。</p>
+
+<p>特点：</p>
+
+<ul>
+<li>可以用来储存字符串，哈希结构，链表，集合，有序集合、</li>
+<li>具有“持久化”功能，用来存储</li>
+</ul>
+
+<h3 id="安装">安装</h3>
+
+<p>官网：<a href="https://redis.io">https://redis.io</a></p>
+
+<pre><code class="language-shell">cd /usr/local/src
+$ wget http://download.redis.io/releases/redis-4.0.2.tar.gz
+$ tar xzf redis-4.0.2.tar.gz
+$ cd redis-4.0.2
+$ make
+make PREFIX=/usr/local/redis install
+</code></pre>
+
+<p>启动服务</p>
+
+<pre><code class="language-shell">cd /usr/local/redis
+cp /usr/local/src/redis-4.0.2/redis.conf ./
+cd ..
+./bin/redis-server ./redis.conf 
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sql/redis/r1.png" alt="img" /></p>
+
+<p>设置redis服务后台运行</p>
+
+<pre><code class="language-shell">vim redis.conf
+</code></pre>
+
+<p>将daemonize选项值改为yes</p>
+
+<h2 id="基本数据类型">基本数据类型</h2>
+
+<h3 id="通用键值操作">通用键值操作</h3>
+
+<p><strong>增加键</strong></p>
+
+<pre><code class="language-shell">set keyname value
+</code></pre>
+
+<p><strong>获取键的值</strong></p>
+
+<pre><code class="language-shell">get keyname
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sql/redis/r3.png" alt="img" /></p>
+
+<p><strong>查找键</strong></p>
+
+<p>keys pattern:</p>
+
+<ul>
+<li><code>h?llo</code> matches <code>hello</code>, <code>hallo</code> and <code>hxllo</code></li>
+<li><code>h*llo</code> matches <code>hllo</code> and <code>heeeello</code></li>
+<li><code>h[ae]llo</code> matches <code>hello</code> and <code>hallo,</code> but not <code>hillo</code></li>
+<li><code>h[^e]llo</code> matches <code>hallo</code>, <code>hbllo</code>, &hellip; but not <code>hello</code></li>
+<li><code>h[a-b]llo</code> matches <code>hallo</code> and <code>hbllo</code></li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sql/redis/r2.png" alt="img" /></p>
+
+<p><strong>删除键</strong></p>
+
+<pre><code class="language-shell">del keyname1 keyname2 keyname
+</code></pre>
+
+<p>返回的是删除的条数</p>
+
+<p><strong>清空数据库</strong></p>
+
+<pre><code>flushdb
+</code></pre>
+
+<p><strong>获取一个随机的键</strong></p>
+
+<pre><code>randomkey
+</code></pre>
+
+<p><strong>判断某个键是否存在</strong></p>
+
+<pre><code class="language-shell">exists keyname
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sql/redis/r4.png" alt="img" /></p>
+
+<p><strong>查询键的数据类型</strong></p>
+
+<pre><code class="language-shell">type keyname
+</code></pre>
+
+<p><strong>修改键名</strong></p>
+
+<pre><code>rename oldkeyname newkeyname
+</code></pre>
+
+<p>注意：如果newkeyname已经存在，则原来newkey的值将会被覆盖</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; set site &quot;www.baidu.com&quot;
+OK
+127.0.0.1:6379&gt; set web &quot;www.google.com&quot;
+OK
+127.0.0.1:6379&gt; keys *
+1) &quot;web&quot;
+2) &quot;site&quot;
+127.0.0.1:6379&gt; rename site web
+OK
+127.0.0.1:6379&gt; get web
+&quot;www.baidu.com&quot;
+127.0.0.1:6379&gt; keys *
+1) &quot;web&quot;
+</code></pre>
+
+<ul>
+<li>nx: no exists</li>
+</ul>
+
+<pre><code>renamenx oldkeyname newkeyname
+</code></pre>
+
+<p>当newkeyname未存在时则可修改，修改成功返回1否则返回0</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; set site &quot;www.baidu.com&quot;
+OK
+127.0.0.1:6379&gt; set web &quot;www.google.com&quot;
+OK
+127.0.0.1:6379&gt; keys *
+1) &quot;web&quot;
+2) &quot;site&quot;
+127.0.0.1:6379&gt; renamenx site we
+(integer) 1
+127.0.0.1:6379&gt; renamenx we web
+(integer) 0
+127.0.0.1:6379&gt; keys *
+1) &quot;web&quot;
+2) &quot;we&quot;
+</code></pre>
+
+<h4 id="redis的数据库"><strong><em>Redis的数据库</em></strong></h4>
+
+<p><strong>redis默认有16个数据库</strong></p>
+
+<pre><code class="language-sh"># Set the number of databases. The default database is DB 0, you can select
+# a different one on a per-connection basis using SELECT &lt;dbid&gt; where
+# dbid is a number between 0 and 'databases'-1
+databases 16
+</code></pre>
+
+<p><strong>默认是在0号数据库上进行操作，可通过select [0-15]进行数据库的切换</strong></p>
+
+<pre><code class="language-shell">select 1
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sql/redis/r5.png" alt="img" /></p>
+
+<p><strong>将key在数据库间进行移动</strong></p>
+
+<pre><code class="language-shell">move keyname dbno
+</code></pre>
+
+<p>如：</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; keys *
+1) &quot;web&quot;
+2) &quot;we&quot;
+127.0.0.1:6379&gt; move we 1
+(integer) 1
+127.0.0.1:6379&gt; keys *
+1) &quot;web&quot;
+127.0.0.1:6379&gt; select 1
+OK
+127.0.0.1:6379[1]&gt; keys *
+1) &quot;we&quot;
+</code></pre>
+
+<h3 id="key的有效期">key的有效期</h3>
+
+<p><strong>查看key的有效期</strong></p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; keys *
+1) &quot;web&quot;
+2) &quot;we&quot;
+127.0.0.1:6379&gt; ttl web
+(integer) -1
+127.0.0.1:6379&gt; ttl wer
+(integer) -2
+</code></pre>
+
+<p>过期的key返回-2，否则返回-1（秒数，-1表示永久有效）</p>
+
+<p><strong>设置key的有效期</strong></p>
+
+<p>如设置web的生命周期为10秒</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; expire web 10
+(integer) 1
+127.0.0.1:6379&gt; get web
+(nil)
+</code></pre>
+
+<p>还可以毫秒为单位设置生命周期</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; set web &quot;www.baidu.com&quot;
+OK
+127.0.0.1:6379&gt; pexpire web 5000
+(integer) 1
+127.0.0.1:6379&gt; ttl web
+(integer) -2
+</code></pre>
+
+<p>将某个key设置为永久有效</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; set web &quot;www.baidu.com&quot;
+OK
+127.0.0.1:6379&gt; pexpire web 10000
+(integer) 1
+127.0.0.1:6379&gt; persist web 
+(integer) 1
+127.0.0.1:6379&gt; ttl web
+(integer) -1
+</code></pre>
+
+<h2 id="redis字符串类型的操作">Redis字符串类型的操作</h2>
+
+<h3 id="创建key同时指定生命周期-语法">创建key同时指定生命周期，语法：</h3>
+
+<p>set key value [ex 秒数 | px 毫秒数]</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; set site www.baidu.com ex 10
+OK
+linfeng:6379&gt; ttl site
+(integer) 2
+linfeng:6379&gt; ttl site
+(integer) -2
+</code></pre>
+
+<p>set key value  [nx | xx]</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; keys *
+(empty list or set)
+linfeng:6379&gt; set site &quot;www.baidu.com&quot; nx
+OK
+linfeng:6379&gt; set web &quot;www.google.com&quot; xx
+(nil)
+linfeng:6379&gt; keys *
+1) &quot;site&quot;
+linfeng:6379&gt; get site
+&quot;www.baidu.com&quot;
+linfeng:6379&gt; set site &quot;www.google.com&quot; xx
+OK
+linfeng:6379&gt; keys *
+1) &quot;site&quot;
+linfeng:6379&gt; get site
+&quot;www.google.com&quot;
+127.0.0.1:6379&gt; 
+</code></pre>
+
+<ul>
+<li>nx：当key不存在时执行操作</li>
+<li>xx：当key存在时执行操作</li>
+</ul>
+
+<h3 id="多个key的设置和获取">多个key的设置和获取</h3>
+
+<ul>
+<li>mset key1 value1 key2 value2 &hellip; keyb valuen</li>
+<li>mget key1 key2 &hellip; keyn</li>
+</ul>
+
+<pre><code class="language-shell">linfeng:6379&gt; keys *
+(empty list or set)
+linfeng:6379&gt; mset c controller d dao s service p po
+OK
+linfeng:6379&gt; keys *
+1) &quot;s&quot;
+2) &quot;d&quot;
+3) &quot;p&quot;
+4) &quot;c&quot;
+linfeng:6379&gt; get s
+&quot;service&quot;
+linfeng:6379&gt; get c
+&quot;controller&quot;
+linfeng:6379&gt; mget s d p c
+1) &quot;service&quot;
+2) &quot;dao&quot;
+3) &quot;po&quot;
+4) &quot;controller&quot;
+</code></pre>
+
+<h3 id="字符偏移替代">字符偏移替代</h3>
+
+<p>语法：setrange key offset value</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; keys *
+(empty list or set)
+linfeng:6379&gt; set greet hello
+OK
+linfeng:6379&gt; setrange greet 2 xx
+(integer) 5
+linfeng:6379&gt; get greet
+&quot;hexxo&quot;
+linfeng:6379&gt; setrange greet 6 !
+(integer) 7
+linfeng:6379&gt; get greet
+&quot;hexxo\x00!&quot;
+</code></pre>
+
+<p><strong>注意</strong>：如果偏移量&gt;字符串长度，则空缺处的字符由\x00补全</p>
+
+<h3 id="尾部追加值">尾部追加值</h3>
+
+<p>语法：append key value</p>
+
+<pre><code class="language-shell">linfeng.1:6379&gt; set hello &quot;hello&quot;
+OK
+linfeng:6379&gt; append hello &quot; world&quot;
+(integer) 11
+linfeng:6379&gt; get hello
+&quot;hello world&quot;
+</code></pre>
+
+<h3 id="获取子串">获取子串</h3>
+
+<p>语法：getrange key start end，获取[start,end]范围的值</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; set word &quot;fredistory&quot;
+OK
+linfeng:6379&gt; getrange word 1 5
+&quot;redis&quot;
+</code></pre>
+
+<p>从右往左切掉某段连续的字符串</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; set status working
+OK
+linfeng:6379&gt; getrange status 0 -4
+&quot;work&quot;
+</code></pre>
+
+<p><strong>注意</strong>：</p>
+
+<ul>
+<li>对于字符串的下标，从左数从０开始，从右数从－１开始</li>
+<li>start&gt;length，则返回空字符窜</li>
+<li>end&gt;length，则截取至字符串结束</li>
+<li>如果start所处的位置在stop右边，则返回空字符串</li>
+</ul>
+
+<h3 id="获取key的旧值同时设置新值">获取key的旧值同时设置新值</h3>
+
+<p>语法：getset key value</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; set status &quot;coding&quot;
+OK
+linfeng:6379&gt; getset status &quot;running&quot;
+&quot;coding&quot;
+linfeng:6379&gt; getset status &quot;bathing&quot;
+&quot;running&quot;
+linfeng:6379&gt; getset status &quot;sleeoing&quot;
+&quot;bathing&quot;
+</code></pre>
+
+<h3 id="数值的增减">数值的增减</h3>
+
+<p>每次增减１</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; set age 20
+OK
+linfeng:6379&gt; get age
+&quot;20&quot;
+linfeng:6379&gt; incr age
+(integer) 21
+linfeng:6379&gt; decr age
+(integer) 20
+linfeng:6379&gt; type age
+string
+</code></pre>
+
+<p>每次增减指定的数值</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; get age
+&quot;20&quot;
+linfeng:6379&gt; incrby age 3
+(integer) 23
+linfeng:6379&gt; decrby age 2
+(integer) 21
+</code></pre>
+
+<p>进行浮点数值的增加</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; get age
+&quot;21&quot;
+linfeng:6379&gt; incrbyfloat age 0.5
+&quot;21.5&quot;
+</code></pre>
+
+<h3 id="位运算">位运算</h3>
+
+<p>ASCII</p>
+
+<pre><code class="language-shell">A 65 0100 0001
+a 97 0110 0001
+</code></pre>
+
+<p>将一个大写字母变成小写只需将第三位数改为１</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; set char A
+OK
+linfeng:6379&gt; setbit char 2 1
+(integer) 0
+linfeng:6379&gt; get char
+&quot;a&quot;
+</code></pre>
+
+<p>注意</p>
+
+<ul>
+<li>如果offset过大，则会在中间填充０</li>
+<li>最大值字符串大小为512M</li>
+</ul>
+
+<h3 id="位操作">位操作</h3>
+
+<p>语法： bitop operation destkey key [key &hellip;]</p>
+
+<pre><code class="language-shell">linfeng:6379&gt; setbit lower 2 1 
+(integer) 0
+linfeng:6379&gt; set char R
+OK
+linfeng:6379&gt; bitop ou char char lower
+(error) ERR syntax error
+linfeng:6379&gt; bitop or char char lower
+(integer) 1
+linfeng:6379&gt; get char
+&quot;r&quot;
+</code></pre>
+
+<h2 id="list">List</h2>
+
+<h3 id="lpush-key-value-value-或rpush-key-value-value">lpush key value [value &hellip;]或rpush key value [value &hellip;]</h3>
+
+<p>新建一个List，直接往集合中放数据</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; lpush char a
+(integer) 1
+127.0.0.1:6379&gt; lpush char b
+(integer) 2
+127.0.0.1:6379&gt; lpush char c
+(integer) 3
+</code></pre>
+
+<h3 id="lrange-key-start-stop">lrange key start stop</h3>
+
+<p>返回链表中[start,stop]中的元素</p>
+
+<p>规律：左数从０开始，右数从－１开始</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; lrange char 0 2
+2) &quot;b&quot;
+3) &quot;a&quot;
+127.0.0.1:6379&gt; lrange char 0 1
+1) &quot;c&quot;
+2) &quot;b&quot;
+</code></pre>
+
+<p>可通过 lrange key 0 -1 获取链表中所有的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; lrange char 0 -1
+1) &quot;c&quot;
+2) &quot;b&quot;
+3) &quot;a&quot;
+</code></pre>
+
+<h3 id="lpop-key或rpop-key">lpop key或rpop key</h3>
+
+<p>返回并删除头/尾元素</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; lrange char 0 -1
+1) &quot;0&quot;
+2) &quot;c&quot;
+3) &quot;b&quot;
+4) &quot;a&quot;
+127.0.0.1:6379&gt; lpop char
+&quot;0&quot;
+127.0.0.1:6379&gt; lrange char 0 -1
+1) &quot;c&quot;
+2) &quot;b&quot;
+3) &quot;a&quot;
+127.0.0.1:6379&gt; rpop char
+&quot;a&quot;
+127.0.0.1:6379&gt; lrange char 0 -1
+1) &quot;c&quot;
+2) &quot;b&quot;
+</code></pre>
+
+<h3 id="lrem-key-count-value">lrem key count value</h3>
+
+<p>从链表中删除value，删除count的绝对值个value后结束</p>
+
+<p>count&gt;0:从表头删除</p>
+
+<p>count&lt;0:从表尾删除</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; lrange answer 0 -1
+1) &quot;a&quot;
+2) &quot;b&quot;
+3) &quot;c&quot;
+4) &quot;b&quot;
+5) &quot;d&quot;
+6) &quot;b&quot;
+7) &quot;e&quot;
+127.0.0.1:6379&gt; lrem answer 1 b
+(integer) 1
+127.0.0.1:6379&gt; lrange answer 0 -1
+1) &quot;a&quot;
+2) &quot;c&quot;
+3) &quot;b&quot;
+4) &quot;d&quot;
+5) &quot;b&quot;
+6) &quot;e&quot;
+127.0.0.1:6379&gt; lrem answer -1 b
+(integer) 1
+127.0.0.1:6379&gt; lrange answer 0 -1
+1) &quot;a&quot;
+2) &quot;c&quot;
+3) &quot;b&quot;
+4) &quot;d&quot;
+5) &quot;e&quot;
+</code></pre>
+
+<h3 id="ltrim-key-start-stop">ltrim key start stop</h3>
+
+<p>截取key中[start,stop]的一段，并重新赋值给key</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; rpush char a b c d
+(integer) 4
+127.0.0.1:6379&gt; lrange char 0 -1
+1) &quot;a&quot;
+2) &quot;b&quot;
+3) &quot;c&quot;
+4) &quot;d&quot;
+127.0.0.1:6379&gt; ltrim char 0 1
+OK
+127.0.0.1:6379&gt; lrange char 0 -1
+1) &quot;a&quot;
+2) &quot;b&quot;
+</code></pre>
+
+<h3 id="lindex-key-index">lindex key index</h3>
+
+<p>返回index索引上的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; rpush char a b c d e
+(integer) 5
+127.0.0.1:6379&gt; lindex char 2
+&quot;c&quot;
+</code></pre>
+
+<h3 id="llen-key">llen key</h3>
+
+<p>计算链表的元素个数</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; lrange char 0 -1
+1) &quot;a&quot;
+2) &quot;b&quot;
+3) &quot;c&quot;
+4) &quot;d&quot;
+5) &quot;e&quot;
+127.0.0.1:6379&gt; llen char
+(integer) 5
+</code></pre>
+
+<h3 id="linsert-key-before-after-pivot-value">linsert key BEFORE|AFTER pivot value</h3>
+
+<p>在链表key中查找search，并在search之前或之后插入value，注意一旦找到一个search后，命令就结束了，因此不会产生多个value</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; rpush num 1 3 5 6
+(integer) 4
+127.0.0.1:6379&gt; lrange num 0 -1
+1) &quot;1&quot;
+2) &quot;3&quot;
+3) &quot;5&quot;
+4) &quot;6&quot;
+127.0.0.1:6379&gt; linsert num before 3 2
+(integer) 5
+127.0.0.1:6379&gt; lrange num 0 -1
+1) &quot;1&quot;
+2) &quot;2&quot;
+3) &quot;3&quot;
+4) &quot;5&quot;
+5) &quot;6&quot;
+127.0.0.1:6379&gt; linsert num after 3 4
+(integer) 6
+127.0.0.1:6379&gt; lrange num 0 -1
+1) &quot;1&quot;
+2) &quot;2&quot;
+3) &quot;3&quot;
+4) &quot;4&quot;
+5) &quot;5&quot;
+6) &quot;6&quot;
+127.0.0.1:6379&gt; linsert num after 6 7
+(integer) 7
+127.0.0.1:6379&gt; linsert num after 6 7
+(integer) 8
+127.0.0.1:6379&gt; linsert num after 7 8
+(integer) 9
+127.0.0.1:6379&gt; lrange num 0 -1
+1) &quot;1&quot;
+2) &quot;2&quot;
+3) &quot;3&quot;
+4) &quot;4&quot;
+5) &quot;5&quot;
+6) &quot;6&quot;
+7) &quot;7&quot;
+8) &quot;8&quot;
+9) &quot;7&quot;
+</code></pre>
+
+<h3 id="rpoplpush-source-destination">rpoplpush source destination</h3>
+
+<p>把source的尾部元素弹出放到destination的头部并返回该单元值</p>
+
+<p>场景：task,back双链表完成安全队列</p>
+
+<p>业务逻辑：</p>
+
+<ul>
+<li>rpoplpush task back</li>
+<li>接收返回值，并作业务处理</li>
+<li>若成功，pop back删除任务；若失败，下次从back表中取任务</li>
+</ul>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; rpush task a b c d
+(integer) 4
+127.0.0.1:6379&gt; rpoplpush task back
+&quot;d&quot;
+127.0.0.1:6379&gt; lrange task 0 -1
+1) &quot;a&quot;
+2) &quot;b&quot;
+3) &quot;c&quot;
+127.0.0.1:6379&gt; lrange back 0 -1
+1) &quot;d&quot;
+</code></pre>
+
+<h3 id="brpop-blpop-key-key-timeout">brpop|blpop key [key &hellip;] timeout</h3>
+
+<p>等待弹出的key的尾/头元素，timeout为等待超时时间，若timeout为0则一直等待</p>
+
+<p>场景：长轮询Ajax，在线聊天（读数据发数据）</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sql/redis/list1.png" alt="img" /></p>
+
+<p>message为空，设置等待３０秒，在这期间如果有数据读入，则将之弹出</p>
+
+<h2 id="有序集合">有序集合</h2>
+
+<h3 id="zadd-key-nx-xx-ch-incr-score-member-score-member">zadd key [NX|XX][CH] [INCR] score member [score member &hellip;]</h3>
+
+<p>添加元素</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zadd class 17 Lucy 19 Mike 16 John 21 Allen 20 Daisy
+</code></pre>
+
+<h3 id="zrange-key-start-stop-withscores">zrange key start stop [WITHSCORES]</h3>
+
+<p>根据升序排名后的索引顺序(0-set.length-1)查看元素</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrange class 0 3
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Mike&quot;
+4) &quot;Daisy&quot;
+127.0.0.1:6379&gt; zrange class 0 -1
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Mike&quot;
+4) &quot;Daisy&quot;
+5) &quot;Allen&quot;
+127.0.0.1:6379&gt; zrange class 0 -1 withscores
+ 1) &quot;John&quot;
+ 2) &quot;16&quot;
+ 3) &quot;Lucy&quot;
+ 4) &quot;17&quot;
+ 5) &quot;Mike&quot;
+ 6) &quot;19&quot;
+ 7) &quot;Daisy&quot;
+ 8) &quot;20&quot;
+ 9) &quot;Allen&quot;
+10) &quot;21&quot;
+</code></pre>
+
+<p>同理有查看降序排列后集合元素</p>
+
+<p><strong>zrevrange key start stop [WITHSCORES]</strong></p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrevrange class 0 -1
+1) &quot;Allen&quot;
+2) &quot;Daisy&quot;
+3) &quot;Mike&quot;
+4) &quot;Lucy&quot;
+5) &quot;John&quot;
+</code></pre>
+
+<h3 id="zrangebyscore-key-min-max-withscores-limit-offset-count">zrangebyscore key min max [WITHSCORES| LIMIT offset count]</h3>
+
+<p>集合升序排列后取score在[min,max]中的元素，并跳过offset个，取出count个，可通过加上withscores参数获取score</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrangebyscore class 16 20
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Mike&quot;
+4) &quot;Daisy&quot;
+127.0.0.1:6379&gt; zrangebyscore class 10 20 limit 0 2
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+127.0.0.1:6379&gt; zrangebyscore class 10 20 withscores limit 0 2
+1) &quot;John&quot;
+2) &quot;16&quot;
+3) &quot;Lucy&quot;
+4) &quot;17&quot;
+</code></pre>
+
+<p>同理可查看降序后元素</p>
+
+<p><strong>zrevrangebyscore key max min [WITHSCORES|LIMIT offset count]</strong></p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrevrangebyscore class 20 10
+1) &quot;Daisy&quot;
+2) &quot;Mike&quot;
+3) &quot;Lucy&quot;
+4) &quot;John&quot;
+</code></pre>
+
+<h3 id="zrank-key-member">zrank key member</h3>
+
+<p>查询member的排名，升序从第０名开始</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrange class 0 -1
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Mike&quot;
+4) &quot;Daisy&quot;
+5) &quot;Allen&quot;
+127.0.0.1:6379&gt; zrank class Mike
+(integer) 2
+</code></pre>
+
+<p>查询member的排名，降序从第０名开始</p>
+
+<p><strong>zrevrank key member</strong></p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrange class 0 -1
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Mike&quot;
+4) &quot;Daisy&quot;
+5) &quot;Allen&quot;
+127.0.0.1:6379&gt; zrevrank class Allen
+(integer) 0
+</code></pre>
+
+<h3 id="zrem-key-member-member">zrem key member [member &hellip;]</h3>
+
+<p>删除集合中的元素</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrange class 0 -1
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Mike&quot;
+4) &quot;Daisy&quot;
+5) &quot;Allen&quot;
+127.0.0.1:6379&gt; zrem class Mike
+(integer) 1
+127.0.0.1:6379&gt; zrange class 0 -1
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Daisy&quot;
+4) &quot;Allen&quot;
+</code></pre>
+
+<h3 id="zremrangebyscore-key-min-max">zremrangebyscore key min max</h3>
+
+<p>按照score来删除元素，删除score在[min,max]之间的元素</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrangebyscore class 10 25 withscores
+1) &quot;John&quot;
+2) &quot;16&quot;
+3) &quot;Lucy&quot;
+4) &quot;17&quot;
+5) &quot;Daisy&quot;
+6) &quot;20&quot;
+7) &quot;Allen&quot;
+8) &quot;21&quot;
+127.0.0.1:6379&gt; zremrangebyscore class 10 20
+(integer) 3
+127.0.0.1:6379&gt; zrangebyscore class 10 25 withscores
+1) &quot;Allen&quot;
+2) &quot;21&quot;
+127.0.0.1:6379&gt; 
+</code></pre>
+
+<h3 id="zremrangebyrank-key-start-stop">zremrangebyrank key start stop</h3>
+
+<p>按照排名来删除元素，删除名次在[start,stop]之间的元素</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrange class 0 -1
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Daisy&quot;
+4) &quot;Allen&quot;
+127.0.0.1:6379&gt; zremrangebyrank class 0 1
+(integer) 2
+127.0.0.1:6379&gt; zrange class 0 -1
+1) &quot;Daisy&quot;
+2) &quot;Allen&quot;
+</code></pre>
+
+<h3 id="zcard-key">zcard key</h3>
+
+<p>获取当前集合中的元素个数</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrange class 0 -1
+1) &quot;John&quot;
+2) &quot;Lucy&quot;
+3) &quot;Mike&quot;
+4) &quot;Daisy&quot;
+5) &quot;Allen&quot;
+127.0.0.1:6379&gt; zcard class
+(integer) 5
+</code></pre>
+
+<h3 id="zcount-key-min-max">zcount key min max</h3>
+
+<p>返回score在[min,max]区间中元素的个数</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zrangebyscore class 15 25 withscores
+ 1) &quot;John&quot;
+ 2) &quot;16&quot;
+ 3) &quot;Lucy&quot;
+ 4) &quot;17&quot;
+ 5) &quot;Mike&quot;
+ 6) &quot;19&quot;
+ 7) &quot;Daisy&quot;
+ 8) &quot;20&quot;
+ 9) &quot;Allen&quot;
+10) &quot;21&quot;
+127.0.0.1:6379&gt; zcount class 15 19
+(integer) 3
+</code></pre>
+
+<h3 id="zinterstore-destination-numkeys-key-key-1-key2-keyn-weights-weight-aggrigate-sum-min-max">zinterstore destination numkeys key [key 1,key2,&hellip;,keyn]|[WEIGHTS weight] |[AGGRIGATE SUM|MIN|MAX]</h3>
+
+<p>求key1,key2,&hellip;,keyn的交集，key1,key2,&hellip;的权重分别为weight1,weight2,&hellip;，numkeys表示作交集运算的key的个数聚合方法用sum,max.min,聚合结果保存在destination</p>
+
+<p>中,返回值是destination中元素的个数</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zadd li 4 cat 3 dog 5 horse 7 duck
+(integer) 4
+127.0.0.1:6379&gt; zadd liu 5 cat 2 dog 4 horse 4 donkey
+(integer) 4
+127.0.0.1:6379&gt; zinterstore result 2 li liu 
+(integer) 3
+127.0.0.1:6379&gt; zrange result 0 -1 withscores
+1) &quot;dog&quot;
+2) &quot;5&quot;
+3) &quot;cat&quot;
+4) &quot;9&quot;
+5) &quot;horse&quot;
+6) &quot;9&quot;
+</code></pre>
+
+<p>可见默认的聚合函数为SUM，当然还可指定其他函数</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zadd li 4 cat 3 dog 5 horse 7 duck
+(integer) 4
+127.0.0.1:6379&gt; zadd liu 5 cat 2 dog 4 horse 4 donkey
+(integer) 4
+127.0.0.1:6379&gt; zinterstore maxresult 2 li liu aggregate max
+(integer) 3
+127.0.0.1:6379&gt; zrange maxresult 0 -1 withscores
+1) &quot;dog&quot;
+2) &quot;3&quot;
+3) &quot;cat&quot;
+4) &quot;5&quot;
+5) &quot;horse&quot;
+6) &quot;5&quot;
+127.0.0.1:6379&gt; zinterstore minresult 2 li liu aggregate min
+(integer) 3
+127.0.0.1:6379&gt; zrange minresult 0 -1 withscores
+1) &quot;dog&quot;
+2) &quot;2&quot;
+3) &quot;cat&quot;
+4) &quot;4&quot;
+5) &quot;horse&quot;
+6) &quot;4&quot;
+</code></pre>
+
+<p>当然也可以指定key的权重</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; zadd li 4 cat 3 dog 5 horse 7 duck
+(integer) 4
+127.0.0.1:6379&gt; zadd liu 5 cat 2 dog 4 horse 4 donkey
+(integer) 4
+127.0.0.1:6379&gt; zinterstore result 2 li liu weights 2 1 
+(integer) 3
+127.0.0.1:6379&gt; zrange result 0 -1 withscores
+1) &quot;dog&quot;
+2) &quot;8&quot;
+3) &quot;cat&quot;
+4) &quot;13&quot;
+5) &quot;horse&quot;
+6) &quot;14&quot;
+</code></pre>
+
+<p>这里的score是一共卖出了多少个动物，weight可以是单个动物的价格，这样得出的sum为总收入</p>
+
+<p>同理还有用于并集运算的zunionstore</p>
+
+<p><strong>zunionstore destination numkeys key [key &hellip;][WEIGHTS weight] [AGGREGATE SUM|MIN|MAX]</strong></p>
+
+<h3 id="哈希结构">哈希结构</h3>
+
+<h3 id="hset-key-field-value">hset key field value</h3>
+
+<p>把key中的field域的值设为value，若没有field直接添加否则覆盖原field的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hset user name Mike
+(integer) 1
+127.0.0.1:6379&gt; hset user age 20
+(integer) 1
+127.0.0.1:6379&gt; hset user gender male
+(integer) 1
+</code></pre>
+
+<h3 id="hmset-key-field-value-field-value">hmset key field value [field value &hellip;]</h3>
+
+<p>创建key同时设置多个field的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hmset user1 name Daisy age 21 gender female
+OK
+</code></pre>
+
+<h3 id="hgetall-key">hgetall key</h3>
+
+<p>获取key的所有field及其对应的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hgetall user
+1) &quot;name&quot;
+2) &quot;Mike&quot;
+3) &quot;age&quot;
+4) &quot;20&quot;
+5) &quot;gender&quot;
+6) &quot;male&quot;
+</code></pre>
+
+<h3 id="hget-key-field">hget key field</h3>
+
+<p>返回key中field对应的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hget user1 name
+&quot;Daisy&quot;
+</code></pre>
+
+<h3 id="hmget-key-field-field1-field2-fieldn">hmget key field [field1,field2,&hellip;,fieldn]</h3>
+
+<p>返回key中field1,field2,&hellip;,fieldn对应的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hmget user name age gender
+1) &quot;Mike&quot;
+2) &quot;20&quot;
+3) &quot;male&quot;
+</code></pre>
+
+<h3 id="hdel-key-field-field1-field2-fieldn">hdel key field [field1,field2,&hellip;,fieldn]</h3>
+
+<p>删除key中的field1,field2,&hellip;,fieldn</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hgetall user
+1) &quot;name&quot;
+2) &quot;Mike&quot;
+3) &quot;age&quot;
+4) &quot;20&quot;
+5) &quot;gender&quot;
+6) &quot;male&quot;
+127.0.0.1:6379&gt; hdel user age gender
+(integer) 2
+127.0.0.1:6379&gt; hgetall user
+1) &quot;name&quot;
+2) &quot;Mike&quot;
+</code></pre>
+
+<h3 id="hlen-key">hlen key</h3>
+
+<p>返回key中field的个数</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hgetall user
+1) &quot;name&quot;
+2) &quot;Mike&quot;
+3) &quot;age&quot;
+4) &quot;20&quot;
+5) &quot;gender&quot;
+6) &quot;male&quot;
+127.0.0.1:6379&gt; hlen user
+(integer) 3
+</code></pre>
+
+<h3 id="hexists-key-field">hexists key field</h3>
+
+<p>判断key中是否有field，若有返回１否则返回０</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hgetall user
+1) &quot;name&quot;
+2) &quot;Mike&quot;
+3) &quot;age&quot;
+4) &quot;20&quot;
+5) &quot;gender&quot;
+6) &quot;male&quot;
+127.0.0.1:6379&gt; hexists user age 
+(integer) 1
+127.0.0.1:6379&gt; hexists user height
+(integer) 0
+</code></pre>
+
+<h3 id="hincrby-key-field-increment">hincrby key field increment</h3>
+
+<p>将key中field的值增加increment，返回值为field增加后的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hget user age 
+&quot;20&quot;
+127.0.0.1:6379&gt; hincrby user age 2
+(integer) 22
+</code></pre>
+
+<h3 id="incrbyfloat-key-increment">incrbyfloat key increment</h3>
+
+<p>将key中field的值增加increment，increment为浮点数，返回值为field增加后的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hincrby user age -2
+(integer) 20
+127.0.0.1:6379&gt; hincrbyfloat user age 1.5
+&quot;21.5&quot;
+</code></pre>
+
+<h3 id="hkeys-key">hkeys key</h3>
+
+<p>返回key中所有的field</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hgetall user
+1) &quot;name&quot;
+2) &quot;Mike&quot;
+3) &quot;age&quot;
+4) &quot;21.5&quot;
+5) &quot;gender&quot;
+6) &quot;male&quot;
+127.0.0.1:6379&gt; hkeys user
+1) &quot;name&quot;
+2) &quot;age&quot;
+3) &quot;gender&quot;
+</code></pre>
+
+<h3 id="hvals-key">hvals key</h3>
+
+<p>返回key的所有field对应的值</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; hgetall user
+1) &quot;name&quot;
+2) &quot;Mike&quot;
+3) &quot;age&quot;
+4) &quot;21.5&quot;
+5) &quot;gender&quot;
+6) &quot;male&quot;
+127.0.0.1:6379&gt; hvals user
+1) &quot;Mike&quot;
+2) &quot;21.5&quot;
+3) &quot;male&quot;
+</code></pre>
+
+<h3 id="事务及锁应用">事务及锁应用</h3>
+
+<p><strong>基本命令</strong></p>
+
+<ul>
+<li>multi：开启事务</li>
+<li>discard：撤销</li>
+<li>exec：执行</li>
+<li>watch：监视</li>
+<li>unwatch：取消对所有的key的监视</li>
+</ul>
+
+<p><strong>Ｄｅｍｏ１：模拟一个银行转账的过程</strong></p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; set li 600
+OK
+127.0.0.1:6379&gt; set wang 1000
+OK
+127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; decrby wang 300
+QUEUED
+127.0.0.1:6379&gt; incrby li 300
+QUEUED
+127.0.0.1:6379&gt; exec
+1) (integer) 700
+2) (integer) 900
+127.0.0.1:6379&gt; mget wang li
+1) &quot;700&quot;
+2) &quot;900&quot;
+</code></pre>
+
+<p>可见在事务过程中，先将要执行的语句加入到队列中，若无错误则在确定exec后在执行，这样保证命令的原子性</p>
+
+<p>注意事务出错主要有两种</p>
+
+<ul>
+<li>语法有问题，这时事务中所有语句都不执行</li>
+</ul>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; mget wang li
+1) &quot;700&quot;
+2) &quot;900&quot;
+127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; decrby wang 200
+QUEUED
+127.0.0.1:6379&gt; dsadasd
+(error) ERR unknown command 'dsadasd'
+127.0.0.1:6379&gt; exec
+(error) EXECABORT Transaction discarded because of previous errors.
+127.0.0.1:6379&gt; mget wang li
+1) &quot;700&quot;
+2) &quot;900&quot;
+</code></pre>
+
+<ul>
+<li>语句本身没有问题，但适用对象有问题，这时只执行正确的命令</li>
+</ul>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; mget wang li
+1) &quot;700&quot;
+2) &quot;900&quot;
+127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; decrby wang 200
+QUEUED
+127.0.0.1:6379&gt; sadd li longlong
+QUEUED
+127.0.0.1:6379&gt; incrby li 200
+QUEUED
+127.0.0.1:6379&gt; exec
+1) (integer) 500
+2) (error) WRONGTYPE Operation against a key holding the wrong kind of value
+3) (integer) 1100
+127.0.0.1:6379&gt; mget wang li
+1) &quot;500&quot;
+2) &quot;1100&quot;
+</code></pre>
+
+<p>discard，取消执行事务，严格意义上不算回滚，只是将任务队列清空,一旦队列中命令已经执行，则无法取消</p>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; mget wang li
+1) &quot;500&quot;
+2) &quot;1100&quot;
+127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; incrby wang 100
+QUEUED
+127.0.0.1:6379&gt; decrby li 100
+QUEUED
+127.0.0.1:6379&gt; discard
+OK
+127.0.0.1:6379&gt; mget wang li
+1) &quot;500&quot;
+2) &quot;1100&quot;
+</code></pre>
+
+<p><strong>Demo2：模拟一个买票的场景</strong></p>
+
+<p>ticket-1,money-100</p>
+
+<p>假如在执行买票的事务的过程中票刚好卖完，ticket就有可能出现负值</p>
+
+<p>这时可以通过在事务中通过<strong>watch ticket</strong> 来实现对某个key的监听，如果ticket的值发生变化，则事务取消，这就是<strong>watch key [key &hellip;]</strong> 的用法</p>
+
+<ul>
+<li>假如liu和chen两人抢最后一张票</li>
+</ul>
+
+<pre><code class="language-shell">127.0.0.1:6379&gt; set ticket 1
+OK
+127.0.0.1:6379&gt; set liu 300 
+OK
+127.0.0.1:6379&gt; set chen 300
+OK
+</code></pre>
+
+<ul>
+<li>liu正要买票</li>
+</ul>
+
+<pre><code class="language-shell">  127.0.0.1:6379&gt; multi
+  OK
+  127.0.0.1:6379&gt; decr ticket
+  QUEUED
+  127.0.0.1:6379&gt; decrby liu 100
+  QUEUED
+</code></pre>
+
+<ul>
+<li>然而就在他要执行的时候，票被chen买走了</li>
+</ul>
+
+<pre><code class="language-shell">  127.0.0.1:6379&gt; multi
+  OK
+  127.0.0.1:6379&gt; decr ticket
+  QUEUED
+  127.0.0.1:6379&gt; decrby chen 100
+  QUEUED
+  127.0.0.1:6379&gt; exec
+  1) (integer) 0
+  2) (integer) 200
+  127.0.0.1:6379&gt; get ticket
+  &quot;0&quot;
+</code></pre>
+
+<ul>
+<li>这时如果liu再执行，则ticket变为-1了，显然不符合实际</li>
+</ul>
+
+<pre><code class="language-shell">  127.0.0.1:6379&gt; exec
+  1) (integer) -1
+  2) (integer) 200
+</code></pre>
+
+<ul>
+<li>使用监视，liu再买票</li>
+</ul>
+
+<pre><code class="language-shell">  127.0.0.1:6379&gt; flushdb
+  OK
+  127.0.0.1:6379&gt; mset ticket 1 liu 300 chen 300
+  OK
+  127.0.0.1:6379&gt; watch ticket
+  OK
+  127.0.0.1:6379&gt; multi
+  OK
+  127.0.0.1:6379&gt; decr ticket
+  QUEUED
+  127.0.0.1:6379&gt; decrby liu 100
+  QUEUED
+</code></pre>
+
+<ul>
+<li>chen再把票抢走</li>
+</ul>
+
+<pre><code class="language-shell">  127.0.0.1:6379&gt; multi
+  OK
+  127.0.0.1:6379&gt; decr ticket
+  QUEUED
+  127.0.0.1:6379&gt; decrby chen 100
+  QUEUED
+  127.0.0.1:6379&gt; exec
+  1) (integer) 0
+  2) (integer) 200
+</code></pre>
+
+<ul>
+<li>liu执行</li>
+</ul>
+
+<pre><code class="language-shell">  127.0.0.1:6379&gt; mget ticket liu 
+  1) &quot;0&quot;
+  2) &quot;300&quot;
+</code></pre>
+
+<p>可见事务已经取消</p>
+
+<h2 id="频道发布和消息订阅">频道发布和消息订阅</h2>
+
+<h3 id="publish-channel-message">publish channel message</h3>
+
+<p>发布message到某个某个频道，返回值为接收到消息的客户端的个数</p>
+
+<pre><code class="language-shell">client&gt; publish news &quot;today...&quot;
+(integer) 0
+</code></pre>
+
+<h3 id="subscribe-channel-channel">subscribe channel [channel &hellip;]</h3>
+
+<p>收听某个/些频道</p>
+
+<pre><code class="language-shell">client&gt; subscribe news
+Reading messages... (press Ctrl-C to quit)
+1) &quot;subscribe&quot;
+2) &quot;news&quot;
+3) (integer) 1
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sql/redis/news1.png" alt="img" /></p>
+
+<h3 id="psubscribe-pattern-pattern">psubscribe pattern [pattern &hellip;]</h3>
+
+<p>通过通配符指定收听一系列频道</p>
+
+<pre><code class="language-shell">client&gt; psubscribe news *
+Reading messages... (press Ctrl-C to quit)
+1) &quot;psubscribe&quot;
+2) &quot;news&quot;
+3) (integer) 1
+1) &quot;psubscribe&quot;
+2) &quot;*&quot;
+3) (integer) 2
+1) &quot;pmessage&quot;
+2) &quot;*&quot;
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sql/redis/news2.png" alt="img" /></p>
+
+<h2 id="pubsub-channels-pattern">PUBSUB CHANNELS [pattern]</h2>
+
+<p>列出当前的活跃频道。</p>
+
+<p>活跃频道指的是那些至少有一个订阅者的频道，订阅模式的客户端不计算在内。</p>
+
+<p><code>pattern</code> 参数是可选的：</p>
+
+<ul>
+<li>如果不给出 <code>pattern</code> 参数，那么列出订阅与发布系统中的所有活跃频道。</li>
+<li>如果给出 <code>pattern</code> 参数，那么只列出和给定模式 <code>pattern</code> 相匹配的那些活跃频道。</li>
+</ul>
+
+<p><strong>复杂度：</strong> O(N) ， <code>N</code> 为活跃频道的数量（对于长度较短的频道和模式来说，将进行模式匹配的复杂度视为常数）。</p>
+
+<p><strong>返回值：</strong> 一个由活跃频道组成的列表。</p>
+
+<pre><code class="language-shell"># client-1 订阅 news.it 和 news.sport 两个频道
+
+client-1&gt; SUBSCRIBE news.it news.sport
+Reading messages... (press Ctrl-C to quit)
+1) &quot;subscribe&quot;
+2) &quot;news.it&quot;
+3) (integer) 1
+1) &quot;subscribe&quot;
+2) &quot;news.sport&quot;
+3) (integer) 2
+
+# client-2 订阅 news.it 和 news.internet 两个频道
+
+client-2&gt; SUBSCRIBE news.it news.internet
+Reading messages... (press Ctrl-C to quit)
+1) &quot;subscribe&quot;
+2) &quot;news.it&quot;
+3) (integer) 1
+1) &quot;subscribe&quot;
+2) &quot;news.internet&quot;
+3) (integer) 2
+
+# 首先， client-3 打印所有活跃频道
+# 注意，即使一个频道有多个订阅者，它也只输出一次，比如 news.it
+
+client-3&gt; PUBSUB CHANNELS
+1) &quot;news.sport&quot;
+2) &quot;news.internet&quot;
+3) &quot;news.it&quot;
+
+# 接下来， client-3 打印那些与模式 news.i* 相匹配的活跃频道
+# 因为 news.sport 不匹配 news.i* ，所以它没有被打印
+
+redis&gt; PUBSUB CHANNELS news.i*
+1) &quot;news.internet&quot;
+2) &quot;news.it&quot;
+</code></pre>
+
+<h2 id="pubsub-numsub-channel-1-channel-n">PUBSUB NUMSUB [channel-1 &hellip; channel-N]</h2>
+
+<p>返回给定频道的订阅者数量，订阅模式的客户端不计算在内。</p>
+
+<p><strong>复杂度：</strong> O(N) ， <code>N</code> 为给定频道的数量。</p>
+
+<p><strong>返回值：</strong>一个多条批量回复（Multi-bulk reply），回复中包含给定的频道，以及频道的订阅者数量。格式为：频道 <code>channel-1</code> ， <code>channel-1</code> 的订阅者数量，频道 <code>channel-2</code> ， <code>channel-2</code> 的订阅者数量，诸如此类。回复中频道的排列顺序和执行命令时给定频道的排列顺序一致。不给定任何频道而直接调用这个命令也是可以的，在这种情况下，命令只返回一个空列表。</p>
+
+<pre><code class="language-shell"># client-1 订阅 news.it 和 news.sport 两个频道
+
+client-1&gt; SUBSCRIBE news.it news.sport
+Reading messages... (press Ctrl-C to quit)
+1) &quot;subscribe&quot;
+2) &quot;news.it&quot;
+3) (integer) 1
+1) &quot;subscribe&quot;
+2) &quot;news.sport&quot;
+3) (integer) 2
+
+# client-2 订阅 news.it 和 news.internet 两个频道
+
+client-2&gt; SUBSCRIBE news.it news.internet
+Reading messages... (press Ctrl-C to quit)
+1) &quot;subscribe&quot;
+2) &quot;news.it&quot;
+3) (integer) 1
+1) &quot;subscribe&quot;
+2) &quot;news.internet&quot;
+3) (integer) 2
+
+# client-3 打印各个频道的订阅者数量
+
+client-3&gt; PUBSUB NUMSUB news.it news.internet news.sport news.music
+1) &quot;news.it&quot;    # 频道
+2) &quot;2&quot;          # 订阅该频道的客户端数量
+3) &quot;news.internet&quot;
+4) &quot;1&quot;
+5) &quot;news.sport&quot;
+6) &quot;1&quot;
+7) &quot;news.music&quot; # 没有任何订阅者
+8) &quot;0&quot;
+</code></pre>
+
+<h2 id="pubsub-numpat">PUBSUB NUMPAT</h2>
+
+<p>返回订阅模式的数量。</p>
+
+<p>注意，这个命令返回的不是订阅模式的客户端的数量，而是客户端订阅的所有模式的数量总和。</p>
+
+<p><strong>复杂度：</strong> O(1) 。</p>
+
+<p><strong>返回值：</strong> 一个整数回复（Integer reply）。</p>
+
+<pre><code class="language-shell"># client-1 订阅 news.* 和 discount.* 两个模式
+
+client-1&gt; PSUBSCRIBE news.* discount.*
+Reading messages... (press Ctrl-C to quit)
+1) &quot;psubscribe&quot;
+2) &quot;news.*&quot;
+3) (integer) 1
+1) &quot;psubscribe&quot;
+2) &quot;discount.*&quot;
+3) (integer) 2
+
+# client-2 订阅 tweet.* 一个模式
+
+client-2&gt; PSUBSCRIBE tweet.*
+Reading messages... (press Ctrl-C to quit)
+1) &quot;psubscribe&quot;
+2) &quot;tweet.*&quot;
+3) (integer) 1
+
+# client-3 返回当前订阅模式的数量为 3
+
+client-3&gt; PUBSUB NUMPAT
+(integer) 3
+
+# 注意，当有多个客户端订阅相同的模式时，相同的订阅也被计算在 PUBSUB NUMPAT 之内
+# 比如说，再新建一个客户端 client-4 ，让它也订阅 news.* 频道
+
+client-4&gt; PSUBSCRIBE news.*
+Reading messages... (press Ctrl-C to quit)
+1) &quot;psubscribe&quot;
+2) &quot;news.*&quot;
+3) (integer) 1
+
+# 这时再计算被订阅模式的数量，就会得到数量为 4
+
+client-3&gt; PUBSUB NUMPAT
+(integer) 4
+</code></pre>
+
+<h3 id="unsubscribe-channel-channel">UNSUBSCRIBE [channel [channel &hellip;]]</h3>
+
+<p>指示客户端退订给定的频道。</p>
+
+<p>如果没有频道被指定，也即是，一个无参数的 <code>UNSUBSCRIBE</code> 调用被执行，那么客户端使用SUBSCRIBE命令订阅的所有频道都会被退订。在这种情况下，命令会返回一个信息，告知客户端所有被退订的频道。</p>
+
+<ul>
+<li><strong>可用版本：</strong></li>
+</ul>
+
+<blockquote>
+<p>= 2.0.0</p>
+</blockquote>
+
+<ul>
+<li><strong>时间复杂度：</strong></li>
+</ul>
+
+<p>O(N) ， <code>N</code> 是客户端已订阅的频道的数量。</p>
+
+<ul>
+<li><strong>返回值：</strong></li>
+</ul>
+
+<p>这个命令在不同的客户端中有不同的表现。</p>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <h4><a href="https://jordonyang.github.io/">临风</a></h4>
+  
+  <p>Read <a href="https://jordonyang.github.io/">more posts</a> by this author.</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+  </div>
+</section>
+
+
+
+
+    
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+	<a href="#" class="bds_tqq" data-cmd="tqq"></a>
+	<a href="#" class="bds_renren" data-cmd="renren"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin"></a>
+</div>
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+</main>
+
+
+  <aside class="read-next">
+  
+      <a class="read-next-story" style="no-cover" href="https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/">
+          <section class="post">
+              <h2>通过反编译理解Java foreach 语法糖</h2>
+              
+          </section>
+      </a>
+  
+  
+      <a class="read-next-story prev" style="no-cover" href="https://jordonyang.github.io/post/network/nginx/nginx-rtmp/">
+          <section class="post">
+              <h2>使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播</h2>
+          </section>
+      </a>
+  
+</aside>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+
