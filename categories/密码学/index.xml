@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>密码学 on 临风博客</title>
+    <link>https://jordonyang.github.io/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/</link>
+    <description>Recent content in 密码学 on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Mon, 05 Nov 2018 21:06:29 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Big Prime Number Generation And Primality Testing</title>
+      <link>https://jordonyang.github.io/post/security/crypto/unsymmetry/prime/</link>
+      <pubDate>Mon, 05 Nov 2018 21:06:29 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/unsymmetry/prime/</guid>
+      <description>前言: RSA算法基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。那么也就是说要使用RSA算法，前提是必须有两个大素数才行，那么大素数是怎么生成的呢？考虑到RSA算法的高效性和安全性，怎样快速生成一个大素数呢？
+0x01. 素性测试 (Primality Testing) 素数又称质数，是在大于1的整数中，只能被1和其自身整除的数（如2、3、5等）。素性测试是检验一个给定的整数是否为素数的测试。
+1. 试除法 ( Trial Division ) 如果要判定n是否是素数，写一个循环从2到sqrt(n)判断其能否整除n，若都不能则n为素数。这个方法我们一般称之为试除法。
+如果n比较小的话，采用试除法当然是非常高效快捷的。但是当n很大的时候，这个算法可就行不通了，以RSA1024为例，当公钥为
+0x890e23101a542913da8a4350672c9ef8e7b34c2687ce8cd8db3fb34244a791d60c9dc0a53172a56dcc8a66f553c0ae51e9e2e2ce9486fa6b00a6c556bfed139001133cdfe5921c425eb8823b1bd0a4c00920d24bee2633256328502eadbfac1420f9a5f47139de6f14d8eb7c2b7c0cec42530c0a71dadb80c7214f5cd19a3f2f  时，两个质因数分别为
+0xe5a111a219c64f841669400f51a54dd4e75184004f0f4d21c6ae182cfb528652a02d6d677a72b564c505b1ed42a0c648dbfe14eb66b04c0d60ba3872826c32e7  和
+8002511426596424351829267099531651390448054153452321185350746845306277585856673898048740413439442356860630765545600353049345324913056448174487017235828857  这是一个155位数和一个154位数，都在2的511次方左右，肯定gg啦😒😒😒
+2. 概率性检验算法 现在许多流行的质数检验是概率检验。这些测试除了使用被测试的数字n外，还使用从样本空间中随机选择的其他一些数字a。通常的随机素数检验从不将素数检测误判为合数，但合数被误判为素数是可能的。通过重复几个独立选取的a值进行试验，可以降低误差概率。
+随机素数检验的基本结构如下:
+ 随机选择一个数字a。 检查a与给定数n是否相等，如果相等不成立，则n为合数，a为合数的见证（witness），检验停止。 重复步骤1，直到达到所需的精度。  在一个或多个迭代之后，如果没有发现n是一个合数，那么可以说它可能是素数。
+( 1 ) 费马小定理 (Fermat&amp;rsquo;s little theorem) 它是数论中的一个定理：假如a是一个整数，p是一个素数，那么ap−a是p的倍数，可以表示为ap ≡ a (mod p) ，如果a不是p的倍数，这个定理也可以写成 ap − 1 ≡ 1 (mod p)
+费马小定理的证明过程在这里不再赘述。需要注意的是，费马小定理是判定一个数是否为素数的必要条件，并非充分条件，因为存在着一些伪素数满足费马小定理却不是素数，如2340 ≡ 1 (mod 341)，但是341 = 11×31，不为素数。
+( 2 ) 费马概率性检验 (Fermat primality test) 更近一步考虑，一个合数可能在a=2时通过了测试，但a=3时的计算结果却排除了素数的可能。于是，人们扩展了伪素数的定义，称满足an−1 mod n = 1的合数n叫做以a为底的伪素数(pseudoprime to base a)。前10亿个自然数中同时以2和3为底的伪素数只有1272个，这个数目不到刚才的1/4。这说明如果同时验证a=2和a=3两种情况，算法出错的概率降到了0.</description>
+    </item>
+    
+  </channel>
+</rss>

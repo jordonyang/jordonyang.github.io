@@ -7,13 +7,48 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Thu, 18 Oct 2018 22:23:44 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 10 Nov 2018 14:23:26 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>基于原理逐步实现AES加密算法</title>
+      <title>Understanding And Implementing RSA Algorithm</title>
+      <link>https://jordonyang.github.io/post/security/crypto/unsymmetry/rsa/</link>
+      <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/unsymmetry/rsa/</guid>
+      <description>0x01. 简介 最初的公钥方案是在1977年由Ron Rivest、Adi Shamir和Len Adleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。
+0x02. 应用 用于在开放的网络环境（如Internet）上保护电子通信，而不依赖于隐藏或隐蔽的通道，甚至用于密钥交换。开放的网络环境容易受到各种通信安全问题的影响，比如中间人攻击和欺骗。通信安全通常包括要求通信不得在运输途中可读（保存保密），通信在运输途中不能修改（保证沟通完整性），沟通必须来自一个确定原（发送方真实性），和收件人必须不能否定或拒绝接收的通信。将非对称加密与Enveloped Public Key Encryption（EPKE）方法相结合，允许在开放的网络环境中安全发送通信。换句话说，即使密码分析者听了包括密钥交换在内的整个对话也无法解释对话。
+公钥密码术中使用的区别技术是使用非对称密钥算法，其中一方用于执行加密的密钥与另一方用于解密的密钥不同。每个用户都有一对加密密钥——一个公共加密密钥和一个私有解密密钥。例如，用于数字签名的密钥对（包括一个私有签名密钥和一个公共验证密钥）。公钥可以广泛分发，而私钥只有其所有者知道。它们在数学上是相关的，但是选择参数是为了从公钥计算私钥是不可行的。
+相反，对称密钥算法使用的是一个秘密密钥，它必须由发送方（用于加密)和接收方）用于解密)共享并保持私有。要使用对称加密方案，发送方和接收方必须事先安全地共享密钥。
+由于对称密钥算法几乎总是比非对称密钥算法计算量小得多，所以通常使用密钥交换算法交换密钥，然后使用该密钥和对称密钥算法传输数据。PGP和SSL/TLS方案家族使用这个过程，因此称为混合加密系统。综上非对称算法适用于
+ 密钥交换 数字签名 与对称加密算法混合使用（PGP, SSL, TLS）  0x03. 原理 对于某一明文块M和密文块C，加密和解密有如下的形式： $$C = M^e \ mod \ n$$ $$M = C^d \ mod \ n = (M^e)^d \ mod\ n = M^{ed} mod \ n$$
+发送方和接收方都必须知道n和e的值，并且只有接收者知道d的值。RSA公钥密码算法的公钥KU=&amp;lt;e, n&amp;gt;， 私钥KR=&amp;lt;d, n&amp;gt;。为使该算法能够用于公钥加密，它必须满足下列要求：
+ 可以找到e、d、n的值，使得对所有的Medmod n = M成立。 对所有满足M &amp;lt; n的值，计算Me和Cd相对容易。 给定e和n不可能推出d  前两个要求很容易得到满足。当e和n取很大的值时，第三个要求也能够得到满足。下面的图1总结了RSA算法。
+ 开始时选择两个素数p和q，计算它们的积n作为加密和解密时的模。 接着需要计算n的欧拉函数值φ(n)。φ(n)表示小于n且与n互素的正整数的个数。 然后选择与φ(n)互素的整数e (即e和φ(n)的最大公约数为1)。 最后，计算e关于模φ(n)的乘法逆元d。d和e具有所期望的属性。  假设用户A已经公布了他的公钥，且用户B希望给A发送消息M。那么B计算C = Me(mod n)并且发送C。当接收到密文时，用户A通过计算M = Cd (mod n)解密密文。 上面的图2显示了[SING99]中的一个例子。对于这个例子，按下列步骤生成密钥:</description>
+    </item>
+    
+    <item>
+      <title>Understanding Stream Cipher and Implementation of RC4</title>
+      <link>https://jordonyang.github.io/post/security/crypto/symmetry/rc4/</link>
+      <pubDate>Sat, 10 Nov 2018 10:01:04 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/symmetry/rc4/</guid>
+      <description>前言 分组密码每次处理一个输入分组，并为每个输入分组产生一个输出分组。流密码连续处理输入元素，在运行过程中，一次产生一个输出元素。尽管分组密码普遍得多，但对于一些特定的应用，使用流密码更合适。
+一. 流密码结构 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;典型的流密码一次加密一个字节的明文，尽管流密码可能设计成一次操作一个比特或者比字节大的单位。图2.7是流密码结构的示意图。在这个结构里，密钥输入到一个伪随机字节生成器，产生一个表面随机的8比特数据流。如果不知道输入密钥，伪随机流就不可预测的，而且它具有表面上随机的性质。这个生成器的输出称为密钥流，使用位异或操作与明文流结合，一次一个字节。例如，如果生成器产生的下一字节是01101100，明文的下一字节是11001100，那么得到的密文字节是： $$11001100 ⊕ 01101100 \ = \ 10100000$$ 解密需要同一伪随机序列： $$10100000 ⊕ 01101100 \ = \ 11001100 $$
+[KUMA97]列出了下列设计流密码时需要重要考虑的因素：
+ 加密序列应该有一个长周期。伪随机数生成器使用一个函数产生一个实际上不断重复的确定比特流。这个重复的周期越长，密码破解就越困难。 密钥流应该尽可能地接近真随机数流的性质。例如， 1和0的数目应该近似相等。如果将密钥流视作字节流，那么字节的256种可能值出现的频率应该近似相等。密钥流表现得越随机，密文就越随机化，密码破译就越困难。 图2.6指出了伪随机数生成器的输出受输入密钥值控制。为了抵抗穷举攻击，这个密钥必须非常长。分组密码中的考虑因素在这里同样适用。因此，就当前的科技水平而言，需要至少128比特长度的密钥。  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果伪随机数生成器设计合理，对同样的密钥长度，流密码和分组密码一样安全。流密码的主要优点是流密码与分组密码相比几乎总是更快，使用更少的代码。本文中的示例RC4能用仅仅几行代码实现。最近几年，随着AES的引进，这个优势己经消失了，因为AES可以用软件方式高效实现。比如，Intel AES指令集含有一轮加解密和密钥产生过程使用的机器指令。使用硬件指令实现AES跟仅使用软件方式相比，速度提高了一个数M级。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;分组密码的优点是可以重复使用密钥。但是如果两个明文使用同一密钥进行流密码加密，密码破译常常会非常容易[DAWS96]。如果将这两个密文流进行异或，结果就是原始明文的异或值。如果明文是文本字符串、信用卡号或者其他己知其性质的字节流，密码破解可能会成功。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;对于需要加密/解密数据流的应用，比如在数据通信信道或者浏览器/网络链路上，流密码也许是更好的选择。对于处理数据分组的应用，比如文件传递、电子邮件和数据库，分组密码可能更合适。但是，这两种密码都可以在几乎所有的应用中使用。
+二. RC4算法 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;RC4是Ron Rivest在1987年为RSA Security公司设计的流密码。它是密钥大小可变的流密码，使用面向字节的操作。这个算法基于随机交换的使用。通过分析指出，这个密码的周期完全可能大于10100[ROBS95a]。每输出一个字节需要8~16个机器操作，并且此密码用软件实现运行速度非常快。为网络浏览器和服务器之间的通信定义的SS17TLS (安全套接字层/传输层安全）标准中使用了RC4。它也被用于属于IEEE 802.11无线LAN标准一部分的WEP (有线等效保密）协议及更新的Wi-Fi保护访问（WPA) 协议 。 RC4原本被RSA Security公司当作商业秘密。1994年9月，RC4算法通过Cypherpunks匿名邮件转发列表匿名地公布在因特网上。
+1. 算法细节 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;RC4算法非常简单，易于描述。用一个可变长度为1〜256字节(8-2048比特）的密钥来初始化256字节的状态向S，其元素为S[0], S[l] , …, S[255]。从始至终置换后的S包含从0到255的所有8位数。加密和解密时，字节k（见上图）是从S的255个元素中按一种系统的方式选出的。每次k值产生之后，要重新排列S的元素。
+2. 初始化S &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;开始时， S的元素按升序被置为0〜255；即S[0] = 0, S[l] = l, S[255] = 255。同时创建一个临时向量T。如果密钥K的长度为256字节，就把K直接赋给T，否则，对于keylen字节长度的密钥，将K赋值给T的前keylen个元素，并循环重复用K的值赋给T剩下的元素，直到T的所有元素都被赋值。这些预操作可被概括为
+/* 初始化 */ for i = 0 to 255 do S[i] = i； T[i] = K[i mod keylen];  然后用T产生S的初始置换，从S[0]〜S[255]，对每个S[i],根据由T[i]确定的方案，并将S[i]置换为S的另一字节：</description>
+    </item>
+    
+    <item>
+      <title>Implementation of AES Algorithm</title>
       <link>https://jordonyang.github.io/post/impl-of-aes/</link>
       <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
       
@@ -35,7 +70,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>DES加密算法原理及实现</title>
+      <title>Implementation of DES Algorithm</title>
       <link>https://jordonyang.github.io/post/impl-of-des/</link>
       <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
       
@@ -50,7 +85,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器</title>
+      <title>An Arithmetic Expression Generator Based on Binary Tree Structure</title>
       <link>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</link>
       <pubDate>Tue, 18 Sep 2018 20:25:43 +0800</pubDate>
       
@@ -61,7 +96,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>WordCounter - 基于责任链设计模式的代码文件分析统计器</title>
+      <title>Code File Analyser and Counter Based on Chain of Responsibility Disgn Pattern</title>
       <link>https://jordonyang.github.io/post/code-file-analyser-and-counter-based-on-chain-of-responsibility-disgn-pattern/</link>
       <pubDate>Fri, 14 Sep 2018 12:23:56 +0800</pubDate>
       
@@ -72,7 +107,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>基于JDK1.7的HashMap源码阅读</title>
+      <title>Digging in Source Code of HashMap (JDK1.7)</title>
       <link>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</link>
       <pubDate>Mon, 27 Aug 2018 12:01:48 +0800</pubDate>
       
@@ -82,7 +117,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>JVM垃圾收集机制</title>
+      <title>The Garbage Collection Mechanism of the JVM</title>
       <link>https://jordonyang.github.io/post/garbage-collection-of-jvm/</link>
       <pubDate>Sat, 04 Aug 2018 23:25:14 +0800</pubDate>
       
@@ -102,7 +137,7 @@ GC停顿：亦称Stop The World（STW），即在整个可达性分析期间，�
     </item>
     
     <item>
-      <title>LinkedList源码阅读与分析</title>
+      <title>Digging in Source Code of LinkedList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
       <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
       
@@ -114,7 +149,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>ArrayList源码阅读与分析</title>
+      <title>Digging in Source Code of ArrayList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
       <pubDate>Sat, 23 Jun 2018 22:40:02 +0800</pubDate>
       
@@ -128,7 +163,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Thread类的run()方法执行过程跟踪和思考</title>
+      <title>Thread Run Method Execution Process Tracking and Thinking</title>
       <link>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</link>
       <pubDate>Sun, 25 Mar 2018 21:46:51 +0800</pubDate>
       
@@ -146,7 +181,7 @@ JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到�
     </item>
     
     <item>
-      <title>通过反编译理解Java foreach 语法糖</title>
+      <title>Understanding the Foreach Syntax Sugar by Decompilation</title>
       <link>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</link>
       <pubDate>Sun, 25 Feb 2018 22:03:56 +0800</pubDate>
       
@@ -159,7 +194,7 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>二叉堆的Java实现</title>
+      <title>Constructing Binary Heap with Java</title>
       <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       

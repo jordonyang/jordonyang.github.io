@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java Concurrency on 临风博客</title>
+    <link>https://jordonyang.github.io/tags/java-concurrency/</link>
+    <description>Recent content in Java Concurrency on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Sun, 25 Nov 2018 20:48:32 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/tags/java-concurrency/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Simply Understanding Compare-And-Swap</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/cas/</link>
+      <pubDate>Sun, 25 Nov 2018 20:48:32 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/cas/</guid>
+      <description>一. 简介 比较并交换(compare and swap, CAS)，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。该操作通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值。
+无锁（lock-free）的非阻塞算法 CAS是项乐观锁技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。CAS无锁算法的C语言实现如下：
+int cas(long *addr, long old, long new) { /* Executes atomically. */ ATOMIC(); if(*addr != old) return 0; *addr = new; END_ATOMIC(); return 1; }  在使用上，通常会记录下某块内存中的旧值，通过对旧值进行一系列的操作后得到新值，然后通过CAS操作将新值与旧值进行交换。如果这块内存的值在这期间内没被修改过，则旧值会与内存中的数据相同，这时CAS操作将会成功执行使内存中的数据变为新值。如果内存中的值在这期间内被修改过，则一般来说旧值会与内存中的数据不同，这时CAS操作将会失败，新值将不会被写入内存。
+二. 应用 在应用中CAS可以用于实现无锁数据结构，常见的有
+ 无锁队列(先入先出) 无锁堆(先入后出) 对于可在任意位置插入数据的链表以及双向链表，实现无锁操作的难度较大。  三. ABA问题 ABA问题是无锁结构实现中常见的一种问题，可基本表述为：
+ 进程P1读取了一个数值A P1被挂起(时间片耗尽、中断等)，进程P2开始执行 P2修改数值A为数值B，然后又修改回A P1被唤醒，比较后发现数值A没有变化，程序继续执行。  对于P1来说，数值A未发生过改变，但实际上A已经被变化过了，继续使用可能会出现问题。在CAS操作中，由于比较的多是指针，这个问题将会变得更加严重。试想如下情况：
+ 有一个堆(先入后出)中有top和节点A，节点A目前位于堆顶top指针指向A，这时堆结构图1所示。现在有一个进程P1想要pop一个节点，因此按照如下无锁操作进行  pop() { do{ ptr = top; // ptr = top = NodeA next_prt = top-&amp;gt;next; // next_ptr = NodeX } while(CAS(top, ptr, next_ptr) !</description>
+    </item>
+    
+  </channel>
+</rss>

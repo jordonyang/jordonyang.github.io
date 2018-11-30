@@ -12,13 +12,13 @@
 
 
 
-<meta name="twitter:title" content="DES加密算法原理及实现"/>
-<meta name="twitter:description" content="implementation of DES algorithm"/>
+<meta name="twitter:title" content="Implementation of DES Algorithm"/>
+<meta name="twitter:description" content="DES加密算法原理及实现"/>
 <meta name="twitter:site" content="@"/>
 
 
 
-  	<meta property="og:title" content="DES加密算法原理及实现 &middot; 临风博客" />
+  	<meta property="og:title" content="Implementation of DES Algorithm &middot; 临风博客" />
   	<meta property="og:site_name" content="临风博客" />
   	<meta property="og:url" content="https://jordonyang.github.io/post/impl-of-des/" />
 
@@ -29,7 +29,7 @@
     
 
     
-    <meta property="og:description" content="implementation of DES algorithm" />
+    <meta property="og:description" content="DES加密算法原理及实现" />
   	<meta property="og:type" content="article" />
     <meta property="article:published_time" content="2018-10-09T22:06:42&#43;08:00" />
 
@@ -40,10 +40,10 @@
     
     
 
-    <title>DES加密算法原理及实现 &middot; 临风博客</title>
+    <title>Implementation of DES Algorithm &middot; 临风博客</title>
 
     
-    <meta name="description" content="implementation of DES algorithm" />
+    <meta name="description" content="DES加密算法原理及实现" />
     
 
     <meta name="HandheldFriendly" content="True" />
@@ -69,7 +69,7 @@
     
 
     
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/atom-one-light.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
         <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
         
         <script>hljs.initHighlightingOnLoad();</script>
@@ -120,10 +120,10 @@
             
         ]
     },
-    "headline": DES加密算法原理及实现,
-    "name": DES加密算法原理及实现,
-    "wordCount": 5308,
-    "timeRequired": "PT25M",
+    "headline": Implementation of DES Algorithm,
+    "name": Implementation of DES Algorithm,
+    "wordCount": 4499,
+    "timeRequired": "PT22M",
     "inLanguage": {
       "@type": "Language",
       "alternateName": en
@@ -133,7 +133,7 @@
     "dateModified": 2018-10-09T22:06Z,
     
     "keywords": Java, security,
-    "description": implementation of DES algorithm,
+    "description": DES加密算法原理及实现,
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": https://jordonyang.github.io/post/impl-of-des/
@@ -216,7 +216,7 @@
   
   <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">DES加密算法原理及实现</h1>
+            <h1 class="page-title">Implementation of DES Algorithm</h1>
             <br>
             
 
@@ -261,8 +261,8 @@
   <article class="post post">
     
     <header class="post-header">
-        <h1 class="post-title">DES加密算法原理及实现</h1>
-        <em style="color: blue">implementation of DES algorithm</em>
+        <h1 class="post-title">Implementation of DES Algorithm</h1>
+        <em style="color: blue">DES加密算法原理及实现</em>
 
         <section class="post-meta">
         
@@ -1138,8 +1138,6 @@ decrypt plaintext text        01234567
 private char[][] padPlaintext(String plaintext) {
     char[] plaintextBytes = ArrayUtil.bytesToChars(
         plaintext.getBytes());
-    System.out.println(&quot;明文：&quot;);
-    System.out.println(&quot;填充前的比特串： &quot; + String.valueOf(plaintextBytes));
     int length = plaintextBytes.length;
     int lastBlockBits = length % 64;
     // 现有块数
@@ -1159,14 +1157,9 @@ private char[][] padPlaintext(String plaintext) {
         (randPadCount &amp; 0xff) + 0x0100).substring(1).toCharArray();
     System.arraycopy(padCountVal, 0, padded, padded.length - 8, 8);
 
-    System.out.println(&quot;填充后的比特串： &quot; + String.valueOf(padCountVal));
-
     // 将填充完比特穿分组
     char[][] blocks = new char[blockCount + 1][64];
     for (int i = 0; i &lt; blockCount + 1; i++) {
-        if (printMsg) {
-            messages.add(ArrayUtil.printInfo(&quot;processing block &quot; + i, &quot;&quot;, false));
-        }
         System.arraycopy(padded, i * 64, blocks[i], 0, 64);
     }
     return blocks;
@@ -1198,55 +1191,11 @@ public void testPadPlaintext() {
 <pre><code class="language-java">// 工作模式标记
 private String workingMode;
 
-/**
- * 明文填充，最后一组的最后8位表示填充长度
- */
-public char[][] padPlaintext(String plaintext) {
-    char[] plaintextBytes = ArrayUtil.bytesToChars(plaintext.getBytes());
-    System.out.println(&quot;明文：&quot; + plaintext);
-    System.out.println(&quot;填充前的比特串： &quot; + String.valueOf(plaintextBytes));
-    int length = plaintextBytes.length;
-    int lastBlockBits = length % 64;
-    // 现有块数
-    int blockCount = length / 64;
-
-    // 待伪随机填充位数
-    int randPadCount = 64 - lastBlockBits - 8;
-    char[] padded = new char[(blockCount + 1) * 64];
-    System.arraycopy(plaintextBytes, 0, padded, 0, length);
-
-    // 伪随机填充
-    for (int i = length; i &lt; padded.length - 8; i++) {
-        padded[i] = new Random().nextBoolean() ? '1' : '0';
-    }
-    
-    // 填充最后一个字节比特串
-    char[] padCountVal = Integer.toBinaryString(
-        (randPadCount &amp; 0xff) + 0x0100).substring(1).toCharArray();
-    System.arraycopy(padCountVal, 0, padded, padded.length - 8, 8);
-
-    System.out.println(&quot;填充后的比特串： &quot; + String.valueOf(padded));
-
-    // 将填充完比特穿分组
-    char[][] blocks = new char[blockCount + 1][64];
-    for (int i = 0; i &lt; blockCount + 1; i++) {
-        System.arraycopy(padded, i * 64, blocks[i], 0, 64);
-    }
-    return blocks;
-}
-
 // 对外加密接口，实现ECB、CBC、CTR工作模式
 @Override
 public String encrypt(String plaintext, String key) throws UnsupportedEncodingException {
-    if (printMsg) {
-        messages.add(ArrayUtil.printInfo(&quot;plaintext&quot;, plaintext, false));
-        messages.add(ArrayUtil.printInfo(&quot;keyText&quot;, key, true));
-    }
-    char[] keyBytes = ArrayUtil.bytesToChars(key.getBytes(&quot;UTF-8&quot;));
-    // 获取填充后的所有分组
-    char[][] blocks = padPlaintext(plaintext);
-    int blockCount = blocks.length;
-    char[] cipherVal = new char[blocks.length * 64];
+    ......
+    ...see github repo
 
     switch (workingMode) {
         case &quot;ECB&quot;:
@@ -1283,62 +1232,16 @@ public String encrypt(String plaintext, String key) throws UnsupportedEncodingEx
             }
             break;
     }
-    if (printMsg) {
-        messages.add(ArrayUtil.printBitChars(&quot;cipher blocks bits&quot;, cipherVal));
-    }
-    ArrayUtil.printBitChars(&quot;cipherVal&quot;, cipherVal);
+    ......
     return Base64Util.encode(cipherVal);
-}
-
-/**
- * 产生随机64位比特串
- * @return 64位比特串
- */
-private char[] ranBlock() {
-    char[] result = new char[64];
-    for (int i = 0; i &lt; 64; i++) {
-        result[i] = new Random().nextBoolean() ? '1' : '0';
-    }
-    return result;
-}
-
-/**
- * 单块加密
- * @param plaintextBytes 明文分组（64位）
- * @param keyBytes 密钥串
- * @return 加密结果
- */
-private char[] encryptABlock(char[] plaintextBytes, char[] keyBytes) {
-    if (printMsg) {
-        messages.add(ArrayUtil.printBitChars(&quot;plaintext bits&quot;, plaintextBytes));
-        messages.add(ArrayUtil.printBitChars(&quot;key bits&quot;, keyBytes));
-    }
-
-    char[][] subKeys = generateSubKeys(keyBytes);
-    char[] result = encode(plaintextBytes, subKeys);
-
-    if (printMsg) {
-        messages.add(ArrayUtil.printBitChars(&quot;encryptedText bits&quot;, result));
-    }
-    return result;
 }
 
 // 对外解密接口，实现ECB、CBC、CTR三种工作模式
 @Override
 public String decrypt(String encryptedText, String key) throws UnsupportedEncodingException {
-    if (printMsg) {
-        messages.add(ArrayUtil.printInfo(&quot;encryptedText&quot;, encryptedText, false));
-        messages.add(ArrayUtil.printInfo(&quot;key&quot;, key, true));
-    }
-
-    // 密文串
-    char[] encryptedTextBytes = Base64Util.decodeToChars(encryptedText);
-    // 密文分组
-    char[][] cipherBlocks = new char[encryptedTextBytes.length / 64][64];
-
-    char[] keyBytes = ArrayUtil.bytesToChars(key.getBytes(&quot;UTF-8&quot;));
-    char[] decryptBytes = new char[cipherBlocks.length * 64];
-
+    ......
+    ...see github repo
+        
     // 处理工作模式
     switch (workingMode) {
         case &quot;ECB&quot;:
@@ -1380,28 +1283,9 @@ public String decrypt(String encryptedText, String key) throws UnsupportedEncodi
     // 1. 抽出最后一个字节
     String decryptBytesStr = String.valueOf(decryptBytes);
     int paddedBits = Integer.parseInt(decryptBytesStr.substring(decryptBytes.length - 8), 2);
-    System.out.println(&quot;pad &quot; + paddedBits);
     char[] origin = decryptBytesStr.substring(0, decryptBytes.length - 8 - paddedBits).toCharArray();
     String plaintext = ArrayUtil.segmentAndPrintChars(origin);
-    // 2. 去掉填充信息
-    if (printMsg) {
-        messages.add(ArrayUtil.printBitChars(&quot;plaintext bits&quot;, origin));
-        messages.add(ArrayUtil.printInfo(&quot;plaintext&quot;, plaintext, false));
-    }
     return plaintext;
-}
-
-// 单块解密
-private char[] decryptABlock(char[] encryptedTextBlock, char[] keyBytes) {
-    char[][] inverseKeys = inverseSubKeys(generateSubKeys(keyBytes));
-    char[] result = encode(encryptedTextBlock, inverseKeys);
-
-    if (printMsg) {
-        messages.add(ArrayUtil.printBitChars(&quot;encryptedBlock bits&quot;, encryptedTextBlock));
-        messages.add(ArrayUtil.printBitChars(&quot;key bits&quot;, keyBytes));
-        messages.add(ArrayUtil.printBitChars(&quot;decryptedText bits&quot;, result));
-    }
-    return result;
 }
 </code></pre>
 
@@ -1449,22 +1333,7 @@ public String encryptFile(File file, String key) throws UnsupportedEncodingExcep
 
 <p>使用JFrame进行实现GUI界面</p>
 
-<pre><code class="language-java">package org.jordon.security.view;
-
-import org.jordon.security.core.crypto.symmetry.DESCipherService;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-
-/**
+<pre><code class="language-java">/**
  * @author Jordon
  */
 public class DESView extends JFrame {
@@ -1549,196 +1418,7 @@ public class DESView extends JFrame {
 
 
     private void initComponents() {
-        textArea1 = new JTextArea();
-        scrollPane1 = new JScrollPane();
-        ptArea = new JTextArea();
-        label1 = new JLabel();
-        label2 = new JLabel();
-        keyField = new JTextField();
-        label3 = new JLabel();
-        scrollPane2 = new JScrollPane();
-        cipherArea = new JTextArea();
-        processPanel = new JScrollPane();
-        processArea = new JTextArea();
-        label4 = new JLabel();
-        decButton = new JButton();
-        encButton = new JButton();
-        padComboBox = new JComboBox();
-        workComboBox = new JComboBox();
-        label5 = new JLabel();
-        label6 = new JLabel();
-        chooserButton = new JButton();
-
-        //======== this ========
-        setTitle(&quot;DES-Jordon Yang&quot;);
-        Container contentPane = getContentPane();
-
-        //======== scrollPane1 ========
-        {
-            scrollPane1.setViewportView(ptArea);
-        }
-
-        //---- label1 ----
-        label1.setText(&quot;\u660e\u6587&quot;);
-
-        //---- label2 ----
-        label2.setText(&quot;\u5bc6\u94a5&quot;);
-
-        //---- label3 ----
-        label3.setText(&quot;\u5bc6\u6587&quot;);
-
-        //======== scrollPane2 ========
-        {
-            scrollPane2.setViewportView(cipherArea);
-        }
-
-        //======== processPanel ========
-        {
-            processPanel.setViewportView(processArea);
-        }
-
-        //---- label4 ----
-        label4.setText(&quot;\u8be6\u7ec6\u8fc7\u7a0b&quot;);
-
-        //---- decButton ----
-        decButton.setText(&quot;\u89e3\u5bc6&quot;);
-        decButton.addActionListener(e -&gt; decButtonActionPerformed(e));
-
-        //---- encButton ----
-        encButton.setText(&quot;\u52a0\u5bc6&quot;);
-        encButton.addActionListener(e -&gt; encButtonActionPerformed(e));
-
-        //---- label5 ----
-        label5.setText(&quot;\u586b\u5145\u65b9\u5f0f&quot;);
-
-        //---- label6 ----
-        label6.setText(&quot;\u5de5\u4f5c\u6a21\u5f0f&quot;);
-
-        //---- chooserButton ----
-        chooserButton.setText(&quot;\u9009\u62e9\u6587\u4ef6&quot;);
-        chooserButton.addActionListener(this::chooserButtonActionPerformed);
-
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap(20, Short.MAX_VALUE)
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                            .addGap(58, 58, 58)
-                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addComponent(label5)
-                                    .addGap(46, 46, 46)
-                                    .addComponent(padComboBox, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
-                                    .addGap(80, 80, 80)
-                                    .addComponent(label6, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
-                                    .addGap(58, 58, 58))
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addGap(83, 83, 83)
-                                    .addComponent(chooserButton, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(encButton, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-                                    .addGap(87, 87, 87)))
-                            .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(workComboBox, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(decButton, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
-                            .addGap(190, 190, 190))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(processPanel, GroupLayout.PREFERRED_SIZE, 790, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label4, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGap(21, 21, 21)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                        .addComponent(label1)
-                        .addComponent(textArea1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(label2)
-                        .addComponent(label3))
-                    .addGap(18, 18, 18)
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(keyField, GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
-                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE))
-                    .addGap(35, 35, 35))
-        );
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(41, 41, 41)
-                            .addComponent(label1))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(20, 20, 20)
-                            .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)))
-                    .addGap(25, 25, 25)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(label2)
-                        .addComponent(keyField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(52, 52, 52)
-                            .addComponent(label3))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(25, 25, 25)
-                            .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)))
-                    .addGap(24, 24, 24)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(label5)
-                        .addComponent(label6)
-                        .addComponent(workComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(padComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(decButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(encButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(chooserButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
-                    .addGap(39, 39, 39)
-                    .addComponent(label4)
-                    .addGap(26, 26, 26)
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(textArea1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                            .addComponent(processPanel, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap())))
-        );
-        pack();
-        setLocationRelativeTo(getOwner());
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setVisible(true);
-        padComboBox.addItem(&quot;标记位数填充&quot;);
-
-        workComboBox.addItem(&quot;ECB&quot;);
-        workComboBox.addItem(&quot;CBC&quot;);
-        workComboBox.addItem(&quot;CTR&quot;);
-    }
-
-    private JTextArea textArea1;
-    private JScrollPane scrollPane1;
-    private JTextArea ptArea;
-    private JLabel label1;
-    private JLabel label2;
-    private JTextField keyField;
-    private JLabel label3;
-    private JScrollPane scrollPane2;
-    private JTextArea cipherArea;
-    private JScrollPane processPanel;
-    private JTextArea processArea;
-    private JLabel label4;
-    private JButton decButton;
-    private JButton encButton;
-    private JComboBox padComboBox;
-    private JComboBox workComboBox;
-    private JLabel label5;
-    private JLabel label6;
-    private JButton chooserButton;
+        ...see github repo
 }
 </code></pre>
 
@@ -1832,7 +1512,7 @@ public class DESView extends JFrame {
   
       <a class="read-next-story" style="no-cover" href="https://jordonyang.github.io/post/impl-of-aes/">
           <section class="post">
-              <h2>基于原理逐步实现AES加密算法</h2>
+              <h2>Implementation of AES Algorithm</h2>
               
           </section>
       </a>
@@ -1840,7 +1520,7 @@ public class DESView extends JFrame {
   
       <a class="read-next-story prev" style="no-cover" href="https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/">
           <section class="post">
-              <h2>ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器</h2>
+              <h2>An Arithmetic Expression Generator Based on Binary Tree Structure</h2>
           </section>
       </a>
   

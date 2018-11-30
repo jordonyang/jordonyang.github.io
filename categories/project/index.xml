@@ -13,7 +13,7 @@
     
     
     <item>
-      <title>ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器</title>
+      <title>An Arithmetic Expression Generator Based on Binary Tree Structure</title>
       <link>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</link>
       <pubDate>Tue, 18 Sep 2018 20:25:43 +0800</pubDate>
       
@@ -24,7 +24,7 @@
     </item>
     
     <item>
-      <title>WordCounter - 基于责任链设计模式的代码文件分析统计器</title>
+      <title>Code File Analyser and Counter Based on Chain of Responsibility Disgn Pattern</title>
       <link>https://jordonyang.github.io/post/code-file-analyser-and-counter-based-on-chain-of-responsibility-disgn-pattern/</link>
       <pubDate>Fri, 14 Sep 2018 12:23:56 +0800</pubDate>
       

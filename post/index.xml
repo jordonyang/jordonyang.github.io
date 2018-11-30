@@ -7,13 +7,45 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Sat, 10 Nov 2018 10:01:04 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 25 Nov 2018 20:48:32 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>流密码原理及RC4算法的实现</title>
+      <title>Simply Understanding Compare-And-Swap</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/cas/</link>
+      <pubDate>Sun, 25 Nov 2018 20:48:32 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/cas/</guid>
+      <description>一. 简介 比较并交换(compare and swap, CAS)，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。该操作通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值。
+无锁（lock-free）的非阻塞算法 CAS是项乐观锁技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。CAS无锁算法的C语言实现如下：
+int cas(long *addr, long old, long new) { /* Executes atomically. */ ATOMIC(); if(*addr != old) return 0; *addr = new; END_ATOMIC(); return 1; }  在使用上，通常会记录下某块内存中的旧值，通过对旧值进行一系列的操作后得到新值，然后通过CAS操作将新值与旧值进行交换。如果这块内存的值在这期间内没被修改过，则旧值会与内存中的数据相同，这时CAS操作将会成功执行使内存中的数据变为新值。如果内存中的值在这期间内被修改过，则一般来说旧值会与内存中的数据不同，这时CAS操作将会失败，新值将不会被写入内存。
+二. 应用 在应用中CAS可以用于实现无锁数据结构，常见的有
+ 无锁队列(先入先出) 无锁堆(先入后出) 对于可在任意位置插入数据的链表以及双向链表，实现无锁操作的难度较大。  三. ABA问题 ABA问题是无锁结构实现中常见的一种问题，可基本表述为：
+ 进程P1读取了一个数值A P1被挂起(时间片耗尽、中断等)，进程P2开始执行 P2修改数值A为数值B，然后又修改回A P1被唤醒，比较后发现数值A没有变化，程序继续执行。  对于P1来说，数值A未发生过改变，但实际上A已经被变化过了，继续使用可能会出现问题。在CAS操作中，由于比较的多是指针，这个问题将会变得更加严重。试想如下情况：
+ 有一个堆(先入后出)中有top和节点A，节点A目前位于堆顶top指针指向A，这时堆结构图1所示。现在有一个进程P1想要pop一个节点，因此按照如下无锁操作进行  pop() { do{ ptr = top; // ptr = top = NodeA next_prt = top-&amp;gt;next; // next_ptr = NodeX } while(CAS(top, ptr, next_ptr) !</description>
+    </item>
+    
+    <item>
+      <title>Understanding And Implementing RSA Algorithm</title>
+      <link>https://jordonyang.github.io/post/security/crypto/unsymmetry/rsa/</link>
+      <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/unsymmetry/rsa/</guid>
+      <description>0x01. 简介 最初的公钥方案是在1977年由Ron Rivest、Adi Shamir和Len Adleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。
+0x02. 应用 用于在开放的网络环境（如Internet）上保护电子通信，而不依赖于隐藏或隐蔽的通道，甚至用于密钥交换。开放的网络环境容易受到各种通信安全问题的影响，比如中间人攻击和欺骗。通信安全通常包括要求通信不得在运输途中可读（保存保密），通信在运输途中不能修改（保证沟通完整性），沟通必须来自一个确定原（发送方真实性），和收件人必须不能否定或拒绝接收的通信。将非对称加密与Enveloped Public Key Encryption（EPKE）方法相结合，允许在开放的网络环境中安全发送通信。换句话说，即使密码分析者听了包括密钥交换在内的整个对话也无法解释对话。
+公钥密码术中使用的区别技术是使用非对称密钥算法，其中一方用于执行加密的密钥与另一方用于解密的密钥不同。每个用户都有一对加密密钥——一个公共加密密钥和一个私有解密密钥。例如，用于数字签名的密钥对（包括一个私有签名密钥和一个公共验证密钥）。公钥可以广泛分发，而私钥只有其所有者知道。它们在数学上是相关的，但是选择参数是为了从公钥计算私钥是不可行的。
+相反，对称密钥算法使用的是一个秘密密钥，它必须由发送方（用于加密)和接收方）用于解密)共享并保持私有。要使用对称加密方案，发送方和接收方必须事先安全地共享密钥。
+由于对称密钥算法几乎总是比非对称密钥算法计算量小得多，所以通常使用密钥交换算法交换密钥，然后使用该密钥和对称密钥算法传输数据。PGP和SSL/TLS方案家族使用这个过程，因此称为混合加密系统。综上非对称算法适用于
+ 密钥交换 数字签名 与对称加密算法混合使用（PGP, SSL, TLS）  0x03. 原理 对于某一明文块M和密文块C，加密和解密有如下的形式： $$C = M^e \ mod \ n$$ $$M = C^d \ mod \ n = (M^e)^d \ mod\ n = M^{ed} mod \ n$$
+发送方和接收方都必须知道n和e的值，并且只有接收者知道d的值。RSA公钥密码算法的公钥KU=&amp;lt;e, n&amp;gt;， 私钥KR=&amp;lt;d, n&amp;gt;。为使该算法能够用于公钥加密，它必须满足下列要求：
+ 可以找到e、d、n的值，使得对所有的Medmod n = M成立。 对所有满足M &amp;lt; n的值，计算Me和Cd相对容易。 给定e和n不可能推出d  前两个要求很容易得到满足。当e和n取很大的值时，第三个要求也能够得到满足。下面的图1总结了RSA算法。
+ 开始时选择两个素数p和q，计算它们的积n作为加密和解密时的模。 接着需要计算n的欧拉函数值φ(n)。φ(n)表示小于n且与n互素的正整数的个数。 然后选择与φ(n)互素的整数e (即e和φ(n)的最大公约数为1)。 最后，计算e关于模φ(n)的乘法逆元d。d和e具有所期望的属性。  假设用户A已经公布了他的公钥，且用户B希望给A发送消息M。那么B计算C = Me(mod n)并且发送C。当接收到密文时，用户A通过计算M = Cd (mod n)解密密文。 上面的图2显示了[SING99]中的一个例子。对于这个例子，按下列步骤生成密钥:</description>
+    </item>
+    
+    <item>
+      <title>Understanding Stream Cipher and Implementation of RC4</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/rc4/</link>
       <pubDate>Sat, 10 Nov 2018 10:01:04 +0800</pubDate>
       
@@ -31,7 +63,28 @@
     </item>
     
     <item>
-      <title>基于原理逐步实现AES加密算法</title>
+      <title>Big Prime Number Generation And Primality Testing</title>
+      <link>https://jordonyang.github.io/post/security/crypto/unsymmetry/prime/</link>
+      <pubDate>Mon, 05 Nov 2018 21:06:29 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/unsymmetry/prime/</guid>
+      <description>前言: RSA算法基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。那么也就是说要使用RSA算法，前提是必须有两个大素数才行，那么大素数是怎么生成的呢？考虑到RSA算法的高效性和安全性，怎样快速生成一个大素数呢？
+0x01. 素性测试 (Primality Testing) 素数又称质数，是在大于1的整数中，只能被1和其自身整除的数（如2、3、5等）。素性测试是检验一个给定的整数是否为素数的测试。
+1. 试除法 ( Trial Division ) 如果要判定n是否是素数，写一个循环从2到sqrt(n)判断其能否整除n，若都不能则n为素数。这个方法我们一般称之为试除法。
+如果n比较小的话，采用试除法当然是非常高效快捷的。但是当n很大的时候，这个算法可就行不通了，以RSA1024为例，当公钥为
+0x890e23101a542913da8a4350672c9ef8e7b34c2687ce8cd8db3fb34244a791d60c9dc0a53172a56dcc8a66f553c0ae51e9e2e2ce9486fa6b00a6c556bfed139001133cdfe5921c425eb8823b1bd0a4c00920d24bee2633256328502eadbfac1420f9a5f47139de6f14d8eb7c2b7c0cec42530c0a71dadb80c7214f5cd19a3f2f  时，两个质因数分别为
+0xe5a111a219c64f841669400f51a54dd4e75184004f0f4d21c6ae182cfb528652a02d6d677a72b564c505b1ed42a0c648dbfe14eb66b04c0d60ba3872826c32e7  和
+8002511426596424351829267099531651390448054153452321185350746845306277585856673898048740413439442356860630765545600353049345324913056448174487017235828857  这是一个155位数和一个154位数，都在2的511次方左右，肯定gg啦😒😒😒
+2. 概率性检验算法 现在许多流行的质数检验是概率检验。这些测试除了使用被测试的数字n外，还使用从样本空间中随机选择的其他一些数字a。通常的随机素数检验从不将素数检测误判为合数，但合数被误判为素数是可能的。通过重复几个独立选取的a值进行试验，可以降低误差概率。
+随机素数检验的基本结构如下:
+ 随机选择一个数字a。 检查a与给定数n是否相等，如果相等不成立，则n为合数，a为合数的见证（witness），检验停止。 重复步骤1，直到达到所需的精度。  在一个或多个迭代之后，如果没有发现n是一个合数，那么可以说它可能是素数。
+( 1 ) 费马小定理 (Fermat&amp;rsquo;s little theorem) 它是数论中的一个定理：假如a是一个整数，p是一个素数，那么ap−a是p的倍数，可以表示为ap ≡ a (mod p) ，如果a不是p的倍数，这个定理也可以写成 ap − 1 ≡ 1 (mod p)
+费马小定理的证明过程在这里不再赘述。需要注意的是，费马小定理是判定一个数是否为素数的必要条件，并非充分条件，因为存在着一些伪素数满足费马小定理却不是素数，如2340 ≡ 1 (mod 341)，但是341 = 11×31，不为素数。
+( 2 ) 费马概率性检验 (Fermat primality test) 更近一步考虑，一个合数可能在a=2时通过了测试，但a=3时的计算结果却排除了素数的可能。于是，人们扩展了伪素数的定义，称满足an−1 mod n = 1的合数n叫做以a为底的伪素数(pseudoprime to base a)。前10亿个自然数中同时以2和3为底的伪素数只有1272个，这个数目不到刚才的1/4。这说明如果同时验证a=2和a=3两种情况，算法出错的概率降到了0.</description>
+    </item>
+    
+    <item>
+      <title>Implementation of AES Algorithm</title>
       <link>https://jordonyang.github.io/post/impl-of-aes/</link>
       <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
       
@@ -53,7 +106,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>DES加密算法原理及实现</title>
+      <title>Implementation of DES Algorithm</title>
       <link>https://jordonyang.github.io/post/impl-of-des/</link>
       <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
       
@@ -68,7 +121,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器</title>
+      <title>An Arithmetic Expression Generator Based on Binary Tree Structure</title>
       <link>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</link>
       <pubDate>Tue, 18 Sep 2018 20:25:43 +0800</pubDate>
       
@@ -79,7 +132,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>WordCounter - 基于责任链设计模式的代码文件分析统计器</title>
+      <title>Code File Analyser and Counter Based on Chain of Responsibility Disgn Pattern</title>
       <link>https://jordonyang.github.io/post/code-file-analyser-and-counter-based-on-chain-of-responsibility-disgn-pattern/</link>
       <pubDate>Fri, 14 Sep 2018 12:23:56 +0800</pubDate>
       
@@ -90,7 +143,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>基于JDK1.7的HashMap源码阅读</title>
+      <title>Digging in Source Code of HashMap (JDK1.7)</title>
       <link>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</link>
       <pubDate>Mon, 27 Aug 2018 12:01:48 +0800</pubDate>
       
@@ -100,7 +153,7 @@ $$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x
     </item>
     
     <item>
-      <title>JVM垃圾收集机制</title>
+      <title>The Garbage Collection Mechanism of the JVM</title>
       <link>https://jordonyang.github.io/post/garbage-collection-of-jvm/</link>
       <pubDate>Sat, 04 Aug 2018 23:25:14 +0800</pubDate>
       
@@ -120,7 +173,7 @@ GC停顿：亦称Stop The World（STW），即在整个可达性分析期间，�
     </item>
     
     <item>
-      <title>LinkedList源码阅读与分析</title>
+      <title>Digging in Source Code of LinkedList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
       <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
       
@@ -132,7 +185,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>ArrayList源码阅读与分析</title>
+      <title>Digging in Source Code of ArrayList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
       <pubDate>Sat, 23 Jun 2018 22:40:02 +0800</pubDate>
       
@@ -146,7 +199,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Thread类的run()方法执行过程跟踪和思考</title>
+      <title>Thread Run Method Execution Process Tracking and Thinking</title>
       <link>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</link>
       <pubDate>Sun, 25 Mar 2018 21:46:51 +0800</pubDate>
       
@@ -164,7 +217,7 @@ JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到�
     </item>
     
     <item>
-      <title>通过反编译理解Java foreach 语法糖</title>
+      <title>Understanding the Foreach Syntax Sugar by Decompilation</title>
       <link>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</link>
       <pubDate>Sun, 25 Feb 2018 22:03:56 +0800</pubDate>
       
@@ -177,7 +230,7 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>Redis api使用学习笔记</title>
+      <title>Notes for Redis Api Learning</title>
       <link>https://jordonyang.github.io/post/db/nosql/redis/redis_api/</link>
       <pubDate>Mon, 20 Nov 2017 19:50:14 +0800</pubDate>
       
@@ -196,7 +249,7 @@ keys pattern:
     </item>
     
     <item>
-      <title>使用Nginx&#43;rtmp&#43;FFmpeg&#43;video.js 实现视频直播</title>
+      <title>Achieving Video Live Broadcasting with Nginx and RTMP, FFmpeg and video.Js</title>
       <link>https://jordonyang.github.io/post/network/nginx/nginx-rtmp/</link>
       <pubDate>Wed, 15 Nov 2017 19:46:54 +0800</pubDate>
       
@@ -212,7 +265,7 @@ nginx-rtmp-module ：一个由俄罗斯人Roman Arutyunyan开发出来的支持r
     </item>
     
     <item>
-      <title>二叉堆的Java实现</title>
+      <title>Constructing Binary Heap with Java</title>
       <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       
