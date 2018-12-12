@@ -1234,6 +1234,7 @@ body:not(.post-template) .post-title {
     line-height: 1;
     /*font-style: italic;*/
     color: #9EABB3;
+    width: 100%;
 }
 
 .author-meta a {
@@ -2016,6 +2017,31 @@ body:not(.post-template) .post-title {
     /*margin-top: 10rem;*/
 }
 
+.readmore-prev {
+    width: 50%;
+    text-align: left;
+}
+
+.readmore-next {
+    width: 50%;
+    text-align: right;
+}
+
+.readmore-meta {
+    padding: 0;
+    margin: 0;
+    font-size: 1.4rem;
+    color: #9EABB3;
+}
+
+.readmore-meta a {
+    color: #9EABB3;
+    text-decoration: none;
+}
+.readmore-meta a:hover {
+    color: #111;
+}
+
 .read-next-story {
     display: -webkit-box;
     display: -webkit-flex;
@@ -2146,6 +2172,16 @@ body:not(.post-template) .post-title {
     border-top: rgba(0,0,100,0.06) 1px solid;
     border-left: none;
   }
+
+  .readmore-prev {
+      width: 50%;
+      text-align: left;
+  }
+
+  .readmore-next {
+      width: 50%;
+      text-align: right;
+  }
 }
 
 
@@ -2158,7 +2194,18 @@ body:not(.post-template) .post-title {
   .read-next .post {
     width: 100%;
   }
+
+  .readmore-prev {
+      width: 100%;
+      text-align: left;
+  }
+
+  .readmore-next {
+      width: 100%;
+      text-align: right;
+  }
 }
+
 
 
 /* ==========================================================================

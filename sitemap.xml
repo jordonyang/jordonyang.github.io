@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jordonyang.github.io/post/security/app/ssl-config/</loc>
+    <lastmod>2018-12-10T23:42:48+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/post/architecture/pattern/template-method-pattern/</loc>
+    <lastmod>2018-12-06T19:42:27+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jordonyang.github.io/post/java/concurrency/cas/</loc>
     <lastmod>2018-11-25T20:48:32+08:00</lastmod>
   </url>
@@ -111,7 +121,19 @@
   
   <url>
     <loc>https://jordonyang.github.io/tags/design-pattern/</loc>
-    <lastmod>2018-09-14T12:23:56+08:00</lastmod>
+    <lastmod>2018-12-06T19:42:27+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/categories/design-pattern/</loc>
+    <lastmod>2018-12-06T19:42:27+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/tags/https/</loc>
+    <lastmod>2018-12-10T23:42:48+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -165,7 +187,7 @@
   
   <url>
     <loc>https://jordonyang.github.io/post/</loc>
-    <lastmod>2018-11-25T20:48:32+08:00</lastmod>
+    <lastmod>2018-12-10T23:42:48+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -195,7 +217,13 @@
   
   <url>
     <loc>https://jordonyang.github.io/categories/security/</loc>
-    <lastmod>2018-11-10T14:23:26+08:00</lastmod>
+    <lastmod>2018-12-10T23:42:48+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/tags/ssl/</loc>
+    <lastmod>2018-12-10T23:42:48+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -207,7 +235,7 @@
   
   <url>
     <loc>https://jordonyang.github.io/</loc>
-    <lastmod>2018-11-25T20:48:32+08:00</lastmod>
+    <lastmod>2018-12-10T23:42:48+08:00</lastmod>
     <priority>0</priority>
   </url>
   

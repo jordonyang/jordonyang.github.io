@@ -7,10 +7,43 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Sun, 25 Nov 2018 20:48:32 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 10 Dec 2018 23:42:48 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Homemade Certificate and Config Unidirectional Authentication</title>
+      <link>https://jordonyang.github.io/post/security/app/ssl-config/</link>
+      <pubDate>Mon, 10 Dec 2018 23:42:48 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/app/ssl-config/</guid>
+      <description>0x00. OpenSSL使用 作为本地环境的实验，可以使用OpenSSL生成证书帮助理解证书认证的整个过程，事实上，在应用层面OpenSSL的可靠性是值得考量的，最著名的事件莫过于在2014年爆出的心跳漏洞（Heart Bleed），利用该漏洞，黑客坐在自己家里电脑前，就可以实时获取到约30%https开头网址的用户登录账号密码，包括大批网银、购物网站、电子邮件等。
+1. 获取OpenSSL  Github OpenSSL官网 Git安装目录下的/usr/bin/openssl.exe（win10，Linux类似）  比较折腾的方法是到Github或者OpenSSL官网的官网下载源码，然后自己编译，但我敲下nmake命令之后，发现这个坑不是一般的大，想想要在我这破电脑上装个VS突然心酸不已，那有没有什么easy way呢？有，而且或许在不知不觉中你已经装了，那就是Git，想想Git一套套的安全验证机制，当你在Git安装目录下的/usr/bin/中找到openssl.exe这个文件时真的不需要惊奇。
+2. 创建私钥 下面命令会生成2048位的RSA密钥对， 并且将它存放在exp.key文件中。
+OpenSSL&amp;gt; genrsa -out out.key 2048  如果不指定参数则会创建默认2048位的RSA密钥对， 并且输出到stdout
+OpenSSL&amp;gt; genrsa Generating RSA private key, 2048 bit long modulus .......................................................................................+++ ........+++ e is 65537 (0x10001) -----BEGIN RSA PRIVATE KEY----- MIIEowIBAAKCAQEAm5FLEgxENOYWzKxs/PNP2/UxmBQjdfURuz3k1QFVw76RMi8i mQPTdMSdZ3tuEG6r7qZDId4nefJRFCMSJOLbuVoLkLozWnoUAGbvDzQKiXEVE9Bi ypsm6fHi7zZKpBltHwFiuU0jMSlj1PIcKyd7JYr0dIXyZIYz8z9bfJf+JPefr6sq WsTl6FzxC+3S8Na6xzCNPl21v9AGsLOIT9roVenN7ewjdhOqpKOyvYwSAev0wOoc gMiz6qnI0a/2xlrgFP6qb7wofOpBbosDSbYsexg2kFfvlYPTtPFyAUudewtaZ2qm MzWl5f7vngfLLQ9F8C4cXFpFUVoboDOO+vvXxwIDAQABAoIBABqcDaU2p+wMd1Xn IHVcAQr0s9j5iN9CXhgTDDNLGSp0TE2zNk3KE79jajErMbZp18rocY83erUnN6sk HJRmoYLg3h2RW/tb6lPvR3DoS+0ahKpw+JUDWPKnR1P3i2jqWHn3OLXNdfmQxNzF 1P+krzHKxOmxh7aeJgCzk6iKLxSPamCQLSWW8sc3fu+6yBbtXOzifgETXqc5SEbk UKfn489d4vLU5foLiOLuSWc2FI+c1mDQfzUVo14v/CpnknCSfNIPlDePdvBLr5uG 8YWQ4hftlCQ6hZQodmnxw+HNCqOqJzMs3SMXsuuFu66VVzy48p8+zKzZJ7+uZUOA Bo1GCgECgYEAyenl8TP6yxW4sKc3pQwL2A9wUJBg3mdcpMOEvJoL66fL1HF2uSz9 /3H/aNJzJb5bfeJytZfgSIt+XwttuKxWzLfBOdpX972xA9iZ0ia3v62wD7oXkrho +oaETu41y6CIy5t9eTQpk7JeH/MzrXYPIXGPAuLq/DOPZ0aR32N5tYECgYEAxT09 Weee71Z+qKNWIcwBGnq+ko5CRWe1Btl75yeo/kABVH8/jDMJFlZU5otU8W6aPRmX 93nbNZ42u24GBo8xZcrY5/K1qRolMS40faDQqv28pWcRJAfDUyp+iuZ8nulV9fFU 5KaDR1Z2Tq2XX9lAX92itaPeiFrmUL0UO98FAUcCgYAodvWcJzyloo7G6FwgeY+O F1n861Jef/xzELPzUDP/YDtbMfoHFls47FGxYiutbr7LNayjc/KA12PWDGZK0k76 7ACPZZCnl554FNqO4S+F/HsCS9sZjleLjZXKc7bYPi3sEBdPSQLkFKUEZir/Il/Z 5fYxL+TD8llU6zGkwTzNAQKBgBrooO8cD23doggFyKFxwJDJQCikadwoKuVVVHcT zRVqzAOoHJZW/B1lB84wIhWSHk7JqBbmNAbbn+HwP7gzXuzhQLhcP3Zjj8Fm6Vhe UTmSxmLWbds5h+dXu83dZhEUCls0Yn2TTgO0gw1211kHPaYWibU4NwrpQ9SuBw2n /nnPAoGBAJsQn5SsS97e1D++wHXCduj8mP/oA3xUxVVySwiwh5+equGRMNl/ALfF v3ok5pLP/j2KbfXwnNAiImNUzY7KJhGrAGwWG9vPloeM3oXjeeBlDuVKcxcNzRat 9DrkTj9IH1YNcFV+z5hMpxNhMWIBEjtlL9YCRpla9W9dpFAwMYG8 -----END RSA PRIVATE KEY-----  下面是genrsa命令的一些参数 (usage: genrsa [args)][numbits])</description>
+    </item>
+    
+    <item>
+      <title>What is Template Method Pattern</title>
+      <link>https://jordonyang.github.io/post/architecture/pattern/template-method-pattern/</link>
+      <pubDate>Thu, 06 Dec 2018 19:42:27 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/architecture/pattern/template-method-pattern/</guid>
+      <description> 0x00. 定义 定义一个操作中的算法的框架， 而将一些步骤延迟到子类中。 使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。 模板方法模式的通用类图如下所示 模板方法模式确实非常简单， 仅仅使用了Java的继承机制， 但它是一个应用非常广泛的模式。 其中， AbstractClass叫做抽象模板， 它的方法分为两类：
+ 基本方法 基本方法也叫做基本操作， 是由子类实现的方法， 并且在模板方法被调用 模板方法 可以有一个或几个， 一般是一个具体方法， 也就是一个框架， 实现对基本方法的调度，完成固定的逻辑。  注意: 为了防止恶意的操作， 一般模板方法都加上final关键字，不允许被覆写；所有的基本方法一般都是用protected修饰的，因为具体算法的实现只有子类可以访问，对外是不开放的。
+在类图中还有一个角色： 具体模板。 ConcreteClass1和ConcreteClass2属于具体模板， 实现父类所定义的一个或多个抽象方法， 也就是父类定义的基本方法在子类中得以实现。
+其通用代码如下图所示
+0x01. 优点 1. 封装不变部分， 扩展可变部分：把认为是不变部分的算法封装到父类实现， 而可变部分的则可以通过继承来继续扩展。 增加一个子类，只需实现父类的基本方法。
+2. 提取公共部分代码，便于维护
+3. 行为由父类控制， 子类实现：基本方法是由子类实现的， 因此子类可以通过扩展的方式增加相应的功能，符合开闭原则。
+0x02. 缺点 按照我们的设计习惯， 抽象类负责声明最抽象、最一般的事物属性和方法，实现类完成具体的事物属性和方法。但是模板方法模式却颠倒了，抽象类定义了部分抽象方法，由子类实现，子类执行的结果影响了父类的结果，也就是子类对父类产生了影响，这在复杂的项目中，会带来代码阅读的难度，而且也会让新手产生不适感。
+0x03. 应用  多个子类有公有的方法，并且逻辑基本相同时。 重要、复杂的算法，可以把核心算法设计为模板方法，周边的相关细节功能则由各个子类实现。 重构时，模板方法模式是一个经常使用的模式，把相同的代码抽取到父类中，然后通过钩子函数（见模板方法模式的扩展） 约束其行为。  0x04. 扩展 - 控制反转 模板方法设计模式的一个更加常见的形式是除了使用abstract的基本方法和final的不可变的模板方法外，还应用了钩子函数，所谓的钩子函数一般是指一系列定义在抽象父类中非抽象方法，子类可以选择性地重写这些方法（当然也可以使用父类的默认实现），通常地，它们拥有布尔型的返回值，在通过子类对象调用父类的模板方法时，模板方法会根据子类的钩子函数结果决定其执行逻辑。
+不难发现，这种情况中的模板方法跟上面的的有所不同，在上面的通用代码中，父类直接决定整个模板的执行，而现在父类的模板方法的运行过程需要需要依赖于子类某个方法的执行结果，这种情况其实属于控制反转的一种，因为高层代码不再在运行前决定整个代码块的执行流程，而是在运行时动态地选择低层代码。
+0x05. 实例 如果你看过AQS源码，那么很自然地你会发现它使用了模板方法设计模式。虽然AQS定义为抽象类，但是其中并没有抽象的基本方法，其中定义了5个钩子函数和10个模板方法，钩子函数的具体实现由AQS子类提供，而且这些返回值会影响模板方法的执行结果。
+0x06. 参考  Wikipedia - IoC Wikipedia - Template_method_pattern 《设计模式之禅》（秦小波著，第二版，机械工业出版社）  </description>
+    </item>
     
     <item>
       <title>Simply Understanding Compare-And-Swap</title>
@@ -18,11 +51,11 @@
       <pubDate>Sun, 25 Nov 2018 20:48:32 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/java/concurrency/cas/</guid>
-      <description>一. 简介 比较并交换(compare and swap, CAS)，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。该操作通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值。
+      <description>0x00. TOC  0x01.简介 0x02.应用 0x03.ABA问题 0x04.实现 0x05.Java中的CAS 0x06.参考  0x01. 简介 比较并交换(compare and swap, CAS)，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。该操作通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值。
 无锁（lock-free）的非阻塞算法 CAS是项乐观锁技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。CAS无锁算法的C语言实现如下：
 int cas(long *addr, long old, long new) { /* Executes atomically. */ ATOMIC(); if(*addr != old) return 0; *addr = new; END_ATOMIC(); return 1; }  在使用上，通常会记录下某块内存中的旧值，通过对旧值进行一系列的操作后得到新值，然后通过CAS操作将新值与旧值进行交换。如果这块内存的值在这期间内没被修改过，则旧值会与内存中的数据相同，这时CAS操作将会成功执行使内存中的数据变为新值。如果内存中的值在这期间内被修改过，则一般来说旧值会与内存中的数据不同，这时CAS操作将会失败，新值将不会被写入内存。
-二. 应用 在应用中CAS可以用于实现无锁数据结构，常见的有
- 无锁队列(先入先出) 无锁堆(先入后出) 对于可在任意位置插入数据的链表以及双向链表，实现无锁操作的难度较大。  三. ABA问题 ABA问题是无锁结构实现中常见的一种问题，可基本表述为：
+0x02. 应用 在应用中CAS可以用于实现无锁数据结构，常见的有
+ 无锁队列(先入先出) 无锁堆(先入后出) 对于可在任意位置插入数据的链表以及双向链表，实现无锁操作的难度较大。  0x03. ABA问题 ABA问题是无锁结构实现中常见的一种问题，可基本表述为：
  进程P1读取了一个数值A P1被挂起(时间片耗尽、中断等)，进程P2开始执行 P2修改数值A为数值B，然后又修改回A P1被唤醒，比较后发现数值A没有变化，程序继续执行。  对于P1来说，数值A未发生过改变，但实际上A已经被变化过了，继续使用可能会出现问题。在CAS操作中，由于比较的多是指针，这个问题将会变得更加严重。试想如下情况：
  有一个堆(先入后出)中有top和节点A，节点A目前位于堆顶top指针指向A，这时堆结构图1所示。现在有一个进程P1想要pop一个节点，因此按照如下无锁操作进行  pop() { do{ ptr = top; // ptr = top = NodeA next_prt = top-&amp;gt;next; // next_ptr = NodeX } while(CAS(top, ptr, next_ptr) !</description>
     </item>
@@ -33,15 +66,12 @@ int cas(long *addr, long old, long new) { /* Executes atomically. */ ATOMIC(); i
       <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/security/crypto/unsymmetry/rsa/</guid>
-      <description>0x01. 简介 最初的公钥方案是在1977年由Ron Rivest、Adi Shamir和Len Adleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。
+      <description>0x00. TOC  0x01.简介 0x02.应用 0x03.原理 0x04.实现  1.素数的选择与判断 2.实现模逆算法  2.1.欧几里得算法 2.2.扩展欧几里得算法 2.3.求解同余方程算法  3.实现快速模指运算 4.编程实现RSA算法 5.利用RSA进行数据加解密  6.实现对大数据进行加密  7.实现简单的GUI界面 8.分析总结  0x05.攻击方法 0x06.密钥分发 0x07.参考  0x01. 简介 最初的公钥方案是在1977年由Ron Rivest、Adi Shamir和Len Adleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。TOC
 0x02. 应用 用于在开放的网络环境（如Internet）上保护电子通信，而不依赖于隐藏或隐蔽的通道，甚至用于密钥交换。开放的网络环境容易受到各种通信安全问题的影响，比如中间人攻击和欺骗。通信安全通常包括要求通信不得在运输途中可读（保存保密），通信在运输途中不能修改（保证沟通完整性），沟通必须来自一个确定原（发送方真实性），和收件人必须不能否定或拒绝接收的通信。将非对称加密与Enveloped Public Key Encryption（EPKE）方法相结合，允许在开放的网络环境中安全发送通信。换句话说，即使密码分析者听了包括密钥交换在内的整个对话也无法解释对话。
 公钥密码术中使用的区别技术是使用非对称密钥算法，其中一方用于执行加密的密钥与另一方用于解密的密钥不同。每个用户都有一对加密密钥——一个公共加密密钥和一个私有解密密钥。例如，用于数字签名的密钥对（包括一个私有签名密钥和一个公共验证密钥）。公钥可以广泛分发，而私钥只有其所有者知道。它们在数学上是相关的，但是选择参数是为了从公钥计算私钥是不可行的。
 相反，对称密钥算法使用的是一个秘密密钥，它必须由发送方（用于加密)和接收方）用于解密)共享并保持私有。要使用对称加密方案，发送方和接收方必须事先安全地共享密钥。
-由于对称密钥算法几乎总是比非对称密钥算法计算量小得多，所以通常使用密钥交换算法交换密钥，然后使用该密钥和对称密钥算法传输数据。PGP和SSL/TLS方案家族使用这个过程，因此称为混合加密系统。综上非对称算法适用于
- 密钥交换 数字签名 与对称加密算法混合使用（PGP, SSL, TLS）  0x03. 原理 对于某一明文块M和密文块C，加密和解密有如下的形式： $$C = M^e \ mod \ n$$ $$M = C^d \ mod \ n = (M^e)^d \ mod\ n = M^{ed} mod \ n$$
-发送方和接收方都必须知道n和e的值，并且只有接收者知道d的值。RSA公钥密码算法的公钥KU=&amp;lt;e, n&amp;gt;， 私钥KR=&amp;lt;d, n&amp;gt;。为使该算法能够用于公钥加密，它必须满足下列要求：
- 可以找到e、d、n的值，使得对所有的Medmod n = M成立。 对所有满足M &amp;lt; n的值，计算Me和Cd相对容易。 给定e和n不可能推出d  前两个要求很容易得到满足。当e和n取很大的值时，第三个要求也能够得到满足。下面的图1总结了RSA算法。
- 开始时选择两个素数p和q，计算它们的积n作为加密和解密时的模。 接着需要计算n的欧拉函数值φ(n)。φ(n)表示小于n且与n互素的正整数的个数。 然后选择与φ(n)互素的整数e (即e和φ(n)的最大公约数为1)。 最后，计算e关于模φ(n)的乘法逆元d。d和e具有所期望的属性。  假设用户A已经公布了他的公钥，且用户B希望给A发送消息M。那么B计算C = Me(mod n)并且发送C。当接收到密文时，用户A通过计算M = Cd (mod n)解密密文。 上面的图2显示了[SING99]中的一个例子。对于这个例子，按下列步骤生成密钥:</description>
+由于对称密钥算法几乎总是比非对称密钥算法计算量小得多，所以通常使用密钥交换算法交换密钥，然后使用该密钥和对称密钥算法传输数据。PGP和SSL/TLS方案家族使用这个过程，因此称为混合加密系统。综上非对称算法适用于 TOC
+ 密钥交换 数字签名 与对称加密算法混合使用（PGP, SSL, TLS）  0x03. 原理 对于某一明文块M和密文块C，加密和解密有如下的形式： $$C = M^e \ mod \ n$$ $$M = C^d \ mod \ n = (M^e)^d \ mod\ n = M^{ed} mod \ n$$</description>
     </item>
     
     <item>
@@ -89,20 +119,13 @@ int cas(long *addr, long old, long new) { /* Executes atomically. */ ATOMIC(); i
       <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/impl-of-aes/</guid>
-      <description>一、概述 美国政府在1997年9月12日公开征集更高效更安全的替代DES加密算法，第一轮共有15种算法入选，其中5种算法入围了决赛，分别是MARS，RC6，Rijndael，Serpent和Twofish。又经过3年的验证、评测及公众讨论之后Rijndael算法最终入选。
+      <description>0x00. TOC  0x01.概述 0x02.AES算法的数学基础  1.有限域 2. AES在有限域上的表示 2. AES的字表示与运算 2.1. 字表示 2.2. 字运算  0x03.AES的加密过程  1.状态 2.加密过程概述 3.AES有限域上加加法 4.轮密钥的生成  4.1.密钥扩展 4.2.轮密钥的选择 4.3.代码实现  5.AES基本变换  5.1.S盒变换 5.2.行移位变换 5.3.列混合变换  6.对外加密接口 7.核心加密逻辑   0x04.解密过程  1.AES基本逆变换 2.对外解密接口 3.核心解密逻辑  0x05.测试 0x06.说明 0x07.参考  0x01. 概述 美国政府在1997年9月12日公开征集更高效更安全的替代DES加密算法，第一轮共有15种算法入选，其中5种算法入围了决赛，分别是MARS，RC6，Rijndael，Serpent和Twofish。又经过3年的验证、评测及公众讨论之后Rijndael算法最终入选。
 Rijndael算法之所以最终能够被选为AES的原因是其安全、性能好、效率高、实用灵活。
-Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。
-二、AES算法的数学基础 Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。
-1. AES的基础域是有限域 GF(28)  一个字节的全体256种取值构成一个GF(28) 一个GF(2)上的8次既约多项式可生成一个 GF(28)
- GF(28)的全体元素构成加法交换群、线性空间。 GF(28)的非零元素构成乘法循环群。  2. AES的GF(28)表示 有限域GF(2^8)上的元素有多种表示方法，为了方便，Rijndaels算法采用多项式表示法，下面是与还表示方法相关的几个定义
-定义1 : 一个由比特位b7b6b5b4b3b2b1b0 组成的字节可表示成系数为(0, 1)的二进制多项式：b7X7 + b6X6 + b5X5 + b4X4 + b3X3 + b2X2 + b1X + b0
-例：字节57＝01010111的多项式表示为: $$x^6 + x^4 + x^2 + x + 1$$
-定义2 : 在GF(28)上的加法定义为二进制多项式的加法，其系数按位模2加。
-例： 57＋83＝D4等价于 $$(x^6+x^4+x^2+x+1)⊕(x^7+x+1)= x^7+x^6+x^4+x^2$$
-定义3 : 在GF(28)上的乘法定义为二进制多项式的乘积模一个次数为8的不可约多项式 $$m(x) = x^8+x^4+x^3+x+1$$
-其系数的十六进制表示为11B
-例： 57×83＝C1等价于
-$$(x^6+x^4+x^2+x+1)×(x^7+x+1) \ mod \ m (x) = x^{13 }+ x^{11}+x^9+x^8+x^6+x^5+x^4+x^3+1 \ mod \ x^8+x^4+x^3+x+1 = x^7+x^6+1 $$</description>
+Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。TOC
+0x02. AES算法的数学基础 Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。 TOC
+1. 有限域 AES的基础域是有限域 GF(28) TOC
+ 一个字节的全体256种取值构成一个GF(28) 一个GF(2)上的8次既约多项式可生成一个 GF(28)
+ GF(28)的全体元素构成加法交换群、线性空间。 GF(28)的非零元素构成乘法循环群。  2.</description>
     </item>
     
     <item>

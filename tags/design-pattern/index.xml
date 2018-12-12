@@ -7,10 +7,30 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Fri, 14 Sep 2018 12:23:56 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 06 Dec 2018 19:42:27 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/tags/design-pattern/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>What is Template Method Pattern</title>
+      <link>https://jordonyang.github.io/post/architecture/pattern/template-method-pattern/</link>
+      <pubDate>Thu, 06 Dec 2018 19:42:27 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/architecture/pattern/template-method-pattern/</guid>
+      <description> 0x00. 定义 定义一个操作中的算法的框架， 而将一些步骤延迟到子类中。 使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。 模板方法模式的通用类图如下所示 模板方法模式确实非常简单， 仅仅使用了Java的继承机制， 但它是一个应用非常广泛的模式。 其中， AbstractClass叫做抽象模板， 它的方法分为两类：
+ 基本方法 基本方法也叫做基本操作， 是由子类实现的方法， 并且在模板方法被调用 模板方法 可以有一个或几个， 一般是一个具体方法， 也就是一个框架， 实现对基本方法的调度，完成固定的逻辑。  注意: 为了防止恶意的操作， 一般模板方法都加上final关键字，不允许被覆写；所有的基本方法一般都是用protected修饰的，因为具体算法的实现只有子类可以访问，对外是不开放的。
+在类图中还有一个角色： 具体模板。 ConcreteClass1和ConcreteClass2属于具体模板， 实现父类所定义的一个或多个抽象方法， 也就是父类定义的基本方法在子类中得以实现。
+其通用代码如下图所示
+0x01. 优点 1. 封装不变部分， 扩展可变部分：把认为是不变部分的算法封装到父类实现， 而可变部分的则可以通过继承来继续扩展。 增加一个子类，只需实现父类的基本方法。
+2. 提取公共部分代码，便于维护
+3. 行为由父类控制， 子类实现：基本方法是由子类实现的， 因此子类可以通过扩展的方式增加相应的功能，符合开闭原则。
+0x02. 缺点 按照我们的设计习惯， 抽象类负责声明最抽象、最一般的事物属性和方法，实现类完成具体的事物属性和方法。但是模板方法模式却颠倒了，抽象类定义了部分抽象方法，由子类实现，子类执行的结果影响了父类的结果，也就是子类对父类产生了影响，这在复杂的项目中，会带来代码阅读的难度，而且也会让新手产生不适感。
+0x03. 应用  多个子类有公有的方法，并且逻辑基本相同时。 重要、复杂的算法，可以把核心算法设计为模板方法，周边的相关细节功能则由各个子类实现。 重构时，模板方法模式是一个经常使用的模式，把相同的代码抽取到父类中，然后通过钩子函数（见模板方法模式的扩展） 约束其行为。  0x04. 扩展 - 控制反转 模板方法设计模式的一个更加常见的形式是除了使用abstract的基本方法和final的不可变的模板方法外，还应用了钩子函数，所谓的钩子函数一般是指一系列定义在抽象父类中非抽象方法，子类可以选择性地重写这些方法（当然也可以使用父类的默认实现），通常地，它们拥有布尔型的返回值，在通过子类对象调用父类的模板方法时，模板方法会根据子类的钩子函数结果决定其执行逻辑。
+不难发现，这种情况中的模板方法跟上面的的有所不同，在上面的通用代码中，父类直接决定整个模板的执行，而现在父类的模板方法的运行过程需要需要依赖于子类某个方法的执行结果，这种情况其实属于控制反转的一种，因为高层代码不再在运行前决定整个代码块的执行流程，而是在运行时动态地选择低层代码。
+0x05. 实例 如果你看过AQS源码，那么很自然地你会发现它使用了模板方法设计模式。虽然AQS定义为抽象类，但是其中并没有抽象的基本方法，其中定义了5个钩子函数和10个模板方法，钩子函数的具体实现由AQS子类提供，而且这些返回值会影响模板方法的执行结果。
+0x06. 参考  Wikipedia - IoC Wikipedia - Template_method_pattern 《设计模式之禅》（秦小波著，第二版，机械工业出版社）  </description>
+    </item>
     
     <item>
       <title>Code File Analyser and Counter Based on Chain of Responsibility Disgn Pattern</title>

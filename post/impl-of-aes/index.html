@@ -122,7 +122,7 @@
     },
     "headline": Implementation of AES Algorithm,
     "name": Implementation of AES Algorithm,
-    "wordCount": 1973,
+    "wordCount": 2001,
     "timeRequired": "PT10M",
     "inLanguage": {
       "@type": "Language",
@@ -255,9 +255,6 @@
 
 <main class="content" role="main">
 
-
-
-
   <article class="post post">
     
     <header class="post-header">
@@ -284,19 +281,69 @@
     <section class="post-content">
       
 
-<h2 id="一-概述">一、概述</h2>
+<h2 id="0x00-toc">0x00. TOC</h2>
+
+<ul>
+<li><a style="color:#0366d6;" href="#0x01-概述">0x01.概述</a></li>
+<li><a style="color:#0366d6;" href="#0x02-aes算法的数学基础">0x02.AES算法的数学基础</a>
+
+<ul>
+<li><a style="color:#0366d6;" href="#1-有限域">1.有限域</a></li>
+<li><a style="color:#0366d6;" href="#2-aes在有限域上的表示">2. AES在有限域上的表示</a></li>
+<li><a style="color:#0366d6;" href="#2-aes的字表示与运算">2. AES的字表示与运算</a></li>
+<li><a style="color:#0366d6;" href="#2-1-字表示">2.1. 字表示</a></li>
+<li><a style="color:#0366d6;" href="#2-2-字运算">2.2. 字运算</a></li>
+</ul></li>
+<li><a style="color:#0366d6;" href="#0x03-aes的加密过程">0x03.AES的加密过程</a>
+
+<ul>
+<li><a style="color:#0366d6;" href="#1-状态">1.状态</a></li>
+<li><a style="color:#0366d6;" href="#2-加密过程概述">2.加密过程概述</a></li>
+<li><a style="color:#0366d6;" href="#3-aes有限域上的加法">3.AES有限域上加加法</a></li>
+<li><a style="color:#0366d6;" href="#4-轮密钥的生成">4.轮密钥的生成</a>
+
+<ul>
+<li><a style="color:#0366d6;" href="#4-1-密钥扩展">4.1.密钥扩展</a></li>
+<li><a style="color:#0366d6;" href="#4-2-轮密钥的选择">4.2.轮密钥的选择</a></li>
+<li><a style="color:#0366d6;" href="#4-3-代码实现">4.3.代码实现</a></li>
+</ul></li>
+<li><a style="color:#0366d6;" href="#5-aes基本变换">5.AES基本变换</a>
+
+<ul>
+<li><a style="color:#0366d6;" href="#5-1-s盒变换">5.1.S盒变换</a></li>
+<li><a style="color:#0366d6;" href="#5-2-行移位变换">5.2.行移位变换</a></li>
+<li><a style="color:#0366d6;" href="#5-3-列混合变换">5.3.列混合变换</a></li>
+</ul></li>
+<li><a style="color:#0366d6;" href="#6-对外加密接口">6.对外加密接口</a></li>
+<li><a style="color:#0366d6;" href="#7-核心加密逻辑">7.核心加密逻辑 </a></li>
+</ul></li>
+<li><a style="color:#0366d6;" href="#0x05-解密过程">0x04.解密过程</a>
+
+<ul>
+<li><a style="color:#0366d6;" href="#1-aes基本逆变换">1.AES基本逆变换</a></li>
+<li><a style="color:#0366d6;" href="#2-对外解密接口">2.对外解密接口</a></li>
+<li><a style="color:#0366d6;" href="#3-核心解密逻辑">3.核心解密逻辑</a></li>
+</ul></li>
+<li><a style="color:#0366d6;" href="#0x05-测试">0x05.测试</a></li>
+<li><a style="color:#0366d6;" href="#0x06-说明">0x06.说明</a></li>
+<li><a style="color:#0366d6;" href="#0x07-参考">0x07.参考</a></li>
+</ul>
+
+<h2 id="0x01-概述">0x01. 概述</h2>
 
 <p>美国政府在1997年9月12日公开征集更高效更安全的替代DES加密算法，第一轮共有15种算法入选，其中5种算法入围了决赛，分别是MARS，RC6，Rijndael，Serpent和Twofish。又经过3年的验证、评测及公众讨论之后Rijndael算法最终入选。</p>
 
 <p>Rijndael算法之所以最终能够被选为AES的原因是其安全、性能好、效率高、实用灵活。</p>
 
-<p>Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。</p>
+<p>Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
-<h2 id="二-aes算法的数学基础">二、AES算法的数学基础</h2>
+<h2 id="0x02-aes算法的数学基础">0x02. AES算法的数学基础</h2>
 
-<p>Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。</p>
+<p>Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
-<h3 id="1-aes的基础域是有限域-gf-2-sup-8-sup">1. AES的基础域是有限域 GF(2<sup>8</sup>)</h3>
+<h3 id="1-有限域">1. 有限域</h3>
+
+<p>AES的基础域是有限域 GF(2<sup>8</sup>)  <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>一个字节的全体256种取值构成一个GF(2<sup>8</sup>)</li>
@@ -305,9 +352,9 @@
 <li>GF(2<sup>8</sup>)的非零元素构成乘法循环群。</li>
 </ul>
 
-<h3 id="2-aes的gf-2-sup-8-sup-表示">2. AES的GF(2<sup>8</sup>)表示</h3>
+<h3 id="2-aes在有限域上的表示">2. AES在有限域上的表示</h3>
 
-<p>有限域GF(2^8)上的元素有多种表示方法，为了方便，Rijndaels算法采用多项式表示法，下面是与还表示方法相关的几个定义</p>
+<p>有限域GF(2<sup>8</sup>sup&gt;)上的元素有多种表示方法，为了方便，Rijndaels算法采用多项式表示法，下面是与还表示方法相关的几个定义 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <p><strong>定义1</strong> : 一个由比特位b<sub>7</sub>b<sub>6</sub>b<sub>5</sub>b<sub>4</sub>b<sub>3</sub>b<sub>2</sub>b<sub>1</sub>b<sub>0</sub> 组成的字节可表示成系数为(0, 1)的二进制多项式：b<sub>7</sub>X<sup>7</sup> + b<sub>6</sub>X<sup>6</sup> + b<sub>5</sub>X<sup>5</sup> + b<sub>4</sub>X<sup>4</sup> + b<sub>3</sub>X<sup>3</sup> + b<sub>2</sub>X<sup>2</sup> + b<sub>1</sub>X + b<sub>0</sub></p>
 
@@ -335,13 +382,13 @@
 
 <h3 id="3-aes的字表示与运算">3.  AES的字表示与运算</h3>
 
-<h4 id="1-字表示">(1) 字表示</h4>
+<h4 id="3-1-字表示">3.1. 字表示</h4>
 
-<p>AES数据处理的单位是字节和字，一个字由四个字节组成，表示为系数取自GF(2<sup>8</sup>)上的次数低于4次的多项式</p>
+<p>AES数据处理的单位是字节和字，一个字由四个字节组成，表示为系数取自GF(2<sup>8</sup>)上的次数低于4次的多项式    <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <p>例: 字<code>57 83 4A D1</code>等价于 $$57x^3+83x^2+4Ax+D1$$</p>
 
-<h4 id="2-字运算">(2) 字运算</h4>
+<h4 id="3-2-字运算">3.2. 字运算</h4>
 
 <p>字运算是基于上述关于AES在GF(2<sup>8</sup>)中的运算规则的。</p>
 
@@ -365,11 +412,11 @@
 
 <p>​                                            <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/nb3.png" alt="img" /></p>
 
-<h2 id="三-aes的加密过程">三、 AES的加密过程</h2>
+<h2 id="0x03-aes的加密过程">0x03. AES的加密过程</h2>
 
 <h3 id="1-状态">1. 状态</h3>
 
-<p>在AES中除了字节和字外，还有一种被称为状态的数据处理方式，它用来存储加解密过程中的中间数据，一般用以字节为元素的矩阵或二维数组表示。</p>
+<p>在AES中除了字节和字外，还有一种被称为状态的数据处理方式，它用来存储加解密过程中的中间数据，一般用以字节为元素的矩阵或二维数组表示。<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <p>如果用Nb代表明密文所含的字数。 Nk代表密钥所含的字数。 Nr代表迭代轮数，则当Nb和Nk都等于4时的状态与密钥数组分别如下面的（图 3-1）和（图 3-2）  所示</p>
 
@@ -379,9 +426,9 @@
 
 <p><img src="https://github.com/threeworld/encrypt/raw/master/AES/pic/10.png" alt="img" /></p>
 
-<h3 id="2-概述">2. 概述</h3>
+<h3 id="2-加密过程概述">2. 加密过程概述</h3>
 
-<p>AES加密算法的主要步骤有</p>
+<p>AES加密算法的主要步骤有<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>轮密钥生成</li>
@@ -405,7 +452,7 @@
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/encryption.png" alt="img" /></p>
 
-<h3 id="3-有限域gf-2-上的加法">3. 有限域GF(2)上的加法</h3>
+<h3 id="3-aes有限域上的加法">3. AES有限域上的加法</h3>
 
 <pre><code class="language-java">/**
  * 有限域GF(2)上的加法，&lt;tt&gt;modeSize&lt;/tt&gt;位的异或操作
@@ -428,7 +475,7 @@ private short[][] xor(short[][] first, short[][] second) {
 
 <h3 id="4-轮密钥生成-generateroundkeys">4.  轮密钥生成 （GenerateRoundKeys）</h3>
 
-<p>轮密钥根据密钥产生算法通过主密钥得到。密钥产生分两步进行： 密钥扩展和轮密钥选择，且郡守以下规则</p>
+<p>轮密钥根据密钥产生算法通过主密钥得到。密钥产生分两步进行： 密钥扩展和轮密钥选择，且郡守以下规则<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>轮密钥的比特总数为明文数据块长度与轮数加1的积。例如，对于128位的分组长度和10轮迭代，轮密钥长度为128 x (10 + 1) = 1408位，即11个状态长</li>
@@ -436,9 +483,9 @@ private short[][] xor(short[][] first, short[][] second) {
 <li>再从扩展密钥中选出轮密钥：第一个轮密钥由扩展中的前Nb个字组成（即原主密钥），第二个轮密钥是接下来的Nb个字，以此类推。</li>
 </ul>
 
-<h4 id="1-密钥扩展-keyexpansion">( 1 ) 密钥扩展  （KeyExpansion）</h4>
+<h4 id="4-1-密钥扩展">4.1. 密钥扩展</h4>
 
-<p>用一个字元素的一维数组<code>W[Nb*(Nr+1)]</code>表示扩展密钥。把密钥放在该数组最开始的Nk个字中，其它的字由它前面的字经过处理后得到。分Nk≤6 和Nk&gt;6两种密钥扩展算法：</p>
+<p>用一个字元素的一维数组<code>W[Nb*(Nr+1)]</code>表示扩展密钥。把密钥放在该数组最开始的Nk个字中，其它的字由它前面的字经过处理后得到。分Nk≤6 和Nk&gt;6两种密钥扩展算法：    <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <p><strong>① Nk≤6的密钥扩展</strong></p>
 
@@ -462,13 +509,13 @@ private short[][] xor(short[][] first, short[][] second) {
 
 <p>增加ByteSub变换，是因为当Nk&gt;6时密钥很长，仅仅对Nk的整数倍的位置处的字进行ByteSub变换，就显得ByteSub变换的密度较稀，安全程度不够强。</p>
 
-<h4 id="2-轮密钥的选择">( 2 ) 轮密钥的选择</h4>
+<h4 id="4-2-轮密钥的选择">4.2. 轮密钥的选择</h4>
 
-<p>根据分组的大小，依次从扩展密钥中取出轮密钥。 前面的Nb个字作为轮密钥0，接下来的Nb个字作为轮密钥1，以此类推</p>
+<p>根据分组的大小，依次从扩展密钥中取出轮密钥。 前面的Nb个字作为轮密钥0，接下来的Nb个字作为轮密钥1，以此类推                             <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <p>​                                   <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/keySelection1.png" alt="img" /></p>
 
-<h4 id="3-代码实现">( 3 ) 代码实现</h4>
+<h4 id="4-3-代码实现">4.3. 代码实现</h4>
 
 <pre><code class="language-java">/**
  * 轮密钥扩展：将1个状态长度的主密钥扩展成&lt;tt&gt;rounds + 1&lt;/tt&gt;个状态长度的轮密钥数组
@@ -495,9 +542,9 @@ private short[][] generateRoundKeys(short[][] originalKey) {
 
 <h3 id="5-aes基本变换">5. AES基本变换</h3>
 
-<h4 id="1-s盒变换-bytesub">（1）S盒变换 (ByteSub)</h4>
+<h4 id="5-1-s盒变换">5.1. S盒变换</h4>
 
-<p>一种作用在状态中每一个字节上的非线性变换，对比于DES</p>
+<p>一种作用在状态中每一个字节上的非线性变换，对比于DES <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>因为AES-126明文数据块为16个字节，所以AES使用16个相同的S盒(其实是可重复16次使用同一个)；DES使用8个不相同的S盒。</li>
@@ -525,7 +572,7 @@ private short[][] generateRoundKeys(short[][] originalKey) {
 
 <p><strong>代码实现</strong></p>
 
-<p>通过建表查表代替运算，同时将该操作拆分为<code>substituteState</code>、<code>substituteWord</code>和<code>substituteByte</code>三个子操作</p>
+<p>通过建表查表代替运算，同时将该操作拆分为<code>substituteState</code>、<code>substituteWord</code>和<code>substituteByte</code>三个子操作<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <p>​         <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/subbytes1.png" alt="img" /></p>
 
@@ -578,7 +625,7 @@ private short substituteByte(short originalByte, short[][] substituteTable) {
 }
 </code></pre>
 
-<h4 id="2-行移位变换-shiftrows">（2）行移位变换  (ShiftRows)</h4>
+<h4 id="5-2-行移位变换">5.2. 行移位变换</h4>
 
 <p>​                               <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/ShiftRows.png" alt="img" /></p>
 
@@ -640,7 +687,7 @@ private static short[][] shiftRows(short[][] state, short[][] shiftingTable) {
 }
 </code></pre>
 
-<h4 id="3-列混合变换-mixcolumn">（3）列混合变换      (MixColumn)</h4>
+<h4 id="5-3-列混合变换">5.3. 列混合变换</h4>
 
 <p>​                                                      <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/mc.png" alt="img" /></p>
 
@@ -796,9 +843,9 @@ private short[][] coreEncrypt(short[][] initialPTState,
 }
 </code></pre>
 
-<h2 id="四-解密过程">四. 解密过程</h2>
+<h2 id="0x04-解密过程">0x04. 解密过程</h2>
 
-<p>说到加密先纵观整个AES的加解密流程，由于Rijndael算法不是对合运算，所以其解密算法与加密算法不同，根据解密算法应当是加密算法的逆，最直接的做法就是把加密算法倒序执行，便得到解密算法，但是这样不便于工程实现。</p>
+<p>说到加密先纵观整个AES的加解密流程，由于Rijndael算法不是对合运算，所以其解密算法与加密算法不同，根据解密算法应当是加密算法的逆，最直接的做法就是把加密算法倒序执行，便得到解密算法，但是这样不便于工程实现。<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/big.png" alt="img" /></p>
 
@@ -806,17 +853,17 @@ private short[][] coreEncrypt(short[][] initialPTState,
 
 <h3 id="1-aes基本逆变换">1. AES基本逆变换</h3>
 
-<h4 id="1-addroundkey">( 1 ) AddRoundKey</h4>
+<h4 id="1-1-addroundkey">1.1. AddRoundKey</h4>
 
 <p>轮密钥加变换的逆就是其本身，即</p>
 
 <p>$$ (AddRoundKey)^{-1}= AddRoundKey $$</p>
 
-<h4 id="2-shiftrows">( 2 ) ShiftRows</h4>
+<h4 id="1-2-shiftrows">1.2. ShiftRows</h4>
 
 <p>行移位变换的逆是状态的后三行分别移位N<sub>b</sub> - C<sub>1</sub>， N</sub>b</sub> - C<sub>2</sub>， N<sub>b</sub> - C<sub>3</sub>个字节。</p>
 
-<h4 id="3-mixcolumns">( 3 ) MixColumns</h4>
+<h4 id="1-3-mixcolumns">1.3. MixColumns</h4>
 
 <p>因为列混合变换是把状态的每一列都乘以一个固定的多项式c(x) :</p>
 
@@ -826,13 +873,13 @@ private short[][] coreEncrypt(short[][] initialPTState,
 
 <p>$$d(x)=(c(x) )^{-1} \ mod \ x^4+1 ，c(x)=03x^3+01x^2+01x+02，d(x)=0Bx^3+0Dx^2+09x+0E $$</p>
 
-<h4 id="4-subbytes">( 4 ) SubBytes</h4>
+<h4 id="1-4-subbytes">1.4. SubBytes</h4>
 
 <p>S盒变换的逆要先进行逆仿射变换，再把每个字节用其在GF(2<sup>8</sup>)中的逆来代替。</p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/inversesb.png" alt="img" /></p>
 
-<h4 id="5-keyexpansion">( 5 ) KeyExpansion</h4>
+<h4 id="1-5-keyexpansion">1.5. KeyExpansion</h4>
 
 <p>解密的密钥扩展与加密的密钥扩展不同，其定义如下：</p>
 
@@ -908,7 +955,7 @@ private short[][][] inverseRoundKeys(short[][][] roundKeys) {
 }
 </code></pre>
 
-<h2 id="五-测试">五. 测试</h2>
+<h2 id="0x05-测试">0x05. 测试</h2>
 
 <pre><code class="language-java">@Test
 public void testAES() throws UnsupportedEncodingException {
@@ -1118,11 +1165,11 @@ AddRoundKeys                  70617373776f72645465787443617365
 plaintext                     passwordTextCase  
 </code></pre>
 
-<h2 id="六-说明">六. 说明</h2>
+<h2 id="0x06-说明">0x06. 说明</h2>
 
 <h3 id="1-源码">1. 源码</h3>
 
-<p>本AES实现的代码已经发布到<a href="https://github.com/jordonyang/cipher4j">Github</a>，如果你觉得写得还不错，欢迎star和fork; 如果对代码有疑惑，欢迎通过邮箱<code>linfengit@qq.com</code>与我讨论</p>
+<p>本AES实现的代码已经发布到<a href="https://github.com/jordonyang/cipher4j">Github</a>，如果你觉得写得还不错，欢迎star和fork; 如果对代码有疑惑，欢迎通过邮箱<code>linfengit@qq.com</code>与我讨论 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
 
 <h3 id="2-todo">2. TODO</h3>
 
@@ -1132,7 +1179,7 @@ plaintext                     passwordTextCase
 <li>实现的是最简单的电码本（ECB）工作模式，暂不支持其他模式明文数据模式</li>
 </ul>
 
-<h2 id="七-参考">七. 参考</h2>
+<h2 id="0x07-参考">0x07. 参考</h2>
 
 <ul>
 <li><a href="https://www.baidu.com/link?url=QhLf4SboJVjBsfe1JGiOB6nzvzmo0xZ0QU_Mxoft1fB6bJK_H8o2ffPXMY4-cv-W&amp;wd=&amp;eqid=bea9a25000020bc8000000065bc6115b"><em>FIPS</em> <em>197</em> &ndash; Advanced Encryption Standard</a></li>
@@ -1147,10 +1194,7 @@ plaintext                     passwordTextCase
 
     </section>
 
-
   <footer class="post-footer">
-
-
     
 
 
@@ -1166,29 +1210,38 @@ plaintext                     passwordTextCase
 
 
 <section class="author">
-  <h4><a href="https://jordonyang.github.io/">临风</a></h4>
-  
-  <p>Read <a href="https://jordonyang.github.io/">more posts</a> by this author.</p>
-  
   <div class="author-meta">
-    <span class="author-location icon-location">Guangzhou, China</span>
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
     <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
   </div>
 </section>
 
 
 
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/security/crypto/unsymmetry/prime/"><h4>Big Prime Number Generation And Primality Testing</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/impl-of-des/"><h4>Implementation of DES Algorithm</h4></a></span>
+  
+
+</aside>
+
+
+
 
     
-<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
 
-<div class="bdsharebuttonbox">
-	<a href="#" class="bds_more" data-cmd="more"></a>
-	<a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
-	<a href="#" class="bds_tqq" data-cmd="tqq"></a>
-	<a href="#" class="bds_renren" data-cmd="renren"></a>
-	<a href="#" class="bds_weixin" data-cmd="weixin"></a>
-</div>
 
 
 
@@ -1215,28 +1268,10 @@ plaintext                     passwordTextCase
   </footer>
 </article>
 
+
+
+	
 </main>
-
-
-  <aside class="read-next">
-  
-      <a class="read-next-story" style="no-cover" href="https://jordonyang.github.io/post/security/crypto/unsymmetry/prime/">
-          <section class="post">
-              <h2>Big Prime Number Generation And Primality Testing</h2>
-              
-          </section>
-      </a>
-  
-  
-      <a class="read-next-story prev" style="no-cover" href="https://jordonyang.github.io/post/impl-of-des/">
-          <section class="post">
-              <h2>Implementation of DES Algorithm</h2>
-          </section>
-      </a>
-  
-</aside>
-
-
 
     <footer class="site-footer clearfix">
         <section class="copyright"><a href="">临风博客</a> All rights reserved</section>

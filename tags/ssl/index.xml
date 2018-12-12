@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ssl on 临风博客</title>
+    <link>https://jordonyang.github.io/tags/ssl/</link>
+    <description>Recent content in Ssl on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Mon, 10 Dec 2018 23:42:48 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/tags/ssl/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Homemade Certificate and Config Unidirectional Authentication</title>
+      <link>https://jordonyang.github.io/post/security/app/ssl-config/</link>
+      <pubDate>Mon, 10 Dec 2018 23:42:48 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/app/ssl-config/</guid>
+      <description>0x00. OpenSSL使用 作为本地环境的实验，可以使用OpenSSL生成证书帮助理解证书认证的整个过程，事实上，在应用层面OpenSSL的可靠性是值得考量的，最著名的事件莫过于在2014年爆出的心跳漏洞（Heart Bleed），利用该漏洞，黑客坐在自己家里电脑前，就可以实时获取到约30%https开头网址的用户登录账号密码，包括大批网银、购物网站、电子邮件等。
+1. 获取OpenSSL  Github OpenSSL官网 Git安装目录下的/usr/bin/openssl.exe（win10，Linux类似）  比较折腾的方法是到Github或者OpenSSL官网的官网下载源码，然后自己编译，但我敲下nmake命令之后，发现这个坑不是一般的大，想想要在我这破电脑上装个VS突然心酸不已，那有没有什么easy way呢？有，而且或许在不知不觉中你已经装了，那就是Git，想想Git一套套的安全验证机制，当你在Git安装目录下的/usr/bin/中找到openssl.exe这个文件时真的不需要惊奇。
+2. 创建私钥 下面命令会生成2048位的RSA密钥对， 并且将它存放在exp.key文件中。
+OpenSSL&amp;gt; genrsa -out out.key 2048  如果不指定参数则会创建默认2048位的RSA密钥对， 并且输出到stdout
+OpenSSL&amp;gt; genrsa Generating RSA private key, 2048 bit long modulus .......................................................................................+++ ........+++ e is 65537 (0x10001) -----BEGIN RSA PRIVATE KEY----- MIIEowIBAAKCAQEAm5FLEgxENOYWzKxs/PNP2/UxmBQjdfURuz3k1QFVw76RMi8i mQPTdMSdZ3tuEG6r7qZDId4nefJRFCMSJOLbuVoLkLozWnoUAGbvDzQKiXEVE9Bi ypsm6fHi7zZKpBltHwFiuU0jMSlj1PIcKyd7JYr0dIXyZIYz8z9bfJf+JPefr6sq WsTl6FzxC+3S8Na6xzCNPl21v9AGsLOIT9roVenN7ewjdhOqpKOyvYwSAev0wOoc gMiz6qnI0a/2xlrgFP6qb7wofOpBbosDSbYsexg2kFfvlYPTtPFyAUudewtaZ2qm MzWl5f7vngfLLQ9F8C4cXFpFUVoboDOO+vvXxwIDAQABAoIBABqcDaU2p+wMd1Xn IHVcAQr0s9j5iN9CXhgTDDNLGSp0TE2zNk3KE79jajErMbZp18rocY83erUnN6sk HJRmoYLg3h2RW/tb6lPvR3DoS+0ahKpw+JUDWPKnR1P3i2jqWHn3OLXNdfmQxNzF 1P+krzHKxOmxh7aeJgCzk6iKLxSPamCQLSWW8sc3fu+6yBbtXOzifgETXqc5SEbk UKfn489d4vLU5foLiOLuSWc2FI+c1mDQfzUVo14v/CpnknCSfNIPlDePdvBLr5uG 8YWQ4hftlCQ6hZQodmnxw+HNCqOqJzMs3SMXsuuFu66VVzy48p8+zKzZJ7+uZUOA Bo1GCgECgYEAyenl8TP6yxW4sKc3pQwL2A9wUJBg3mdcpMOEvJoL66fL1HF2uSz9 /3H/aNJzJb5bfeJytZfgSIt+XwttuKxWzLfBOdpX972xA9iZ0ia3v62wD7oXkrho +oaETu41y6CIy5t9eTQpk7JeH/MzrXYPIXGPAuLq/DOPZ0aR32N5tYECgYEAxT09 Weee71Z+qKNWIcwBGnq+ko5CRWe1Btl75yeo/kABVH8/jDMJFlZU5otU8W6aPRmX 93nbNZ42u24GBo8xZcrY5/K1qRolMS40faDQqv28pWcRJAfDUyp+iuZ8nulV9fFU 5KaDR1Z2Tq2XX9lAX92itaPeiFrmUL0UO98FAUcCgYAodvWcJzyloo7G6FwgeY+O F1n861Jef/xzELPzUDP/YDtbMfoHFls47FGxYiutbr7LNayjc/KA12PWDGZK0k76 7ACPZZCnl554FNqO4S+F/HsCS9sZjleLjZXKc7bYPi3sEBdPSQLkFKUEZir/Il/Z 5fYxL+TD8llU6zGkwTzNAQKBgBrooO8cD23doggFyKFxwJDJQCikadwoKuVVVHcT zRVqzAOoHJZW/B1lB84wIhWSHk7JqBbmNAbbn+HwP7gzXuzhQLhcP3Zjj8Fm6Vhe UTmSxmLWbds5h+dXu83dZhEUCls0Yn2TTgO0gw1211kHPaYWibU4NwrpQ9SuBw2n /nnPAoGBAJsQn5SsS97e1D++wHXCduj8mP/oA3xUxVVySwiwh5+equGRMNl/ALfF v3ok5pLP/j2KbfXwnNAiImNUzY7KJhGrAGwWG9vPloeM3oXjeeBlDuVKcxcNzRat 9DrkTj9IH1YNcFV+z5hMpxNhMWIBEjtlL9YCRpla9W9dpFAwMYG8 -----END RSA PRIVATE KEY-----  下面是genrsa命令的一些参数 (usage: genrsa [args)][numbits])</description>
+    </item>
+    
+  </channel>
+</rss>

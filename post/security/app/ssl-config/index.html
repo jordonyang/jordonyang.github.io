@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Homemade Certificate and Config Unidirectional Authentication"/>
+<meta name="twitter:description" content="使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Homemade Certificate and Config Unidirectional Authentication &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/security/app/ssl-config/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-12-10T23:42:48&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Https" />
+    
+    <meta property="article:tag" content="SSL" />
+    
+    
+
+    <title>Homemade Certificate and Config Unidirectional Authentication &middot; 临风博客</title>
+
+    
+    <meta name="description" content="使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/security/app/ssl-config/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Homemade Certificate and Config Unidirectional Authentication,
+    "name": Homemade Certificate and Config Unidirectional Authentication,
+    "wordCount": 1101,
+    "timeRequired": "PT6M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/security/app/ssl-config/,
+    "datePublished": 2018-12-10T23:42Z,
+    "dateModified": 2018-12-10T23:42Z,
+    
+    "keywords": Https, SSL,
+    "description": 使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/security/app/ssl-config/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            </br></br><strong>学习大纲</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/hierarchy-java">Java</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Homemade Certificate and Config Unidirectional Authentication</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Homemade Certificate and Config Unidirectional Authentication</h1>
+        <em style="color: blue">使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/https/">#Https</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/ssl/">#SSL</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-12-10T23:42:48&#43;08:00">
+            2018/Dec/10
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h2 id="0x00-openssl使用">0x00. OpenSSL使用</h2>
+
+<p>作为本地环境的实验，可以使用OpenSSL生成证书帮助理解证书认证的整个过程，事实上，在应用层面OpenSSL的可靠性是值得考量的，最著名的事件莫过于在2014年爆出的心跳漏洞（Heart Bleed），利用该漏洞，黑客坐在自己家里电脑前，就可以实时获取到约30%https开头网址的用户登录账号密码，包括大批网银、购物网站、电子邮件等。</p>
+
+<h3 id="1-获取openssl">1. 获取OpenSSL</h3>
+
+<ul>
+<li>Github</li>
+<li>OpenSSL官网</li>
+<li>Git安装目录下的/usr/bin/openssl.exe（win10，Linux类似）</li>
+</ul>
+
+<p>比较折腾的方法是到Github或者OpenSSL官网的官网下载源码，然后自己编译，但我敲下<code>nmake</code>命令之后，发现这个坑不是一般的大，想想要在我这破电脑上装个VS突然心酸不已，那有没有什么easy way呢？有，而且或许在不知不觉中你已经装了，那就是Git，想想Git一套套的安全验证机制，当你在Git安装目录下的/usr/bin/中找到openssl.exe这个文件时真的不需要惊奇。</p>
+
+<h3 id="2-创建私钥">2. 创建私钥</h3>
+
+<p>下面命令会生成<code>2048位</code>的<code>RSA</code>密钥对， 并且将它存放在<code>exp.key</code>文件中。</p>
+
+<pre><code class="language-shell">OpenSSL&gt; genrsa -out out.key 2048
+</code></pre>
+
+<p>如果不指定参数则会创建默认2048位的RSA密钥对， 并且输出到<code>stdout</code></p>
+
+<pre><code class="language-shell">OpenSSL&gt; genrsa
+Generating RSA private key, 2048 bit long modulus
+.......................................................................................+++
+........+++
+e is 65537 (0x10001)
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAm5FLEgxENOYWzKxs/PNP2/UxmBQjdfURuz3k1QFVw76RMi8i
+mQPTdMSdZ3tuEG6r7qZDId4nefJRFCMSJOLbuVoLkLozWnoUAGbvDzQKiXEVE9Bi
+ypsm6fHi7zZKpBltHwFiuU0jMSlj1PIcKyd7JYr0dIXyZIYz8z9bfJf+JPefr6sq
+WsTl6FzxC+3S8Na6xzCNPl21v9AGsLOIT9roVenN7ewjdhOqpKOyvYwSAev0wOoc
+gMiz6qnI0a/2xlrgFP6qb7wofOpBbosDSbYsexg2kFfvlYPTtPFyAUudewtaZ2qm
+MzWl5f7vngfLLQ9F8C4cXFpFUVoboDOO+vvXxwIDAQABAoIBABqcDaU2p+wMd1Xn
+IHVcAQr0s9j5iN9CXhgTDDNLGSp0TE2zNk3KE79jajErMbZp18rocY83erUnN6sk
+HJRmoYLg3h2RW/tb6lPvR3DoS+0ahKpw+JUDWPKnR1P3i2jqWHn3OLXNdfmQxNzF
+1P+krzHKxOmxh7aeJgCzk6iKLxSPamCQLSWW8sc3fu+6yBbtXOzifgETXqc5SEbk
+UKfn489d4vLU5foLiOLuSWc2FI+c1mDQfzUVo14v/CpnknCSfNIPlDePdvBLr5uG
+8YWQ4hftlCQ6hZQodmnxw+HNCqOqJzMs3SMXsuuFu66VVzy48p8+zKzZJ7+uZUOA
+Bo1GCgECgYEAyenl8TP6yxW4sKc3pQwL2A9wUJBg3mdcpMOEvJoL66fL1HF2uSz9
+/3H/aNJzJb5bfeJytZfgSIt+XwttuKxWzLfBOdpX972xA9iZ0ia3v62wD7oXkrho
++oaETu41y6CIy5t9eTQpk7JeH/MzrXYPIXGPAuLq/DOPZ0aR32N5tYECgYEAxT09
+Weee71Z+qKNWIcwBGnq+ko5CRWe1Btl75yeo/kABVH8/jDMJFlZU5otU8W6aPRmX
+93nbNZ42u24GBo8xZcrY5/K1qRolMS40faDQqv28pWcRJAfDUyp+iuZ8nulV9fFU
+5KaDR1Z2Tq2XX9lAX92itaPeiFrmUL0UO98FAUcCgYAodvWcJzyloo7G6FwgeY+O
+F1n861Jef/xzELPzUDP/YDtbMfoHFls47FGxYiutbr7LNayjc/KA12PWDGZK0k76
+7ACPZZCnl554FNqO4S+F/HsCS9sZjleLjZXKc7bYPi3sEBdPSQLkFKUEZir/Il/Z
+5fYxL+TD8llU6zGkwTzNAQKBgBrooO8cD23doggFyKFxwJDJQCikadwoKuVVVHcT
+zRVqzAOoHJZW/B1lB84wIhWSHk7JqBbmNAbbn+HwP7gzXuzhQLhcP3Zjj8Fm6Vhe
+UTmSxmLWbds5h+dXu83dZhEUCls0Yn2TTgO0gw1211kHPaYWibU4NwrpQ9SuBw2n
+/nnPAoGBAJsQn5SsS97e1D++wHXCduj8mP/oA3xUxVVySwiwh5+equGRMNl/ALfF
+v3ok5pLP/j2KbfXwnNAiImNUzY7KJhGrAGwWG9vPloeM3oXjeeBlDuVKcxcNzRat
+9DrkTj9IH1YNcFV+z5hMpxNhMWIBEjtlL9YCRpla9W9dpFAwMYG8
+-----END RSA PRIVATE KEY-----
+</code></pre>
+
+<p>下面是<code>genrsa</code>命令的一些参数 (usage: genrsa [args)][numbits])</p>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>-des</td>
+<td>encrypt the generated key with DES in cbc mode</td>
+</tr>
+
+<tr>
+<td>-des3</td>
+<td>encrypt the generated key with DES in ede cbc mode (168 bit key)</td>
+</tr>
+
+<tr>
+<td>-idea</td>
+<td>encrypt the generated key with IDEA in cbc mode</td>
+</tr>
+
+<tr>
+<td>-seed</td>
+<td>encrypt PEM output with cbc seed</td>
+</tr>
+
+<tr>
+<td>-aes128, -aes192, -aes256</td>
+<td>encrypt PEM output with cbc aes</td>
+</tr>
+
+<tr>
+<td>-camellia128, -camellia192, -camellia256</td>
+<td>encrypt PEM output with cbc camellia</td>
+</tr>
+
+<tr>
+<td>-out file</td>
+<td>output the key to &lsquo;file</td>
+</tr>
+
+<tr>
+<td>-passout arg</td>
+<td>output file pass phrase source</td>
+</tr>
+
+<tr>
+<td>-f4</td>
+<td>use F4 (0x10001) for the E value</td>
+</tr>
+
+<tr>
+<td>-3</td>
+<td>use 3 for the E value</td>
+</tr>
+
+<tr>
+<td>-engine e</td>
+<td>use engine e, possibly a hardware device.</td>
+</tr>
+
+<tr>
+<td>-rand file;file;&hellip;</td>
+<td>load the file (or the files in the directory) intothe random number generator</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="3-创建证书请求">3. 创建证书请求</h3>
+
+<p>下面命令使用 <code>exp.key</code>密钥文件（刚刚创建的） 生成一个新的证书请求文件<code>exp.csr</code>。 在创建过程中需要输入一些其它参数， 这些参数在下面给出</p>
+
+<pre><code class="language-shell">OpenSSL&gt; req -new -out exp.csr -key exp.key
+</code></pre>
+
+<p>输出内容如下</p>
+
+<pre><code class="language-shell">Enter pass phrase for root.key: ← 输入前面创建的密码 
+You are about to be asked to enter information that will be incorporated 
+into your certificate request. 
+What you are about to enter is what is called a Distinguished Name or a DN. 
+There are quite a few fields but you can leave some blank 
+For some fields there will be a default value, 
+If you enter ‘.’, the field will be left blank. 
+—– 
+Country Name (2 letter code) [AU]:CN ← 国家代号，中国输入CN 
+State or Province Name (full name) [Some-State]:BeiJing ← 省的全名，拼音 
+Locality Name (eg, city) []:BeiJing ← 市的全名，拼音 
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:MyCompany Corp. ← 公司英文名 
+Organizational Unit Name (eg, section) []: ← 可以不输入 
+Common Name (eg, YOUR name) []: ← 创建根证书时不用输入，创建服务器证书时需要认真输入 
+Email Address []:admin@mycompany.com ← 电子邮箱，可随意填
+
+Please enter the following ‘extra’ attributes 
+to be sent with your certificate request 
+A challenge password []: ← 可以不输入 
+An optional company name []: ← 可以不输入
+</code></pre>
+
+<p>下面是req的一些参数</p>
+
+<p>使用：req [options] <infile >outfile</p>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>-inform arg</td>
+<td>input format - DER or PEM</td>
+</tr>
+
+<tr>
+<td>-outform arg</td>
+<td>output format - DER or PEM</td>
+</tr>
+
+<tr>
+<td>-in arg</td>
+<td>input file</td>
+</tr>
+
+<tr>
+<td>-out arg</td>
+<td>output file</td>
+</tr>
+
+<tr>
+<td>-text</td>
+<td>text form of request</td>
+</tr>
+
+<tr>
+<td>-pubkey</td>
+<td>output public key</td>
+</tr>
+
+<tr>
+<td>-noout</td>
+<td>do not output REQ</td>
+</tr>
+
+<tr>
+<td>-verify</td>
+<td>verify signature on REQ</td>
+</tr>
+
+<tr>
+<td>-modulus</td>
+<td>RSA modulus</td>
+</tr>
+
+<tr>
+<td>-nodes</td>
+<td>don&rsquo;t encrypt the output key</td>
+</tr>
+
+<tr>
+<td>-engine e</td>
+<td>use engine e, possibly a hardware device</td>
+</tr>
+
+<tr>
+<td>-subject</td>
+<td>output the request&rsquo;s subject</td>
+</tr>
+
+<tr>
+<td>-passin</td>
+<td>private key password source</td>
+</tr>
+
+<tr>
+<td>-key file</td>
+<td>use the private key contained in file</td>
+</tr>
+
+<tr>
+<td>-keyform arg</td>
+<td>key file format</td>
+</tr>
+
+<tr>
+<td>-keyout arg</td>
+<td>file to send the key to</td>
+</tr>
+
+<tr>
+<td>-rand file;file;&hellip;</td>
+<td>load the file (or the files in the directory) into the random number generator</td>
+</tr>
+
+<tr>
+<td>-newkey rsa:bits</td>
+<td>generate a new RSA key of &lsquo;bits&rsquo; in size</td>
+</tr>
+
+<tr>
+<td>-newkey dsa:file</td>
+<td>generate a new DSA key, parameters taken from CA in &lsquo;file&rsquo;</td>
+</tr>
+
+<tr>
+<td>-newkey ec:file</td>
+<td>generate a new EC key, parameters taken from CA in &lsquo;file&rsquo;</td>
+</tr>
+
+<tr>
+<td>-[digest]</td>
+<td>Digest to sign with (md5, sha1, md2, mdc2, md4)</td>
+</tr>
+
+<tr>
+<td>-config file</td>
+<td>request template file.</td>
+</tr>
+
+<tr>
+<td>-subj arg</td>
+<td>set or modify request subject</td>
+</tr>
+
+<tr>
+<td>-multivalue-rdn</td>
+<td>enable support for multivalued RDNs</td>
+</tr>
+
+<tr>
+<td>-new</td>
+<td>new request.</td>
+</tr>
+
+<tr>
+<td>-batch</td>
+<td>do not ask anything during request generation</td>
+</tr>
+
+<tr>
+<td>-x509</td>
+<td>output a x509 structure instead of a cert. req</td>
+</tr>
+
+<tr>
+<td>-days</td>
+<td>number of days a certificate generated by -x509 is valid for.</td>
+</tr>
+
+<tr>
+<td>-set_serial</td>
+<td>serial number to use for a certificate generated by -x509.</td>
+</tr>
+
+<tr>
+<td>-newhdr</td>
+<td>output &ldquo;NEW&rdquo; in the header lines</td>
+</tr>
+
+<tr>
+<td>-asn1 -kludge</td>
+<td>Output the &lsquo;request&rsquo; in a format that is wrong but some CA&rsquo;<strong>s</strong></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="4-生成自签名证书">4. 生成自签名证书</h3>
+
+<p>下面命令用证书请求文件<code>exp.csr</code>， 通过<code>exp.key</code>签名后生成有效其10年的证书<code>exp.crt</code></p>
+
+<pre><code class="language-shell">OpenSSL&gt; x509 -req -in exp.csr -out exp.crt -signkey exp.key -days 3650
+</code></pre>
+
+<p>X509 一些常用参数：</p>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>-CAform arg</td>
+<td>- CA format - default PEM</td>
+</tr>
+
+<tr>
+<td>-outform arg</td>
+<td>- output format - default PEM (one of DER, NET or PEM)</td>
+</tr>
+
+<tr>
+<td>-inform arg</td>
+<td>- input format - default PEM (one of DER, NET or PEM)</td>
+</tr>
+
+<tr>
+<td>-keyform arg</td>
+<td>- private key format - default PEM</td>
+</tr>
+
+<tr>
+<td>-CAkeyform arg</td>
+<td>- CA key format - default PEM</td>
+</tr>
+
+<tr>
+<td>-in arg</td>
+<td>- input file - default stdin</td>
+</tr>
+
+<tr>
+<td>-out arg</td>
+<td>- output file - default stdout</td>
+</tr>
+
+<tr>
+<td>-passin arg</td>
+<td>- private key password source</td>
+</tr>
+
+<tr>
+<td>-serial</td>
+<td>- print serial number value</td>
+</tr>
+
+<tr>
+<td>-subject_hash</td>
+<td>- print subject hash value</td>
+</tr>
+
+<tr>
+<td>-subject_hash_old</td>
+<td>- print old-style (MD5) subject hash value</td>
+</tr>
+
+<tr>
+<td>-issuer_hash</td>
+<td>- print issuer hash value</td>
+</tr>
+
+<tr>
+<td>-issuer_hash_old</td>
+<td>- print old-style (MD5) issuer hash value</td>
+</tr>
+
+<tr>
+<td>-hash</td>
+<td>- synonym for -subject_hash</td>
+</tr>
+
+<tr>
+<td>-subject</td>
+<td>- print subject DN</td>
+</tr>
+
+<tr>
+<td>-issuer</td>
+<td>- print issuer DN</td>
+</tr>
+
+<tr>
+<td>-email</td>
+<td>- print email address(es)</td>
+</tr>
+
+<tr>
+<td>-startdate</td>
+<td>- notBefore field</td>
+</tr>
+
+<tr>
+<td>-enddate</td>
+<td>- notAfter field</td>
+</tr>
+
+<tr>
+<td>-purpose</td>
+<td>- print out certificate purposes</td>
+</tr>
+
+<tr>
+<td>-dates</td>
+<td>- both Before and After dates</td>
+</tr>
+
+<tr>
+<td>-modulus</td>
+<td>- print the RSA key modulus</td>
+</tr>
+
+<tr>
+<td>-pubkey</td>
+<td>- output the public key</td>
+</tr>
+
+<tr>
+<td>-fingerprint</td>
+<td>- print the certificate fingerprint</td>
+</tr>
+
+<tr>
+<td>-alias</td>
+<td>- output certificate alias</td>
+</tr>
+
+<tr>
+<td>-noout</td>
+<td>- no certificate output</td>
+</tr>
+
+<tr>
+<td>-ocspid</td>
+<td>- print OCSP hash values for the subject name and public key</td>
+</tr>
+
+<tr>
+<td>-ocsp_uri</td>
+<td>- print OCSP Responder URL(s)</td>
+</tr>
+
+<tr>
+<td>-trustout</td>
+<td>- output a &ldquo;trusted&rdquo; certificate</td>
+</tr>
+
+<tr>
+<td>-clrtrust</td>
+<td>- clear all trusted purposes</td>
+</tr>
+
+<tr>
+<td>-clrreject</td>
+<td>- clear all rejected purposes</td>
+</tr>
+
+<tr>
+<td>-addtrust arg</td>
+<td>- trust certificate for a given purpose</td>
+</tr>
+
+<tr>
+<td>-addreject arg</td>
+<td>- reject certificate for a given purpose</td>
+</tr>
+
+<tr>
+<td>-setalias arg</td>
+<td>- set certificate alias</td>
+</tr>
+
+<tr>
+<td>-days arg</td>
+<td>- How long till expiry of a signed certificate - def 30 days</td>
+</tr>
+
+<tr>
+<td>-checkend arg</td>
+<td>check whether the cert expires in the next arg seconds exit 1 if so, 0 if not</td>
+</tr>
+
+<tr>
+<td>-signkey arg</td>
+<td>- self sign cert with arg</td>
+</tr>
+
+<tr>
+<td>-x509toreq</td>
+<td>- output a certification request object</td>
+</tr>
+
+<tr>
+<td>-req</td>
+<td>- input is a certificate request, sign and output.</td>
+</tr>
+
+<tr>
+<td>-CA arg</td>
+<td>- set the CA certificate, must be PEM format.</td>
+</tr>
+
+<tr>
+<td>-CAcreateserial</td>
+<td>- create serial number file if it does not exist</td>
+</tr>
+
+<tr>
+<td>-CAserial arg</td>
+<td>- serial file</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="0x01-根证书">0x01. 根证书</h2>
+
+<p>根证书根证书是CA认证中心给自己颁发的证书，是信任链的起始点。安装根证书意味着对这个CA认证中心的信任。</p>
+
+<h3 id="1-制作根证书密钥root-key">1. 制作根证书密钥root.key</h3>
+
+<p>生成2048位的RSA密钥对，并且使用<code>3重DES</code>对之进行加密，将加密结果输出到<code>root.key</code>密钥文件</p>
+
+<pre><code class="language-shell">openssl genrsa -des3 -out root.key 2048
+</code></pre>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/1.png" alt="img" /></p>
+
+<h3 id="2-创建根证书的申请文件root-csr">2. 创建根证书的申请文件root.csr</h3>
+
+<p>使用<code>root.key</code>文件中的私钥加密请求信息并将加密结果输出到<code>root.csr</code>文件中</p>
+
+<pre><code class="language-shell">req -new -key root.key -out root.csr
+</code></pre>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/2.png" alt="img" /></p>
+
+<h3 id="3-创建一个自当前日期起为期十年的根证书-root-crt">3. 创建一个自当前日期起为期十年的根证书 root.crt</h3>
+
+<pre><code class="language-shell">x509 -req -days 3650 -sha256 -extensions v3_ca -signkey root.key -in root.csr -out root.crt
+</code></pre>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/3.png" alt="img" /></p>
+
+<h2 id="0x02-服务器证书">0x02. 服务器证书</h2>
+
+<h3 id="1-创建服务器证书密钥-server-key">1. 创建服务器证书密钥 server.key</h3>
+
+<pre><code class="language-shell">genrsa -des3 -out server.key 2048
+</code></pre>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/serverkey.png" alt="img" /></p>
+
+<h3 id="2-创建服务器证书的申请文件-server-csr">2. 创建服务器证书的申请文件 server.csr</h3>
+
+<pre><code class="language-shell">req -new -key server.key -out server.csr
+</code></pre>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/servercsr.png" alt="img" /></p>
+
+<h3 id="3-创建服务器证书">3. 创建服务器证书</h3>
+
+<p>创建自当前日期起有效期为期十年的服务器证书 server.crt</p>
+
+<pre><code class="language-shell">openssl x509 -req -days 3650 -sha256 -extensions v3_req -CA root.crt -CAkey root.key -CAcreateserial -in server.csr -out server.crt
+</code></pre>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/servercrt.png" alt="img" /></p>
+
+<h3 id="4-导出-p12文件-server1-p12">4. 导出.p12文件 server1.p12</h3>
+
+<pre><code class="language-shell">openssl pkcs12 -export -in D:\softwares\Git\usr\bin\server.crt -inkey D:\softwares\Git\usr\bin\server.key -out  D:\softwares\Git\usr\bin\server1.p12 -name &quot;server1&quot;
+</code></pre>
+
+<p>根据命令提示，输入server.key密码，创建p12密码。
+<img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/serverp12.png" alt="img" /></p>
+
+<h3 id="5-生成-store文件-server1-keystore">5. 生成./store文件 server1.keystore</h3>
+
+<p>使用JDK自带的密钥工具<code>keytoool</code>生成密钥存储文件</p>
+
+<pre><code class="language-shell">keytool -importkeystore -v -srckeystore  /tmp/ca/server.p12 -srcstoretype pkcs12 -srcstorepass 123456 -destkeystore /tmp/ca/server.keystore -deststoretype jks -deststorepass 123456
+// 这里srcstorepass后面的123456为server.p12的密码deststorepass后的123456为keyStore的密码
+</code></pre>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/serverstore.png" alt="img" /></p>
+
+<h2 id="0x03-配置tomcat">0x03. 配置Tomcat</h2>
+
+<ul>
+<li>将keystore文件<code>server.keystore</code>放在tomcat根目录的conf目录下</li>
+<li>修改tomcat配置文件<code>server.xml</code>，添加<code>Connector</code>节点</li>
+</ul>
+
+<pre><code class="language-xml">  &lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11Protocol&quot;
+               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; scheme=&quot;https&quot; secure=&quot;true&quot;
+               keystoreFile=&quot;/你的tomcat根目录/conf/server.keystore&quot;
+               keystorePass=&quot;123456&quot;
+               clientAuth=&quot;false&quot; sslEnabledProtocols=&quot;TLSv1.2&quot;
+               ciphers=&quot;TLS_RSA_WITH_AES_128_CBC_SHA,
+                               TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+                               TLS_RSA_WITH_AES_128_CBC_SHA256,
+                               TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+                               TLS_RSA_WITH_3DES_EDE_CBC_SHA,
+                               TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA&quot; /&gt;
+</code></pre>
+
+<h2 id="0x04-测试">0x04. 测试</h2>
+
+<p>修改<code>C:\Windows\System32\drivers\etc\hosts</code>文件，使上面配置<code>server.csr</code>时指定的<code>www.geekeye.com</code>指向环路地址<code>127.0.0.1</code></p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/hoststest.png" alt="img" /></p>
+
+<p>在IDEA中使用本地的Tomcat运行一个项目进行测试</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/testidea.png" alt="img" /></p>
+
+<p>成功访问登录界面，显示不安全</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/5.png" alt="img" /></p>
+
+<p>在http协议下登录，输入用户名密码都为admin，请求的后端接口为<code>user/login.do</code>，使用Wireshark抓包情况如下</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/ws1.png" alt="img" /></p>
+
+<p>在https协议下登录，输入用户名密码都为admin，请求的后端接口为<code>user/login.do</code>，使用Wireshark抓包情况如下</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/ws2.png" alt="img" /></p>
+
+<p>用户名密码信息已经看不到了，因为数据已经使用加密方法加密了。</p>
+
+<h2 id="0x05-参考">0x05. 参考</h2>
+
+<ul>
+<li><a style="color:#0366d6;" href="https://www.jianshu.com/p/045f95c008a0">简书 - linux下Tomcat+OpenSSL配置单向&amp;双向认证(自制证书)</a></li>
+<li><a style="color:#0366d6;" href="https://www.cnblogs.com/kongxianghai/p/7071263.html">博客园 - wireshark抓取本地数据包</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/architecture/pattern/template-method-pattern/"><h4>What is Template Method Pattern</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+
