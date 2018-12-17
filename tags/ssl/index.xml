@@ -25,5 +25,34 @@ OpenSSL&amp;gt; genrsa -out out.key 2048  如果不指定参数则会创建默�
 OpenSSL&amp;gt; genrsa Generating RSA private key, 2048 bit long modulus .......................................................................................+++ ........+++ e is 65537 (0x10001) -----BEGIN RSA PRIVATE KEY----- MIIEowIBAAKCAQEAm5FLEgxENOYWzKxs/PNP2/UxmBQjdfURuz3k1QFVw76RMi8i mQPTdMSdZ3tuEG6r7qZDId4nefJRFCMSJOLbuVoLkLozWnoUAGbvDzQKiXEVE9Bi ypsm6fHi7zZKpBltHwFiuU0jMSlj1PIcKyd7JYr0dIXyZIYz8z9bfJf+JPefr6sq WsTl6FzxC+3S8Na6xzCNPl21v9AGsLOIT9roVenN7ewjdhOqpKOyvYwSAev0wOoc gMiz6qnI0a/2xlrgFP6qb7wofOpBbosDSbYsexg2kFfvlYPTtPFyAUudewtaZ2qm MzWl5f7vngfLLQ9F8C4cXFpFUVoboDOO+vvXxwIDAQABAoIBABqcDaU2p+wMd1Xn IHVcAQr0s9j5iN9CXhgTDDNLGSp0TE2zNk3KE79jajErMbZp18rocY83erUnN6sk HJRmoYLg3h2RW/tb6lPvR3DoS+0ahKpw+JUDWPKnR1P3i2jqWHn3OLXNdfmQxNzF 1P+krzHKxOmxh7aeJgCzk6iKLxSPamCQLSWW8sc3fu+6yBbtXOzifgETXqc5SEbk UKfn489d4vLU5foLiOLuSWc2FI+c1mDQfzUVo14v/CpnknCSfNIPlDePdvBLr5uG 8YWQ4hftlCQ6hZQodmnxw+HNCqOqJzMs3SMXsuuFu66VVzy48p8+zKzZJ7+uZUOA Bo1GCgECgYEAyenl8TP6yxW4sKc3pQwL2A9wUJBg3mdcpMOEvJoL66fL1HF2uSz9 /3H/aNJzJb5bfeJytZfgSIt+XwttuKxWzLfBOdpX972xA9iZ0ia3v62wD7oXkrho +oaETu41y6CIy5t9eTQpk7JeH/MzrXYPIXGPAuLq/DOPZ0aR32N5tYECgYEAxT09 Weee71Z+qKNWIcwBGnq+ko5CRWe1Btl75yeo/kABVH8/jDMJFlZU5otU8W6aPRmX 93nbNZ42u24GBo8xZcrY5/K1qRolMS40faDQqv28pWcRJAfDUyp+iuZ8nulV9fFU 5KaDR1Z2Tq2XX9lAX92itaPeiFrmUL0UO98FAUcCgYAodvWcJzyloo7G6FwgeY+O F1n861Jef/xzELPzUDP/YDtbMfoHFls47FGxYiutbr7LNayjc/KA12PWDGZK0k76 7ACPZZCnl554FNqO4S+F/HsCS9sZjleLjZXKc7bYPi3sEBdPSQLkFKUEZir/Il/Z 5fYxL+TD8llU6zGkwTzNAQKBgBrooO8cD23doggFyKFxwJDJQCikadwoKuVVVHcT zRVqzAOoHJZW/B1lB84wIhWSHk7JqBbmNAbbn+HwP7gzXuzhQLhcP3Zjj8Fm6Vhe UTmSxmLWbds5h+dXu83dZhEUCls0Yn2TTgO0gw1211kHPaYWibU4NwrpQ9SuBw2n /nnPAoGBAJsQn5SsS97e1D++wHXCduj8mP/oA3xUxVVySwiwh5+equGRMNl/ALfF v3ok5pLP/j2KbfXwnNAiImNUzY7KJhGrAGwWG9vPloeM3oXjeeBlDuVKcxcNzRat 9DrkTj9IH1YNcFV+z5hMpxNhMWIBEjtlL9YCRpla9W9dpFAwMYG8 -----END RSA PRIVATE KEY-----  下面是genrsa命令的一些参数 (usage: genrsa [args)][numbits])</description>
     </item>
     
+    <item>
+      <title>SSL - Dive into Handshake protocol</title>
+      <link>https://jordonyang.github.io/post/security/ssl/handshake/</link>
+      <pubDate>Mon, 12 Nov 2018 12:04:11 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/ssl/handshake/</guid>
+      <description>0x00. 握手过程 SSL最复杂的部分是握手协议。这一协议允许客户端和服务器相互认证，并协商加密和MAC算法，以及用于保护数据使用的密钥通过SSL记录传送。握手协议在任何应用数据被传输之前使用。 握手协议由客户端和服务器之间的一系列消息交换组成。每一条消息都包括三个域：
+ 类型（1字节）：表示预定义的10种消息类型之一。 长度（3字节）：以字节为单位的消息长度。 内容（&amp;gt;0字节）：和本条消息相关的参数。     消息类型 参数     hello_request 空   client_hello 版本，随机数，会话ID，密码套件，压缩方法   server_hello 版本，随机数，会话1D，密码套件，压缩方法   certificate X.509v3证书链   server_key_exchange 参数，签名   certificate_request 类型，授权   server_done 空   certificate_verify 签名   client key_exchange 参数，签名   finished 散列值    下图说明了为建立客户端和服务器之间的逻辑连接需要进行的初始交换。这些交换可分为4个阶段。(注意：加阴影的传输是可选的)
+1. 第一阶段：客户端发起建立连接请求 这一阶段主要是发起逻辑连接并建立与之关联的安全能力。交换首先由客户端通过发送下列dient_hello消息启动。
+ 版本（Client_version）：客户端的SSL最高版本。 随机数（Random）：由客户端产生的随机序列，由32比特时间戳以及安全随机数生成器产生的28字节随机数组成。这些数没有任何意义，主要用于SSL协议后面的密码学计算（会话密钥），防止密钥交换过程中的重放攻击。 会话ID（Session ID）：可变长度的会话标识符。非零值表示客户端希望更新现有连接的参数，或为该会话创建一条新连接。零值表示客户端希望在新会话上建立一条新连接。 密码套件（Cipher_suite）：按优先级的降序排列的、客户端支持的密码算法列表。列表中的每一行（即每一个密码套件）同时定义了密钥交换算法和密码规格（CipherSpec）。 压缩方法（Compression_methods）：客户端支持的压缩方法列表。 同样，该列表也依赖客户端的偏爱来排序。尽管该域通常在SSLv3中不使用（空算法），但以后的TLS将要求支持它。  发送完dient_hello消息后，客户端将等待server_hello消息，该消息所包含的参数与client_hello消息包含的参数相同。</description>
+    </item>
+    
+    <item>
+      <title>SSL - Architecture and Basic Protocols</title>
+      <link>https://jordonyang.github.io/post/security/ssl/base/</link>
+      <pubDate>Mon, 12 Nov 2018 12:03:51 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/ssl/base/</guid>
+      <description>0x00. 简介  安全套接字层(Secure Socket Layer, SSL)，由网景(Netscape)公司于1994年提出的基于Web应用的安全协议。该协议的第三版是经过公开评论和工业界使用后成为互联网草案。1999年，Internet Engineering Task Force (IETF)标准化了一种名为TLS的新协议，它是SSL的更新版本。事实上，TLS与SSL非常相似，TLS 1.0使用的SSL协议版本号为3.1。乍一看，这可能令人困惑，但这是有意义的，因为TLS只是对SSL 3.0的一个小更新。TLS的后续版本遵循了这种模式。由于TLS是SSL协议的演变，人们仍然可以在某种程度上互换使用术语TLS和SSL。 SSL主要采用了公钥密码机制和X.509数字证书技术，其目标是保证两个应用间通信的保密性、完整性和可靠性，可在服务器和客户端两端同时实现支持。 SSL结余可靠的传输层协议和应用层协议之间，能为客户端和服务器之间的TCP/IP连接提供服务器认证、消息完整性、通信数据加密和可选的客户端认证服务。   SSL可以用于任何面向连接的安全通信，但通用于安全web应用的HTTP协议。 SSL提供一个安全的握手来初始化一个TCP/IP连接，完成客户端与服务端之间关于安全等级，密码算法、通信密钥的协商，以及执行对连接端的身份认证工作。在此之后SSL上的所传送的应用层数据都会被加密，从而保证通信的机密性。  0x01. 协议结构 1. 协议栈 SSL使用TCP提供一种可靠的端对端的安全服务。SSL不是单个协议，它由两层协议组成，如下图所示。SSL记录协议对各种更高层协议提供基本的安全服务。尤其是，HTTP是为Web客户端/服务器的交互提供传输服务的协议，它可以在SSL的顶层运行。SSL中定义的三个较高层协议分别是：握手协议、修改密码规范协议和警报协议。这些SSL协议规范用来管理SSL的交换，
+2. 状态 SSL协议中的两个重要概念是SSL会话和SSL连接，按照规范文件，它们的定义如下。
+ 连接：传输层概念，是一种能够提供合适服务类型（按照OSI分层模型定义）的传输。对SSL来说，这种连接是点对点的关系而且都是短暂的。每一条连接都与一个会话相关联。 会话：SSL会话是客户与服务器之间的一种关联。会话是通过握手协议来创建的。所有会话都定义了密码安全参数集合，这些参数可以在多个安全连接之间共享。会话通常用来减少每次连接建立安全参数的昂贵协商费用。  任何一对实体（例如客户和服务器上的HTTP应用）之间都可以有多个安全连接。理论上也允许一对实体之间同时有多个会话存在，但实际上并非如此。根据连接和会话状态，可以描述SSL的基本通信步骤：
+ 建立TCP连接 SSL握手，建立SSL会话 通过会话传送加密数据报 释放连接，会话过期  实际上还有若干个状态与每个会话相关联。一旦建立起一个会话，对于读和写（即接收和发送）就存在一个当前操作状态。此外，在握手协议中，还会创建读挂起和写挂起状态。当握手协议结束后，挂起的状态又回到当前状态。
+根据SSL规范文件，会话状态由下列参数定义：
+ 会话标识符：由服务器产生的用于标识活动或可恢复的会话状态的一个任意字节序列 对等实体证书：对等实体（信道另一方）的X.509v3证书。会话状态的这一元素可以为空。 压缩方法：加密前用于压缩数据的算法。 密码规格：包括大块数据加密算法（例如空算法、 AES算法等）规格和用于计算MAC的散列算法（如MD5或SHA-1算法等）规格。它还定义了一些密码属性，例如散列值长度等。 主密钥：客户端和服务器共享的48字节的会话密钥。 可恢复性：表明会话是否可被用于初始化新连接的标志。  连接状态由下列参数定义：
+ 服务器和客户端随机数：由服务器和客户端为每个连接选定的字节串。 服务器写MAC密钥：服务器发送数据时用于计算MAC值的密钥。 客户端写MAC密钥：客户端发送数据时用于计算MAC值的密钥。 服务器写密钥：服务器用于加密数据、客户端用于解密数据的加密密钥。 客户端写密钥：客户端用于加密数据、服务器用于解密数据的对称加密密钥。 初始化向量：在CBC模式中，需要为每个密钥配置一个初始化向S(IV)。最初的IV值由SSL的握手协议初始化。之后，每个记录的最后一个密码块被保存，以作为后续记录的IV。 序列号：建立连接的各方为每条连接发送和接收的消息维护单独的序列号。当一方发送或接收改变密码规格的消息时，相应的序列号应置零。序列号的值不能超过264-1。  3. 记录层协议 记录协议要传输应用消息时，先将数据分段成一些可操作的明文记录(Plaintext Records)，然后选择压缩或不压缩数据，再生成MAC、加密、添加头并将最后的结果作为一个TCP分组送出。对接收到的数据，首先解密，然后做完整性验证、解压缩、重组，最后把数据递送到更高层用户。
+SSL记录协议为SSL连接提供如下两种服务。
+ 机密性：握手协议定义一个可以用于加密SSL载荷的传统加密共享密钥。 消息完整性：握手协议还定义一个用于产生消息认证码(MAC)的共享密钥。  3.</description>
+    </item>
+    
   </channel>
 </rss>

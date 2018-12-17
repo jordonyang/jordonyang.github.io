@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="SSL - Architecture and Basic Protocols"/>
+<meta name="twitter:description" content="SSL - 协议架构和基本协议介绍"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="SSL - Architecture and Basic Protocols &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/security/ssl/base/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="SSL - 协议架构和基本协议介绍" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-11-12T12:03:51&#43;08:00" />
+
+    
+    <meta property="article:tag" content="security" />
+    
+    <meta property="article:tag" content="SSL" />
+    
+    
+
+    <title>SSL - Architecture and Basic Protocols &middot; 临风博客</title>
+
+    
+    <meta name="description" content="SSL - 协议架构和基本协议介绍" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/security/ssl/base/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": SSL - Architecture and Basic Protocols,
+    "name": SSL - Architecture and Basic Protocols,
+    "wordCount": 206,
+    "timeRequired": "PT1M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/security/ssl/base/,
+    "datePublished": 2018-11-12T12:03Z,
+    "dateModified": 2018-11-12T12:03Z,
+    
+    "keywords": security, SSL,
+    "description": SSL - 协议架构和基本协议介绍,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/security/ssl/base/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            </br></br><strong>学习大纲</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/hierarchy-java">Java</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">SSL - Architecture and Basic Protocols</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">SSL - Architecture and Basic Protocols</h1>
+        <em style="color: blue">SSL - 协议架构和基本协议介绍</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/ssl/">#SSL</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-11-12T12:03:51&#43;08:00">
+            2018/Nov/12
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h2 id="0x00-简介">0x00. 简介</h2>
+
+<ul>
+<li>安全套接字层(Secure Socket Layer, SSL)，由网景(Netscape)公司于1994年提出的基于Web应用的安全协议。该协议的第三版是经过公开评论和工业界使用后成为互联网草案。1999年，Internet Engineering Task Force (IETF)标准化了一种名为TLS的新协议，它是SSL的更新版本。事实上，TLS与SSL非常相似，TLS 1.0使用的SSL协议版本号为3.1。乍一看，这可能令人困惑，但这是有意义的，因为TLS只是对SSL 3.0的一个小更新。TLS的后续版本遵循了这种模式。由于TLS是SSL协议的演变，人们仍然可以在某种程度上互换使用术语TLS和SSL。</li>
+<li>SSL主要采用了公钥密码机制和X.509数字证书技术，其目标是保证两个应用间通信的保密性、完整性和可靠性，可在服务器和客户端两端同时实现支持。</li>
+<li>SSL结余可靠的传输层协议和应用层协议之间，能为客户端和服务器之间的TCP/IP连接提供服务器认证、消息完整性、通信数据加密和可选的客户端认证服务。</li>
+</ul>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/wire/location.png" alt="img" /></p>
+
+<ul>
+<li>SSL可以用于任何面向连接的安全通信，但通用于安全web应用的HTTP协议。</li>
+<li>SSL提供一个安全的握手来初始化一个TCP/IP连接，完成客户端与服务端之间关于安全等级，密码算法、通信密钥的协商，以及执行对连接端的身份认证工作。在此之后SSL上的所传送的应用层数据都会被加密，从而保证通信的机密性。</li>
+</ul>
+
+<h2 id="0x01-协议结构">0x01. 协议结构</h2>
+
+<h3 id="1-协议栈">1. 协议栈</h3>
+
+<p>SSL使用TCP提供一种可靠的端对端的安全服务。SSL不是单个协议，它由两层协议组成，如下图所示。SSL记录协议对各种更高层协议提供基本的安全服务。尤其是，HTTP是为Web客户端/服务器的交互提供传输服务的协议，它可以在SSL的顶层运行。SSL中定义的三个较高层协议分别是：<code>握手协议</code>、<code>修改密码规范协议</code>和<code>警报协议</code>。这些SSL协议规范用来管理SSL的交换，</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/wire/ssl_intro_fig2.gif" alt="img" /></p>
+
+<h3 id="2-状态">2. 状态</h3>
+
+<p>SSL协议中的两个重要概念是<code>SSL会话</code>和<code>SSL连接</code>，按照规范文件，它们的定义如下。</p>
+
+<ul>
+<li>连接：传输层概念，是一种能够提供合适服务类型（按照OSI分层模型定义）的传输。对SSL来说，这种连接是点对点的关系而且都是短暂的。每一条连接都与一个会话相关联。</li>
+<li>会话：SSL会话是客户与服务器之间的一种关联。会话是通过握手协议来创建的。所有会话都定义了密码安全参数集合，这些参数可以在多个安全连接之间共享。会话通常用来减少每次连接建立安全参数的昂贵协商费用。</li>
+</ul>
+
+<p>任何一对实体（例如客户和服务器上的HTTP应用）之间都可以有多个安全连接。理论上也允许一对实体之间同时有多个会话存在，但实际上并非如此。根据连接和会话状态，可以描述SSL的基本通信步骤：</p>
+
+<ul>
+<li>建立TCP连接</li>
+<li>SSL握手，建立SSL会话</li>
+<li>通过会话传送加密数据报</li>
+<li>释放连接，会话过期</li>
+</ul>
+
+<p>实际上还有若干个状态与每个会话相关联。一旦建立起一个会话，对于读和写（即接收和发送）就存在一个当前操作状态。此外，在握手协议中，还会创建读挂起和写挂起状态。当握手协议结束后，挂起的状态又回到当前状态。</p>
+
+<p>根据SSL规范文件，<strong>会话状态由下列参数定义：</strong></p>
+
+<ul>
+<li>会话标识符：由服务器产生的用于标识活动或可恢复的会话状态的一个任意字节序列</li>
+<li>对等实体证书：对等实体（信道另一方）的X.509v3证书。会话状态的这一元素可以为空。</li>
+<li>压缩方法：加密前用于压缩数据的算法。</li>
+<li>密码规格：包括大块数据加密算法（例如空算法、 AES算法等）规格和用于计算MAC的散列算法（如MD5或SHA-1算法等）规格。它还定义了一些密码属性，例如散列值长度等。</li>
+<li>主密钥：客户端和服务器共享的48字节的会话密钥。</li>
+<li>可恢复性：表明会话是否可被用于初始化新连接的标志。</li>
+</ul>
+
+<p><strong>连接状态由下列参数定义：</strong></p>
+
+<ul>
+<li>服务器和客户端随机数：由服务器和客户端为每个连接选定的字节串。</li>
+<li>服务器写MAC密钥：服务器发送数据时用于计算MAC值的密钥。</li>
+<li>客户端写MAC密钥：客户端发送数据时用于计算MAC值的密钥。</li>
+<li>服务器写密钥：服务器用于加密数据、客户端用于解密数据的加密密钥。</li>
+<li>客户端写密钥：客户端用于加密数据、服务器用于解密数据的对称加密密钥。</li>
+<li>初始化向量：在CBC模式中，需要为每个密钥配置一个初始化向S(IV)。最初的IV值由SSL的握手协议初始化。之后，每个记录的最后一个密码块被保存，以作为后续记录的IV。</li>
+<li>序列号：建立连接的各方为每条连接发送和接收的消息维护单独的序列号。当一方发送或接收改变密码规格的消息时，相应的序列号应置零。序列号的值不能超过2<sup>64</sup>-1。</li>
+</ul>
+
+<h3 id="3-记录层协议">3. 记录层协议</h3>
+
+<p>记录协议要传输应用消息时，先将数据分段成一些可操作的明文记录(Plaintext Records)，然后选择压缩或不压缩数据，再生成MAC、加密、添加头并将最后的结果作为一个TCP分组送出。对接收到的数据，首先解密，然后做完整性验证、解压缩、重组，最后把数据递送到更高层用户。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/wire/SSL-record.gif" alt="img" /></p>
+
+<p>SSL记录协议为SSL连接提供如下两种服务。</p>
+
+<ul>
+<li>机密性：握手协议定义一个可以用于加密SSL载荷的传统加密共享密钥。</li>
+<li>消息完整性：握手协议还定义一个用于产生消息认证码(MAC)的共享密钥。</li>
+</ul>
+
+<h4 id="3-1-明文分片">3.1 明文分片</h4>
+
+<p>SSL运行的第一步是分段。把每个上层消息分割为不大于2<sup>14</sup>(16384)字节的明文记录，其数据结构为</p>
+
+<pre><code class="language-c">struct {
+    ContentType type; 	// 用来处理分片的高层协议
+    ProtocolVersion version;	// 采用的版本，这里是SSLv3
+    uint16 length;		// SSL分片的长度，不能超过16384字节
+    opaque fragment[SSLPlaintext.length]	// 应用数据
+} SSLPlaintext;		// 分片数据格式
+</code></pre>
+
+<h4 id="3-2-压缩">3.2 压缩</h4>
+
+<p>然后选择压缩或不压缩。压缩必须是无损的并且增加长度不能超过1024字节、在SSLv3 (以及TLS的当前版本）中，没有规定压缩算法，所以默认的压缩算法为空算法。</p>
+
+<h4 id="3-3-生成mac">3.3 生成MAC</h4>
+
+<p>接下来的处理步骤是在压缩数据的基础上计算消息认证码。为此，需要一个共享密钥。计算过程定义如下。</p>
+
+<pre><code class="language-shell">hash(MAC_write_secret || pad_2 || hash(MAC_write_secret || pad_l || seq_num || SSLCompressed.type || SSLCompressed.length || SSLCompressed.fragment))
+
+其中：
+|| = 串接；
+MAC_write_secret = 共享密钥；
+hash = 散列算法（MD5或SHA-1)；
+pad_l = 字节0x36(00110110)的重复。对MD5算法重复48次（384比特），对SHA-1算法重复40次(320比特)；
+pad_2 = 字节 0x5C(01011100)的重复。对MD5算法重复48次，对SHA-1算法重复40次；
+seq_num = 消息的序列号；
+SSLCompressed.type = 处理当前数据块的高层协议；
+SSLCompressed. length = 压缩后数据块的长度；
+SSLCompressed.fragment = 压缩后的数据块（如果没有进行压缩，则为明文块)。
+</code></pre>
+
+<p>值得注意的是这里的计算过程与HMAC算法非常相似。不同之处是SSLv3中的两个填充是串接式的填充，而HMAC中是异或运算。SSLv3中的MAC算法基于HMAC算法的原始互联网草案，该草案使用的是串接式填充。而在RFC 2104给出的关于HMAC的最终版本中使用的是异或运算。</p>
+
+<h4 id="3-4-加密">3.4. 加密</h4>
+
+<p>之后，对压缩后的消息连同增加的MAC使用对称加密算法进行加密。加密造成的块长度增量不会超过1024字节，所以记录块的总长度不会超过2<sup>14</sup>+2048字节。</p>
+
+<p>对于流加密算法，压缩后的消息与MAC码一起被直接加密。值得注意的是MAC码是在加密前计算得到的。计算所得的MAC码连同明文或压缩后的明文一同被加密，允许使用的流密码算法:</p>
+
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>密钥长度（位）</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>RC4-40</td>
+<td>40</td>
+</tr>
+
+<tr>
+<td>RC4-128</td>
+<td>128</td>
+</tr>
+</tbody>
+</table>
+
+<p>对于分组加密算法，在消息的MAC码计算结束之后、加密发生之前要先添加一些填充数据。填充方式为：先进行一定数S的字节填充，然后在最后一个填充字节上填入填充的总长度。全部填充fi应该是使得填充后得到的被加密数据（明文+MAC+填充）总长度正好为分组加密算法中分组长度的最小倍数。假如某明文（或压缩后的明文）为58字节，MAC码为20字节（使用SHA-1算法），分组加密算法的分组长度为8字节（例如使用DES算法)，则考虑到表示填充长度的字节padding.length需占一个字节，还有79个字节。为了使最终结果为8的倍数，需增添一个字节的填充，允许使用的分组密码算法:</p>
+
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>密钥长度 （位）</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>AES</td>
+<td>128或256</td>
+</tr>
+
+<tr>
+<td>IDEA</td>
+<td>128</td>
+</tr>
+
+<tr>
+<td>RC2-40</td>
+<td>40</td>
+</tr>
+
+<tr>
+<td>DES-40</td>
+<td>40</td>
+</tr>
+
+<tr>
+<td>DES</td>
+<td>56</td>
+</tr>
+
+<tr>
+<td>3DES</td>
+<td>168</td>
+</tr>
+
+<tr>
+<td>Fortezza</td>
+<td>80</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="3-5-添加头部">3.5. 添加头部</h4>
+
+<p>SSL记录协议处理过程的最后一步是添加一个由下列域组成的SSL头</p>
+
+<ul>
+<li>内容类型（8比特）：用于处理封装分段的高层协议。</li>
+<li>主版本号（8比特）：表明应用的SSL协议的主版本号。对于SSLv3.0，该值为3。</li>
+<li>从版本号（8比特）：表明应用的SSL协议的从版本号。对于SSLv3.0，该值为0。</li>
+<li>压缩后的长度（8比特）：以字节为单位的明文块（如果使用了压缩则为压缩后的明文块）长度。最大值为2<sup>14</sup>+2048。</li>
+</ul>
+
+<p>内容类型被定义为修改密码规范、警报、握手和应用数据4种。前3种是对SSL特定的协议。值得注意的是，在各种应用（例如， HTTP) 中使用SSL没有什么限制，它们提供的数据内容对SSL来说是不透明的。</p>
+
+<h3 id="4-修改密码规格协议">4. 修改密码规格协议</h3>
+
+<p>修改密码规格协议是应用SSL记录协议的3个SSL规格协议之一，也是最简单的一个协议。本协议只包含一条消息，由一个值为1的字节组成。这条消息的唯一功能是使得挂起状态改变为当前状态，用于更新此连接使用的密码套件。</p>
+
+<h3 id="5-警报协议">5. 警报协议</h3>
+
+<p>警报协议用于将与SSL相关的警报传达给对等实体。与使用SSL的其他应用一样，警报消息也要按照当前状态的规格进行压缩和加密操作。 这一协议过程中的每一条消息都由两个字节组成。其中第一个字节可以取值为警告(1)或致命(2)以表示消息的严重程度。如果严重程度为致命，SSL将立即结束当前连接。虽然该会话中的其他连接还可以继续进行，但是本次会话不允许建立新的连接。第二个字节包括一种用于指明具体警告的消息。下面列出致命警告的内容（由SSL规范定义）：</p>
+
+<ul>
+<li>预期消息：接收到不恰当的消息。</li>
+<li>MAC记录出错（bad_record_mac）：接收到不正确的MAC码。</li>
+<li>解压缩失败（decompression_failure）：解压缩函数接收到不恰当的输入（例如，不能解压缩或解压缩后的数据大于允许的最大长度）。</li>
+<li>握手失败（handshake_failure）：发送者在可选范围内不能协商出一组可接受的安全参数。</li>
+<li>不合法参数（illegal_parameter）：握手消息中的域超出范围或与其他域不一致。</li>
+</ul>
+
+<p>如果第一个字节时warning。则表明该消息是警告的告警消息，包括：</p>
+
+<ul>
+<li>结束通知（close_notify）：通报接收者，发送者在本次连接上将不再发送任何消息。连接双方中的一方在关闭连接之前都应该给对方发送这样一条消息。</li>
+<li>没有证书（no_certificate）：如果没有合适的证书可用时，发送这条消息作为对证书请求者的回应。</li>
+<li>证书不可用（bad_certificate）：接收到的证书不可用（例如包含的签名无法通过验证)。</li>
+<li>不支持的证书（unsupported_certificate）：不支持接收到的证书类型。</li>
+<li>证书作废（certificate_revoked）：证书已被签发者吊销。</li>
+<li>证书过期（certificate_expired）：证书已过期。</li>
+<li>未知证书（certificate_unknown）：处理证书过程中引起的其他未知问题，导致该证书无法被系统识别和接受</li>
+</ul>
+
+<h2 id="0x02-参考">0x02. 参考</h2>
+
+<ul>
+<li><a style="color:#0366d6;" href="https://en.wikipedia.org/wiki/Transport_Layer_Security">Wikipedia - TLS</a></li>
+<li>《网络安全基础 - 应用与标准》（William Stallings著，第五版，清华大学出版社）</li>
+</ul>
+
+<h2 id="0x03-相关文章">0x03. 相关文章</h2>
+
+<ul>
+<li><a style="color:#0366d6;" href="http://geekeye.cc/post/security/ssl/handshake/">SSL - 握手协议详解</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/security/ssl/handshake/"><h4>SSL - Dive into Handshake protocol</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/security/crypto/unsymmetry/rsa/"><h4>Principle and Implementation of RSA Algorithm</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

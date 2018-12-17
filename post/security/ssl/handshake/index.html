@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="SSL - Dive into Handshake protocol"/>
+<meta name="twitter:description" content="SSL - 握手协议详细过程"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="SSL - Dive into Handshake protocol &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/security/ssl/handshake/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="SSL - 握手协议详细过程" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-11-12T12:04:11&#43;08:00" />
+
+    
+    <meta property="article:tag" content="security" />
+    
+    <meta property="article:tag" content="SSL" />
+    
+    
+
+    <title>SSL - Dive into Handshake protocol &middot; 临风博客</title>
+
+    
+    <meta name="description" content="SSL - 握手协议详细过程" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/security/ssl/handshake/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": SSL - Dive into Handshake protocol,
+    "name": SSL - Dive into Handshake protocol,
+    "wordCount": 339,
+    "timeRequired": "PT2M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/security/ssl/handshake/,
+    "datePublished": 2018-11-12T12:04Z,
+    "dateModified": 2018-11-12T12:04Z,
+    
+    "keywords": security, SSL,
+    "description": SSL - 握手协议详细过程,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/security/ssl/handshake/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            </br></br><strong>学习大纲</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/hierarchy-java">Java</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">SSL - Dive into Handshake protocol</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">SSL - Dive into Handshake protocol</h1>
+        <em style="color: blue">SSL - 握手协议详细过程</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/ssl/">#SSL</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-11-12T12:04:11&#43;08:00">
+            2018/Nov/12
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="0x00-握手过程">0x00. 握手过程</h3>
+
+<p>SSL最复杂的部分是握手协议。这一协议允许客户端和服务器相互认证，并协商加密和MAC算法，以及用于保护数据使用的密钥通过SSL记录传送。握手协议在任何应用数据被传输之前使用。
+握手协议由客户端和服务器之间的一系列消息交换组成。每一条消息都包括三个域：</p>
+
+<ul>
+<li>类型（1字节）：表示预定义的10种消息类型之一。</li>
+<li>长度（3字节）：以字节为单位的消息长度。</li>
+<li>内容（&gt;0字节）：和本条消息相关的参数。</li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>消息类型</th>
+<th>参数</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>hello_request</td>
+<td>空</td>
+</tr>
+
+<tr>
+<td>client_hello</td>
+<td>版本，随机数，会话ID，密码套件，压缩方法</td>
+</tr>
+
+<tr>
+<td>server_hello</td>
+<td>版本，随机数，会话1D，密码套件，压缩方法</td>
+</tr>
+
+<tr>
+<td>certificate</td>
+<td>X.509v3证书链</td>
+</tr>
+
+<tr>
+<td>server_key_exchange</td>
+<td>参数，签名</td>
+</tr>
+
+<tr>
+<td>certificate_request</td>
+<td>类型，授权</td>
+</tr>
+
+<tr>
+<td>server_done</td>
+<td>空</td>
+</tr>
+
+<tr>
+<td>certificate_verify</td>
+<td>签名</td>
+</tr>
+
+<tr>
+<td>client key_exchange</td>
+<td>参数，签名</td>
+</tr>
+
+<tr>
+<td>finished</td>
+<td>散列值</td>
+</tr>
+</tbody>
+</table>
+
+<p>下图说明了为建立客户端和服务器之间的逻辑连接需要进行的初始交换。这些交换可分为4个阶段。(注意：加阴影的传输是可选的)</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/wire/SSL-protocol-5.png" alt="img" /></p>
+
+<h4 id="1-第一阶段-客户端发起建立连接请求">1. 第一阶段：客户端发起建立连接请求</h4>
+
+<p>这一阶段主要是发起逻辑连接并建立与之关联的安全能力。交换首先由客户端通过发送下列<code>dient_hello</code>消息启动。</p>
+
+<ul>
+<li>版本（Client_version）：客户端的SSL最高版本。</li>
+<li>随机数（Random）：由客户端产生的随机序列，由32比特时间戳以及安全随机数生成器产生的28字节随机数组成。这些数没有任何意义，主要用于SSL协议后面的密码学计算（会话密钥），防止密钥交换过程中的重放攻击。</li>
+<li>会话ID（Session ID）：可变长度的会话标识符。非零值表示客户端希望更新现有连接的参数，或为该会话创建一条新连接。零值表示客户端希望在新会话上建立一条新连接。</li>
+<li>密码套件（Cipher_suite）：按优先级的降序排列的、客户端支持的密码算法列表。列表中的每一行（即每一个密码套件）同时定义了密钥交换算法和密码规格（CipherSpec）。</li>
+<li>压缩方法（Compression_methods）：客户端支持的压缩方法列表。 同样，该列表也依赖客户端的偏爱来排序。尽管该域通常在SSLv3中不使用（空算法），但以后的TLS将要求支持它。</li>
+</ul>
+
+<p>发送完<code>dient_hello</code>消息后，客户端将等待<code>server_hello</code>消息，该消息所包含的参数与<code>client_hello</code>消息包含的参数相同。</p>
+
+<ul>
+<li>版本（Server_version）：包含客户端支持的较低版本和服务器支持的最高版本。</li>
+<li>随机数（Random）：由服务器产生的一个独立于客户端随机域的新随机序列，用于后面计算<code>会话密钥</code>。</li>
+<li>会话ID（Session ID）：可变长度的会话标识符，提供与当前连接相对应的会话标识信息，如果从客户端收到的会话标识非空，则服务器将查找其缓存一遍找一个匹配。如果找到匹配，服务器就可以重用指定的会话标状态来建立新的连接。在此情况下，服务器返回由客户端提供的同样的值，用以标识一个重用的会话。否则，该域将包含一个不同的值，标识一个新的会话。</li>
+<li>密码套件（Cipher_suite）：该域标识由服务器从客户端提供的列表总选择出来的一个单独的密码组。</li>
+<li>压缩方法（Compression_methods）：与密码组消息类似，该域标识由服务器从客户端提供的列表总选择出来的一个单独的压缩方法。</li>
+</ul>
+
+<p><strong>密码套件域将包括服务器从客户端提供的可选方案中选定的唯一一组密码套件。</strong>压缩域包括服务器从客户端建议中选定的压缩方法。密码套件参数的第一项内容是<code>密钥交换方法</code>（如传统加密密钥和MAC交换方法）。协议支持下列密钥交换方法。</p>
+
+<ul>
+<li>RSA：用接收者的RSA公钥加密的密钥。这里必须要有一个接收者的可用公钥证书。</li>
+<li>固定Diffie-Hellman：这是一个Diffie-Hellman密钥交换过程，其中服务器证书中包含的公钥参数由认证机构(Certification authority, CA)签发。也就是说，公钥证书包含Diffie-Hellmaii公钥参数。客户端可以通过证书提供其公钥参数（如果需要对客户端认证），也可以通过密钥交换消息提供其公钥参数。使用固定的公钥参数和Diffie-Hellman算法进行计算将导致双方产生固定密钥。</li>
+<li>暂态Diffie-Hellman：这种技术用于创建暂态（临时或一次性）密钥。在这种情况下，Diffie-Hellman公钥通过使用发送者的RSA私钥或DSS密钥的方式被交换和签名。接收者可以用相应的公钥验证签名。证书用于认证公钥。这种方式似乎是三种Diffie-Hellman密钥交换方式中最安全的一种，因为它最终将获得一个临时的、被认证的密钥。</li>
+<li>匿名Diffie-Hellman (Anonymous Diffie-Hellman)：使用基本Diffie-Hellman密钥交换方案，且不进行认证。也就是说，双方发送自己的Diffie-Hellman参数给对方且不进行认证。这种方法容易受到<code>中间人攻击</code>，其中攻击者与双方都进行匿名Diffie-Hellman密钥交换。</li>
+<li>Fortezza：这种技术专为Fortezza方案而定义。</li>
+</ul>
+
+<p>紧随密钥交换方法定义之后的是<code>密码规格（CipherSpec）</code>，它包括下面这些域：</p>
+
+<ul>
+<li>密码算法：可以是前面提到的算法中的任何一种： RC4、RC2、DES、3DES、DES-40、IDEA或Fortezza。</li>
+<li>MAC 算法：MD5或SHA-1。</li>
+<li>密码类型：流密码或分组密码。</li>
+<li>可否输出的：可以或不可以。</li>
+<li>散列长度：0、16（用于MD5）或20（用于SHA-1）字节。</li>
+<li>密钥材料：包含用于产生写密钥的数据的字节序列。</li>
+<li>IV大小：密码分组连接(CBC)加密模式中初始向量的大小。</li>
+</ul>
+
+<p>例如：<code>AES128-SHA</code> 定义了一个会话将用</p>
+
+<ul>
+<li>RSA 生成密钥 (隐含)</li>
+<li>RSA 作验证 (隐含)</li>
+<li>128位的CBC明文模式下的AES算法保障机密性</li>
+<li>SHA-1保障消息完整性</li>
+</ul>
+
+<p>一个更加吓人的密码套件例如是<code>ECDHE-ECDSA-AES256-GCM-SHA384</code>，它定义了一个会话将用</p>
+
+<ul>
+<li>Elliptic Curve Diffie-Hellman Ephemeral <a style="color:#0366d6;" href="http://en.wikipedia.org/wiki/Elliptic_curve_Diffie%E2%80%93Hellman">ECDHE</a> 密钥交换生成密钥</li>
+<li>Elliptic Curve Digital Signature Algorithms <a style="color:#0366d6;" href="http://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm">ECDSA</a>  验证</li>
+<li>256位的GCM明文模式下的AES算法保障机密性</li>
+<li>SHA2-384保障消息完整性</li>
+</ul>
+
+<h4 id="2-第二阶段-服务器认证和密钥交换">2. 第二阶段：服务器认证和密钥交换</h4>
+
+<p>如果需要认证，则这一阶段的开始以服务器发送其证书为标志。发送的消息包括一个X.509证书或一个X.509证书链。证书消息对于除匿名Diffie-Hellman密钥交换方法外的其他密钥交换方法都是必需的。值得注意的是如果使用固定匿名Diffie-Hellman密钥交换方法，这一证书消息执行和服务器的密钥交换消息一样的功能，因为它包含了服务器的Diffie-Hdlmaii公钥参数。</p>
+
+<p>之后，如果有必要，将发送一个<code>服务器密钥交换（server_key_exchange）消息</code>。在下列两种情况下无须发送该消息：</p>
+
+<ul>
+<li>服务器已发送包含固定Diffie-Hellman参数的证书</li>
+<li>使用了RSA密钥交换方法。</li>
+</ul>
+
+<p>下列情况需要服务器密钥交换消息：</p>
+
+<ul>
+<li>匿名Diffie-Hellman：消息由两个全局Diffie-Heilman密钥值（一个素数和它的一个本原根）以及一个服务器公钥组成。</li>
+<li>暂态Diffie-Hellman：消息内容由三个Diffie-Hellman参数和一个对这些参数的签名组成。</li>
+<li>RSA密钥交换发生在服务器使用了RSA但是有一个仅用于RSA签名的密钥的情况下：一般来说，客户端不能简单地发送一个用服务器公钥加密的密钥。相反，服务器必须产生一组临时RSA公钥/私钥对并使用服务器密钥交换消息发送其中的公钥。消息由两个临时RSA公钥（幂指数和模数）以及对这些参数的签名组成。</li>
+<li>采用Fortezza密钥交换。</li>
+</ul>
+
+<p><code>服务器密钥交换（server_key_exchange）消息</code>补充以前在<code>Server_hello</code>消息中声明的密码组。它为客户端提供了继续通信而需要的算法变量。这些值依赖于所选定的算法。例如，对于RSA密钥交换（此时RSA仅用于签名），消息中可能包含一个临时的RSA公钥指数和模，以及对这些数据的一个签名。</p>
+
+<p>下面是有关签名的一些具体细节。通常，得到消息的散列值之后使用发送者的私钥对它加密就可得到签名。这里，散列定义如下：</p>
+
+<pre><code class="language-shell">Hash(ClientHello.random || ServerHello.random || ServerParams)
+</code></pre>
+
+<p>所以，散列值不仅涉及Diffie-Hellman或RSA参数，还涉及当前的初始连接消息，这样可以抵抗重放攻击和误传。对于DSS签名，散列值的计算使用了SHA-1算法。对于RSA签名，同时使用MD5算法和SHA-1算法计算两个散列值，并对它们的串接（36字节）使用服务器的私钥进行加密。</p>
+
+<p>接下来，如果服务器使用的不是匿名Diffie-Hellman算法，则服务器可以t通过发送<code>certificate_request消息</code>向客户端请求证书。如果服务器是匿名的，则在请求呵护短证书时会导致致命错。</p>
+
+<p><code>certificate_request</code>消息消息包括两个参数：certificate_type (证书类型）和certificate_authorities（证书机构）。证书类型指出了公钥算法及其用法：</p>
+
+<ul>
+<li>RSA：仅限于签名</li>
+<li>DSS：仅限于签名。</li>
+<li>固定Diffie-Hellman中的RSA:在这种情况下签名只用来进行认证，该认证是通过发送一个由RSA签名的证书来完成的。</li>
+<li>固定Diffie-Hellman中的DSS：同样仅用于认证。</li>
+<li>用于暂态Diffie-Hellman中的RSA。</li>
+<li>用于暂态Diffie-Hellman中的DSS。</li>
+<li>Fortezza。</li>
+</ul>
+
+<p>certificate_request消息中的第二个参数是一个可接受的认证机构名称列表。</p>
+
+<p>第二阶段中的最后一条消息（也是始终需要存在的消息之一）是<code>servei_done (服务器结束）消息</code>。该消息由服务器发出并示意服务器的hello及相关消息己经结束。该消息没有参数，发送完这个消息后，服务器要等待客户的响应。</p>
+
+<h4 id="3-第三阶段-客户端认证和密钥交换">3. 第三阶段：客户端认证和密钥交换</h4>
+
+<p>接收到server_done (服务器结束）消息后，如果需要，客户端应该验证服务器提供的证书是否有效，如果客户端是浏览器，它会去检查其信任证书列表，当然对于其他客户端还有一个选项就是检查操作系统的信任证书及其颁发机构，在Win10环境下可以执行<code>certmgr.msc</code>查看系统的根证书及CA列表：</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/wire/win10-crs.png" alt="img" /></p>
+
+<p>验证服务器提供的证书是否有效后，还要检査<code>server_hello</code>参数是否是可接受的。如果所有这些条件均满足，那么客户端将返回一条或更多消息给服务器。</p>
+
+<p>如果服务器已请求证书，则以客户端发送一条<code>client_certificate消息</code>为这一阶段的开始。如果没有合适的证书可用，那么客户端发送一个<code>no_ceritificate_alert (无证书警报)</code>，如果服务器要求有客户端验证，则它收到警报后宣布握手失败。</p>
+
+<p>接下来是<code>client_key_exchange (客户端密钥交换）消息</code>。该消息必须在这一阶段发送，而且本密钥信息时关于双方在会话中使用的对称密钥算法的。消息内容由下列的密钥交换类型决定：</p>
+
+<ul>
+<li>RSA：客户端产生一个48字节的<code>pre-master_secret (预备主密钥）</code>，并用从服务器证书中得到的公钥或者用从<code>server_key_exchange</code>消息中得到的临时RSA密钥进行加密，然后将结果发送给服务器用来计算<code>主密钥</code>。如何利用它计算主密钥将会在后面进一步解释。</li>
+<li>匿名Diffie-Hellman：报文内容由两个全局的Diffie-Hellman值组成（一个素数和这个数的一个初始报），加上服务器公开的Diffie-Hellman密钥。</li>
+<li>暂态Diffie-Hellman：报文内容包括用于匿名Diffie-Hellman的三个Diffie-Hellman参数，加上这些参数的签名。</li>
+<li>固定Diffie-Hellman：以certificate消息的形式发送客户端的Diffie-Hellman公钥参数，该消息内容为空。</li>
+<li>Fortezza：发送客户端的Fortezza参数。</li>
+</ul>
+
+<p>最后，在这一阶段，客户端可以发送<code>certificate_verify (证书验证）消息</code>，以便对客户端证书进行显式验证。仅当客户端证书具有签名功能（也就是说，除包含固定Diffie-Hellman参数外的所有证书）时才会发送该消息。这个消息是对一个散列码的签名，该散列码基于前面的消息，定义如下：</p>
+
+<pre><code class="language-shell">CertificateVerify.signature.md5_hash
+	MD5(master_secret || pad_2 || MD5(handshake_messages || master_secret || pad_l));
+CertificateVerify.signature.sha_hash
+	SHA(master_secret || pad_2 || SHA(handshake_messages || master_secret || pad_l));
+</code></pre>
+
+<p>其中， pad_l和pad_2是前面讲过的用于MAC计算的填充值； handshake_message (握手消息）是客户端启动client_hello时发送或接收到的所有握手协议消息，但不包括client_hello消息本身； master_secret (主密钥）是一个计算得到的密钥值，其计算过程稍后讲述。如果用户的私钥是DSS，则它将用于加密SHA-1的散列值。如果用户的私钥是RSA，则它将用来加密MD5和SHA-1散列值的串接。这两种情况的目的都是为了验证客户端证书的私钥确实为客户端所有。如果他人误用了客户端的证书，将无法发送该消息。</p>
+
+<h4 id="4-第四阶段-完成握手">4. 第四阶段：完成握手</h4>
+
+<p>这一阶段完成安全连接的建立。客户端发送一个<code>change_cipher_spec(修改密码规格）消息</code>，并把挂起的密码规格复制到当前密码规格中。值得注意的是，<strong style="color:green">该消息不是握手协议的一部分，而是使用修改密码规格协议发送的。</strong>客户端在新算法、新密钥和新秘密值下立即发送<code>finished (结束）消息</code>，用于验证密钥交换和认证过程是否成功，该消息是两个散列码的串接：</p>
+
+<pre><code class="language-shell">MD5 (master_secret || pad2 || MD5(handshake_messages || Sender || master_secret || padl));
+SHA (master_secret || pad2 || SHA(handshake_messages || Sender || master_secret || padl))
+</code></pre>
+
+<p>其中，Sender是一个识别码，它能够把作为发送者的客户端与handshake_messages区分开来。handshake_messages包括从所有握手消息起到Sender码之前的所有数据，但不包括本条消息。</p>
+
+<p>作为对客户端发送的这两条消息的响应，服务器发送自己的<code>change_cipher_spec_message(修改密码规格消息）</code>，把未定的密码规格转变为当前的密码规格并发送其<code>finished消息</code>。到此为止握手过程已经完成，客户端与服务器可以开始交换应用层数据。</p>
+
+<h3 id="0x01-密码计算">0x01. 密码计算</h3>
+
+<h4 id="1-主密钥的创建">1. 主密钥的创建</h4>
+
+<p>共享主密钥是通过安全密钥交换方式为本次会话创建的一个一次性48字节（384比特）的值。创建过程分两步完成。第一步，交换预备主密钥。第二步，双方计算主密钥。对预备主密钥的交换，有下面两种情况：</p>
+
+<h5 id="1-1-rsa">1.1. RSA</h5>
+
+<p>客户端产生一个48字节的预备主密钥，并使用服务器的RSA公钥加密，然后将其发送给服务器。服务器使用自己的私钥解密得到pre_master_secret (预备主密钥）。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/wire/rsa.png" alt="img" /></p>
+
+<ol>
+<li>客户端发送随机数到服务器</li>
+<li>服务器发送另一个随机数和携带公钥信息的证书到客户端</li>
+<li>客户端产生预主密钥（pre_master_key），并用服务器的公钥加密得到<code>encrypted pre_master_key</code></li>
+<li>客户端将<code>encrypted pre_master_key</code>发送到服务器</li>
+<li>服务器用自己的私钥解密<code>encrypted pre_master_key</code>得到预主密钥</li>
+<li>双方分别使用<code>pre_master_secret</code>、<code>ClientHello.random</code>和<code>ServerHello.random</code>生成会话密钥（session_key）</li>
+<li>双发使用会话密钥进行通信</li>
+</ol>
+
+<h5 id="1-2-diffie-hellman">1.2. Diffie-Hellman</h5>
+
+<p>服务器和客户端各自产生一个Diffie-Hellman公钥值。交换之后，双方再分别做Diffie-Hellman计算来创建共享的预备主密钥。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/ssl/wire/dh.png" alt="img" /></p>
+
+<ol>
+<li>客户端发送随机数到服务器</li>
+<li>服务器发送另一个随机数和携带公钥信息的证书到客户端</li>
+<li>服务器生成一个随机整数，使用与客户端约定好的DH信息（素数p和p的本原根a）计算得到DH公钥<code>Server DH parameter</code>，服务器使用自己的私钥计算关于该DH公钥的签名<code>Server signature</code>，将<code>Server DH parameter</code>和<code>Server signature</code>一起发给客户端</li>
+<li>客户端得到<code>Server DH parameter</code>和<code>Server signature</code>，使用服务器的公钥和相应的MAC算法验证消息完整性和服务器身份的有效性</li>
+<li>客户端生成另一个随机整数，使用与服务器约定好的DH信息（素数p和p的本原根a）计算得到DH公钥<code>Client DH parameter</code>，将之发送给服务器</li>
+<li>双方分别使用<code>Server DH parameter</code>和<code>Client DH parameter</code>进行DH运算得到<code>pre_master_secret</code></li>
+<li>双方分别使用<code>pre_master_secret</code>、<code>ClientHello.random</code>和<code>ServerHello.random</code>生成会话密钥（session_key）</li>
+<li>双发使用会话密钥进行通信</li>
+</ol>
+
+<p>使用<code>pre_master_secret</code>、<code>ClientHello.random</code>和<code>ServerHello.random</code>生成会话密钥的过程如下</p>
+
+<pre><code class="language-shell">session_key = 
+MD5(pre_master_secret || SHA('A' || pre_master_secret || ClientHello.random || ServerHello.random)) || 
+MD5(pre_master_secret || SHA('BB' || pre_master_secret || ClientHello.random || ServerHello.random)) || 
+MD5(pre_master_secret || SHA('CCC' || pre_master_secret || ClientHello.random || ServerHello.random)) |
+</code></pre>
+
+<p>其中， ClientHello.random和ServerHello.random是在初始hello消息中交换的两个随机数。</p>
+
+<h4 id="2-密码参数产生">2. 密码参数产生</h4>
+
+<p>密码规格要求客户端写MAC值的密钥、服务器写MAC值密钥、客户端写密钥、服务器写密钥、客户端写初始向量IV、服务器写初始向量IV，这些都是按顺序由主密钥产生的。其方法是主密钥利用散列函数来产生安全字节序列，字节序列足够长以便生成所有需要的参数。</p>
+
+<p>从主密钥中计算密钥材料的方法和从预备主密钥中计算主密钥的格式相同：</p>
+
+<pre><code class="language-shell">key_block = 
+MD5 (master_secret || SHA('A' }} master_secret || ServerHello.random |丨 ClientHello.random)) ||
+MD5 (master_secret || SHA ('BB' || master_secret || ServerHello.random || ClientHello.random)) ||
+MD5 (master_secret || SHA('CCC' || master_secret || ServerHello.random || ClientHello. random) ) ||
+</code></pre>
+
+<p>该计算过程一直持续到产生足够长的输出。该算法结构的结果相当于一个伪随机函数。主密钥可以认为是伪随机函数的种子值。客户端和服务器的随机数可以认为是增加密码分析复杂度的<code>加盐</code>。</p>
+
+<h3 id="0x02-参考">0x02. 参考</h3>
+
+<ul>
+<li><a style="color:#0366d6;" href="https://en.wikipedia.org/wiki/Transport_Layer_Security">Wikipedia - TLS</a></li>
+<li>《网络安全基础 - 应用与标准》（William Stallings著，第五版，清华大学出版社）</li>
+</ul>
+
+<h3 id="0x03-相关文章">0x03. 相关文章</h3>
+
+<ul>
+<li><a style="color:#0366d6;"  href="http://geekeye.cc/post/security/ssl/base/">SSL - 协议架构及基本协议</a></li>
+<li><a style="color:#0366d6;"  href="http://geekeye.cc/post/security/app/ssl-config/">使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证</a></li>
+<li><a style="color:#0366d6;"  href="http://geekeye.cc/post/security/crypto/unsymmetry/rsa/">RSA公钥密码算法原理及实现</a></li>
+<li><a style="color:#0366d6;"  href="http://geekeye.cc/post/security/crypto/symmetry/working-mode/">分组密码的工作模式</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/java/concurrency/cas/"><h4>Simply Understanding Compare-And-Swap</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/security/ssl/base/"><h4>SSL - Architecture and Basic Protocols</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Block Cipher Mode of Operation"/>
+<meta name="twitter:description" content="分组密码的工作模式"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Block Cipher Mode of Operation &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/security/crypto/symmetry/working-mode/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="分组密码的工作模式" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-10-11T21:54:13&#43;08:00" />
+
+    
+    <meta property="article:tag" content="security" />
+    
+    
+
+    <title>Block Cipher Mode of Operation &middot; 临风博客</title>
+
+    
+    <meta name="description" content="分组密码的工作模式" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/security/crypto/symmetry/working-mode/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Block Cipher Mode of Operation,
+    "name": Block Cipher Mode of Operation,
+    "wordCount": 124,
+    "timeRequired": "PT1M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/security/crypto/symmetry/working-mode/,
+    "datePublished": 2018-10-11T21:54Z,
+    "dateModified": 2018-10-11T21:54Z,
+    
+    "keywords": security,
+    "description": 分组密码的工作模式,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/security/crypto/symmetry/working-mode/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            </br></br><strong>学习大纲</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/hierarchy-java">Java</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Block Cipher Mode of Operation</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Block Cipher Mode of Operation</h1>
+        <em style="color: blue">分组密码的工作模式</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-10-11T21:54:13&#43;08:00">
+            2018/Oct/11
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="0x00-简介">0x00. 简介</h3>
+
+<p>分组密码一次处理一个数据分组。在<code>DES</code>和<code>3DES</code>中，分组长度是<code>b=64比特</code>。在AES中，分组长度是<code>b=128比特</code>。对于较长的明文，需要将明文分解成b比特的分组（需要时还要填充最后一个分组)。针对不同应用使用一个分组密码时， NIST (在SP800-38A中）定义了五种工作模式。这五种情况，希望能够覆盖利用一个分组密码做加密的所有可能情况。这五种模式也希望能适用于任何分组密码算法，当然包括三重DES和AES。下面介绍几种最重要的工作模式。</p>
+
+<h3 id="0x01-电子密码本模式">0x01. 电子密码本模式</h3>
+
+<p>最简单的一种使用方式是所谓的电子密码本（Electronic Codebook, ECB）模式，在此模式下明文一次被处理b比特，而且明文的每一个分组都使用同一密钥加密。之所以使用术语密码本，是因为对于给定的密钥，每个b比特的明文分组对应唯一的密文。因此，可以想象一个庞大的密码本，它包含任何可能的b比特明文对应的密文。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/block-cipher/ECB_svg.png" alt="img" /></p>
+
+<p>在ECB中，如果同一个64比特的明文分组在消息中出现了不只一次，它总是产生相同的密文。因此，对于过长的消息， ECB模式可能不安全。如果消息高度结构化，密码破译者很有可能研究出这些规律。例如，如果已知消息总是开始于某一预定范围，那么密码破译者可能会拥有很多已知明文-密文对。如果消息有一些重复元素，重复周期为64比特的倍数，那么这些元素可能被破译者识别。这也许能帮助破译，或者可能给替换或者重排数据分组提供了机会。</p>
+
+<p>为了克服ECB的安全不足，我们希望有一种技术，其中如果重复出现同一明文分组，则将产生不同的密文分组。</p>
+
+<h3 id="0x02-密码分组链接模式">0x02. 密码分组链接模式</h3>
+
+<p>在密码分组链接（Cipher Block Chaining, CBC）模式中，<strong>加密算法的输入是当前明文分组与前一密文分组的异或</strong>；每个分组使用同一密钥。这就相当于将所有的明文组连接起来了。加密函数的每次输入和明文分组之间的关系不固定。因此，64比特的重复模式并不会被暴露。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/block-cipher/CBC_svg.png" alt="img" /></p>
+
+<p>解密时，用解密算法依次处理每个密文分组。将其结果与前一密文分组进行异或，产生明文分组。为了表示这个过程，可以写为
+<img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/block-cipher/cbc-math1.png" alt="img" /></p>
+
+<p>其中E<sub>K</sub>是对明文使用密钥K的加密， ㊉是异或操作符。同理得到其解密过程：</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/block-cipher/cbc-math2.png" alt="img" /></p>
+
+<p>为了产生第一个密文分组，将一个初始向量（IV）和第一个明文分组进行异或。解密时，将IV和解密算法的输出进行异或来恢复第一个明文分组。</p>
+
+<p>发送者和接收者都必须知道IV。为了提高安全性， IV需要像密钥一样进行保护。这可以通过使用ECB加密传送IV来完成。要保护IV的一个理由如下：如果攻击者成功欺骗接收者使其使用一个不同的IV值，接着攻击者就能把明文的第一个分组的某些位取反。为了解释这一点，考虑下列公式：</p>
+
+<p>$$C_1\ = E(K,\ [IV \ ㊉\ P_1])$$</p>
+
+<p>$$P_1\ =\ IV\ ㊉\ D(K,\ C_1)$$</p>
+
+<p>现在使用符号 X[j] 表示 64 比特 X 的第 j 比特。则</p>
+
+<p>$$P_1[i] \ =\ IV[i]\ ㊉\ D(K,\ C_1)[i]$$</p>
+
+<p>那么，根据异或的性质，可以确定</p>
+
+<p>$$P_1[i]&rsquo;\ =\ IV[i]&rsquo;\ ㊉\ D(K,\ C_1)[i]$$</p>
+
+<p>其中单引号表示位的补码。这意味着如果攻击者能确定改变IV的某些比特，那么P<sub>1</sub>接收值的相应比特也会被改变。</p>
+
+<h3 id="0x03-密码反馈模式">0x03. 密码反馈模式</h3>
+
+<p>使用密码反馈（Cipher Feedback, CFB）模式能将任意分组密码转化为流密码。流密码不需要将消息填充为分组的整数倍。它还能实时操作。因此，如果传送字符流，使用面向字符的流密码，每个字符都能被及时地加密并传送。</p>
+
+<p>流密码的一个特性是密文和明文长度相等。因此，如果传输8比特的字符，每个字符应该加密为8比特。如果使用超过8比特的字符进行加密，传输能力就被浪费了。下图描述了CFB方案。在该图中，假设传输单元为k比特；通常值是8。和CBC一样，明文单元被连接在一起，所以任意个明文单元的密文都是和之前所有的明文有关的函数。
+首先，考虑加密。加密模块的输入是一个64比特的移位寄存器，初始值设定为某一初始向量IV。加密模块输出的最左边（最高） k比特和明文P<sub>1</sub>的第1个单元进行异或，产生密文C<sub>1</sub>的第1个单元，然后传输。接下来，移位寄存器的内容都左移k比特，同时将C<sub>1</sub>放在移位寄存器的最右边（最低） k比特。这个过程一直持续直到所有明文单元都已被加密。注意到途中将密文C<sub>i</sub>放在移位寄存器的最右边（最低） k比特的过程标注为<code>FEEDBACK</code>，这就解释了为什么叫密码反馈模式了。</p>
+
+<p><img src="http://www.umich.edu/~x509/ssleay/fip81/fig6-a.jpg" alt="img" /></p>
+
+<p>解密时，使用同样的方案，不同的是<strong>将接收到的密文单元和加密模块的输出进行异或得到明文单元</strong>。注意这里使用的是加密函数，而不是解密函数。这很容易解释。定义S<sub>s</sub>(x)为X的最高有效s比特。那么</p>
+
+<p>$$C_1\ =\ P_1\ ㊉\ S_s[E(K,\ IV)]$$</p>
+
+<p>因此有</p>
+
+<p>$$P_1\ =\ C_1\ ㊉\ S_s[E(K,\ IV)]$$</p>
+
+<h3 id="0x04-计数器模式">0x04. 计数器模式</h3>
+
+<p>随着计数器模式在ATM (异步传输模式）网络安全和IPSec上的应用，人们最近才对它产生了浓厚的兴趣，这个模式已经很早就被提出了（例如， [DIFF79])。</p>
+
+<p>下图描述了计数器（Counter, CTR）模式。这里使用了一个与明文块大小相同的计数器。在SP800-38A中，要求加密不同的明文组计数器对应的值必须是不同的。典型的，计数器初始化为某一值，然后随着消息块的增加计数器值增加1 (以2的6次方为模， A为分组长度）。在加密时，计数器被加密然后与明文分组异或来产生密文分组，这里没有链接。当解密时，相同序列的计数器值与密文异或来恢复相对应的明文分组。
+<img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/block-cipher/CTR_svg.png" alt="img" /></p>
+
+<p>[LIPM00]列出了以下CRT模式的优点</p>
+
+<ul>
+<li>硬件效率：与三种链接模式不同， CRT模型能够并行处理多块明文（密文）的加密(解密），链接模式在处理下一块数据之前必须完成当前数据块的计算。算法的最大吞吐量受限于执行一次加密或解密所需要的交互时间。在CRT模式中，吞吐量仅受可并行度的限制。</li>
+<li>软件效率：因为在CTR模式中能够并行计算，因此可以充分利用能够支持如下并行特征的各类处理器，如提供流水线、每个时钟周期的多指令分派、大fi的寄存器和SIMD指令等并行特征。</li>
+<li>预处理：基本加密算法的执行并不依靠明文或密文的输入。因此，如果有充足的存取器可用，并且能提供安全，可以预处理加密盒的输出，这个输出又进一步作为XOR函数的输入，如上图所示。当给出明文或者密文时，所需的计算仅是进行一系列的异或运算。这样的策略能极大提高吞吐M。</li>
+<li>随机访问：第i个明文分组或密文分组能够用随机存取方式处理。链接模式中，直到第i-1个先行块被计算出来后才能计算密文块C<sub>i</sub>。有很多应用情况是全部密文已储存好，只需要破解其中的某一块密文。对于这种情形，随机访问的方式很多吸引力。</li>
+<li>可证明的安全性：能够证明CTR至少和文中被讨论的其他模式一样安全。</li>
+<li>简单性：不同于ECB和CBC模式，CTR模式只要求实现加密算法，不要求实现解密算法。这一点在加解密算法彼此不同时尤为关键，比如AES。另外，不用实现解密密钥的扩展。</li>
+</ul>
+
+<h3 id="0x05-参考">0x05. 参考</h3>
+
+<ul>
+<li><a style="color:#0366d6;" href="http://www.umich.edu/~x509/ssleay/fip81/fip81.html">FIPS Pub 81 &ndash; DES MODES OF OPERATION</a></li>
+<li><a style="color:#0366d6;" href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation">Wikipedia - Block cipher mode of operation</a></li>
+<li>《网络安全基础 - 应用与标准》（William Stallings著，第五版，清华大学出版社）</li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/impl-of-aes/"><h4>Implementation of AES Algorithm</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/impl-of-des/"><h4>Implementation of DES Algorithm</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+
