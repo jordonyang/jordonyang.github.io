@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jordonyang.github.io/post/os/sc/</loc>
+    <lastmod>2018-12-23T21:05:05+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jordonyang.github.io/post/security/app/ssl-config/</loc>
     <lastmod>2018-12-10T23:42:48+08:00</lastmod>
   </url>
@@ -118,6 +123,10 @@
   </url>
   
   <url>
+    <loc>https://jordonyang.github.io/test/</loc>
+  </url>
+  
+  <url>
     <loc>https://jordonyang.github.io/tags/algorithm/</loc>
     <lastmod>2017-09-25T22:32:08+08:00</lastmod>
     <priority>0</priority>
@@ -202,7 +211,7 @@
   
   <url>
     <loc>https://jordonyang.github.io/post/</loc>
-    <lastmod>2018-12-10T23:42:48+08:00</lastmod>
+    <lastmod>2018-12-23T21:05:05+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -250,7 +259,7 @@
   
   <url>
     <loc>https://jordonyang.github.io/</loc>
-    <lastmod>2018-12-10T23:42:48+08:00</lastmod>
+    <lastmod>2018-12-23T21:05:05+08:00</lastmod>
     <priority>0</priority>
   </url>
   

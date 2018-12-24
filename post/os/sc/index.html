@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Notes for OS Exam"/>
+<meta name="twitter:description" content="操作系统期末考试考点整理"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Notes for OS Exam &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/os/sc/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="操作系统期末考试考点整理" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-12-23T21:05:05&#43;08:00" />
+
+    
+    
+
+    <title>Notes for OS Exam &middot; 临风博客</title>
+
+    
+    <meta name="description" content="操作系统期末考试考点整理" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/os/sc/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Notes for OS Exam,
+    "name": Notes for OS Exam,
+    "wordCount": 769,
+    "timeRequired": "PT4M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/os/sc/,
+    "datePublished": 2018-12-23T21:05Z,
+    "dateModified": 2018-12-23T21:05Z,
+    
+    
+    "description": 操作系统期末考试考点整理,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/os/sc/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/categories/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/test.html/">书籍推荐1</a>
+            </li>
+        
+            </br></br><strong>学习大纲</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/hierarchy-java"></a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href=""></a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Notes for OS Exam</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Notes for OS Exam</h1>
+        <em style="color: blue">操作系统期末考试考点整理</em>
+
+        <section class="post-meta">
+        
+          
+        
+
+          <time class="post-date" datetime="2018-12-23T21:05:05&#43;08:00">
+            2018/Dec/23
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<p><strong>前言：</strong>   本来不打算发的，想想(再)还是(水)留(一)个记(篇)录吧。想到最后一道简单到爆却没时间做的移臂调度不禁心塞😭</p>
+
+<h3 id="0x00-知识点">0x00. 知识点</h3>
+
+<h4 id="第一章-引论">第一章. 引论</h4>
+
+<ul>
+<li>计算机操作系统的功能是<strong>控制、管理计算机系统的资源和程序的执行</strong>。</li>
+<li>分时系统的特点
+
+<ul>
+<li>多路性：各用户可同时请求系统服务，分时原则</li>
+<li>独立性：各用户的请求彼此独立，互不干扰</li>
+<li>及时性：响应快</li>
+<li>交互性：用户通过终端进行广泛的人机对话</li>
+</ul></li>
+<li>多个用户是经过网络连接，同时使用计算机系统不是分时系统的特点。每个用户都在不同的时间片运行，只是时间片很小难以察觉。</li>
+<li>在<strong>实时操作系统</strong>的控制下，计算机系统能及时处理由过程控制反馈的数据，并作出响应。</li>
+<li>操作系统为用户程序完成与<strong>硬件相关和应用无关</strong>的工作。</li>
+<li>分时操作系统的主要目的是<strong>计算机系统的交互性</strong>。</li>
+<li>操作系统不进行软件管理。</li>
+<li>从用户的观点看，操作系统是<strong>用户与计算机之间的接口</strong></li>
+<li>在操作系统的各功能组成部分中，<strong>进程调度</strong>不需要硬件的支持。</li>
+<li><strong>屏蔽所有中断</strong>命令应该只在核心态下执行。</li>
+<li>多道批处理系统的主要缺点是<strong>缺少交互性</strong>。</li>
+<li>配置了操作系统的计算机被称为<strong>虚拟计算机</strong>。</li>
+<li>UNIX操作系统是一种多用户的、人机交互的<strong>分时系统</strong>。</li>
+<li>实时操作系统必须在<strong>被控对象规定</strong>的时间内响应一个新任务。</li>
+<li>操作系统提供给用户程序的接口是<strong>系统调用</strong>。</li>
+<li>操作系统的最主要设计目标是<strong>方便性和有效性</strong>。</li>
+</ul>
+
+<h4 id="第二章-进程描述与控制">第二章 进程描述与控制</h4>
+
+<ul>
+<li>进程之间的制约关系可以归结为<strong>同步与互斥</strong>。</li>
+<li>在进程状态变化中，<strong>等待→运行</strong>的变化是不可能发生的。</li>
+<li>进程和程序的本质区别是<strong>动态和静态特征</strong>。</li>
+<li>某进程所要求的一次打印输出结束，该进程被唤醒，其进程状态将从<strong>等待状态改到就绪状态</strong>。</li>
+<li>临界区是指<strong>一段程序</strong>，用于控制进程/线程对临界资源的互斥访问。</li>
+<li>进程是<strong>PCB结构、程序和数据的集合</strong>。</li>
+<li>多道程序系统中的操作系统分配资源以<strong>进程</strong>为基本单位。</li>
+<li>通常，用户进程被建立后，<strong>随着程序运行正常或异常结束而撤消</strong>。</li>
+<li>同步机制应遵循的规则
+
+<ul>
+<li>空闲让进：当无进程进入临界区，应允许一个进程访问临界资源</li>
+<li>忙则等待：当已有进程进入临界区访问临界资源，其他进程必须等待，以保证互斥访问</li>
+<li>有限等待：保证进程在有限时间内进入临界区</li>
+<li>让权等待：进程不能进入临界区时，应立即放弃CPU执行权</li>
+</ul></li>
+<li>信号量同步机制：通过两个原子操作<code>wait(s)</code>和<code>signal(s)</code>来访问，这两个操作又分别被称为P、V操作
+
+<ul>
+<li>整型信号量：设置整型量，没有遵循让权等待原则，请求临界资源的进程出于“忙等”状态</li>
+<li>记录型信号量：设置等待队列，实现让权等待。</li>
+<li>AND型信号量：要么全分配，要么一个也不分配。避免系统死锁（静态资源分配法）。</li>
+<li>信号量集：为提高效率而对AND信号的扩充。允许一次申请多种资源多个。</li>
+</ul></li>
+<li>三大进程同步问题
+
+<ul>
+<li>生产者-消费者问题</li>
+<li>哲学家进餐问题</li>
+<li>读者-写者问题</li>
+</ul></li>
+<li>当一个进程<strong>获得了所等待的资源</strong>（IO完成等），就要退出等待队列而进入就绪队列。</li>
+<li>多道程序设计能充分发挥<strong>CPU与外设</strong>之间的并行工作能力。</li>
+<li>在引入线程的操作系统中，把<strong>线程作为调度和分派的基本单位</strong>，而把<strong>进程作为资源拥有的基本单位</strong>。</li>
+<li>S为死锁状态的充要条件是当且仅当S状态的<strong>资源分配图是不可完全简化的</strong>，该充要条件称为死锁定理。</li>
+</ul>
+
+<h4 id="第四章-进程的调度与死锁">第四章 进程的调度与死锁</h4>
+
+<ul>
+<li>在批处理系统中，<strong>周转时间是指作业等待时间和运行时间之和</strong>。</li>
+<li>先来先服务调度：排队等待时间最长的作业被优先调度。</li>
+<li>操作系统用于
+
+<ul>
+<li>作业调度的算法有：先来先服务、优先级调度、高响应比优先</li>
+<li>用于进程调度的算法：时间片轮转、优先数优先、多级反馈队列</li>
+</ul></li>
+<li>两个进程争夺同一个资源不一定死锁。</li>
+<li>资源要求多的作业，其优先权应低于资源要求少的作业；系统进程的优先权应高于用户进程的优先权；计算型作业的优先权，应低于I/O型作业的优先权；在动态优先权时，随着进程运行时间的增加，其优先权降低。</li>
+<li>产生死锁的原因：
+
+<ul>
+<li>资源分配策略不当</li>
+<li>并发进程执行速度不当</li>
+</ul></li>
+<li>多个进程由于竞争互斥使用的资源又互不相让而进入死锁。</li>
+<li>资源分配图中有环路则系统可能存在死锁，也可能不存在死锁。</li>
+<li>一般来说，对<strong>需经常启动外设</strong>的进程给一个较小的时间片比较合适（阻塞，不需CPU）。</li>
+<li><strong>最高响应比优先</strong>既有利于短小作业又兼顾到长作业的作业调度。</li>
+<li>在单处理器的多进程系统中，进程什么时候占用处理器和能占用多长时间，取决于<strong>进程自身和进程调度策略</strong>。</li>
+<li>设系统中有n个并发进程，竞争资源R，且每个进程都需要m个R类资源，为使该系统不会因竞争该类资源而死锁，资源R至少要有 <strong>(n-1) x m + 1</strong>个。</li>
+<li>分时系统中进程调度算法通常采用<strong>时间片轮转法</strong>。</li>
+<li>某单处理器多进程系统中有多个就绪进程，<strong>在进程处于临界区时仍能进行处理机调度</strong>。</li>
+</ul>
+
+<h4 id="第四章-存储器管理">第四章 存储器管理</h4>
+
+<ul>
+<li>存储管理方式：
+
+<ul>
+<li>连续分配存储</li>
+<li>固定分区分配</li>
+<li>可变式分区分配
+
+<ul>
+<li>首次适应：符合大小要求即分配</li>
+<li>循环首次适应：从上次分区的下一分区起循环找，找到符合大小要求即分配</li>
+<li>最佳适应：在空闲区表中以空闲区长度按<strong>从小到大</strong>排列</li>
+<li>最坏适应：在空闲区表中以空闲区长度按<strong>从大到小</strong>排列</li>
+</ul></li>
+<li>动态可重定位分区分配：相比于可变式分区分配多了<strong>紧凑</strong>。<br /></li>
+<li>分页存储
+
+<ul>
+<li>很好地解决了“零头”（碎片）问题。</li>
+<li>地址转换工作是由<strong>硬件</strong>完成的。</li>
+</ul></li>
+<li>分段存储</li>
+<li>段页式存储：在CPU中应设置段表控制寄存器，而没有页表控制寄存器。</li>
+</ul></li>
+<li>在存储管理中，提高内存利用率主要是通过<strong>存储扩充</strong>功能实现的。</li>
+<li><strong>重定位</strong>：把目标程序中的逻辑地址转换成主存空间的物理地址。包括：
+
+<ul>
+<li><strong>静态重定位</strong>，在装入时一次完成，数据地址和指令地址都变。</li>
+<li><strong>动态重定位</strong>：在程序运行时完成；支持程序浮动；程序中的数据和指令地址都不用变，需用重定位寄存器。</li>
+</ul></li>
+<li>在无快表的情况下，获取一条指令或数据需访存次数
+
+<ul>
+<li>段页式：3</li>
+<li>段式/页式：2</li>
+</ul></li>
+<li>可变分区存储管理采用<strong>静态重定位</strong>，分页/分段存储管理采用的都是<strong>动态重定位</strong>（都有起址寄存器）。</li>
+</ul>
+
+<h4 id="第五章-虚拟存储器">第五章 虚拟存储器</h4>
+
+<ul>
+<li>在请求页式存储管理中，当查找的页不在<strong>内存</strong>中时，要产生缺页中断。</li>
+<li>虚拟存储器的最大容量<strong>由计算机的地址结构决定</strong>。</li>
+<li>在虚拟存储的实现中，需要页面淘汰的原因是<strong>产生缺页中断时内存中没有空闲块</strong>。</li>
+<li>系统“抖动”现象的发生是由<strong>交换的信息量过大</strong>引起的。</li>
+<li>虚拟存储管理功能的管理方法：
+
+<ul>
+<li>请求分页</li>
+<li>请求分段</li>
+</ul></li>
+<li>在页式虚拟存储管理中，为实现地址变换，应建立<strong>页表</strong>。</li>
+<li>页面置换算法：当内存空间不够时，将某个页面换到外存（或缓冲队列）。
+
+<ul>
+<li>最佳置换：预知未来，不可实现</li>
+<li>先进先出：驻留最久先淘汰</li>
+<li>最近最久未使用（LRU）：淘汰最近最久未被访问的页面，需要硬件支持（寄存器或栈）</li>
+<li>最少使用（LFU）：skipped&hellip;.</li>
+<li>Clock置换：使用访问位可修改位联合判断，考虑置换代价</li>
+</ul></li>
+</ul>
+
+<h4 id="第六章-io系统">第六章 IO系统</h4>
+
+<ul>
+<li>用户程序发出磁盘I/O请求后，系统的正确处理流程是<strong>用户程序→系统调用处理程序（设备无关软件）→设备驱动程序→中断处理程序</strong>。</li>
+<li>设备控制器：设在CPU与外设间，用于控制一个或多个IO设备，以实现IO设备与计算机间的交互。</li>
+<li>IO通道设备：设在CPU与设备控制器间，使数据的传送、IO操作的组织和结束处理等独立于CPU，让CPU有更多时间进行数据处理。实质上是一种特殊的处理机，与CPU共享内存，价格昂贵。</li>
+<li>设备驱动程序：IO系统与设备控制器间的通道程序。功能
+
+<ul>
+<li>向设备寄存器写命令</li>
+<li>检查用户是否有权使用设备</li>
+<li>解释用户的I/O请求，并将该请求转化为具体的I/O操作</li>
+<li>响应中断</li>
+</ul></li>
+<li>对IO设备的控制方式
+
+<ul>
+<li>使用轮询的可编程IO方式：在CPU状态寄存器中设busy位标记IO设备状态，以字为单位IO</li>
+<li>使用中断的可编程IO方式：CPU仅向设备控制器发送IO命令，将控制细节交给设备控制器，设备控制器完成数据处理后向CPU发中断，以字为单位IO</li>
+<li>直接存储器访问方式（DMA）：
+
+<ul>
+<li>对大数据交换时，为避免频繁中断CPU，以数据块为单位IO</li>
+<li>设备与内存直接进行数据交换</li>
+<li>由设备控制器控制，CPU等待中断</li>
+</ul></li>
+<li>IO通道控制方式：由独立于CPU的通道程序处理，进一步减少CPU干预</li>
+</ul></li>
+<li>SPOOLing系统：通过硬件和软件的功能扩充，把原来的<strong>独占设备（临界设备）</strong>改造成能为若干用户<strong>共享</strong>的设备，这种设备称为<strong>虚拟设备</strong>。提高了独占设备的利用率。特点：
+
+<ul>
+<li>提高了IO速度</li>
+<li>将独占设备改为共享设备</li>
+<li>实现了虚拟设备功能</li>
+</ul></li>
+<li>基本的I/O设备处理程序一般处于<strong>阻塞</strong>状态。</li>
+<li>缓冲区：在IO设备与CPU间设置，一般使用内存
+
+<ul>
+<li>单缓冲区</li>
+<li>双缓冲区：可实现双向数据交换</li>
+<li>环形缓冲区：组织多个缓冲区成循环链表，存在指针追逐带来的同步问题</li>
+<li>缓冲池：为了使多个进程能有效地同时处理输入和输出，提高设备利用率；三条队列，四个缓冲区</li>
+</ul></li>
+<li>磁盘调度算法：应采用一种最佳调度算法，以使各进程对磁盘的平均访问时间最小。
+
+<ul>
+<li>早期磁盘调度算法
+
+<ul>
+<li>先来先服务（FCFS）：根据进程请求访问磁盘的先后次序进行调度，由于未对寻道进行优化，致使平均寻道时间可能较长。仅适用于请求磁盘 I/O 的进程数目较少的场合。</li>
+<li>最短寻道优先（SSTF）：要求访问的磁道与当前磁头所在的磁道距离最近，以使每次的寻道时间最短，不能保证平均寻道时间最短。</li>
+</ul></li>
+<li>基于扫描的磁盘算法
+
+<ul>
+<li>扫描算法（SCAN）算法：即电梯调度算法，对SSTF进行修改，防止饥饿，优先考虑磁头的移动方向上的最近的的要访问的磁道。</li>
+<li>循环扫描（CSCAN）：在SCAN的基础上将磁头设为单向，去到最外圈回到最外圈。</li>
+<li>NSTepSCAN：避免出现<strong>磁臂粘道</strong>，将磁盘请求队列分成多个子队列，队间使用FCFS，队内使用SCAN。</li>
+<li>FSACN：将磁盘请求队列分成两个子队列，当前处理的队列使用SCAN，新进来的请求进入等待队列</li>
+</ul></li>
+</ul></li>
+<li>为了提高设备分配的灵活性，用户申请设备时应指定<strong>设备类</strong>相对号。</li>
+<li>对磁盘进行移臂调度的目的是为了缩短<strong>寻道</strong>时间。</li>
+</ul>
+
+<h4 id="第七章-文件系统">第七章 文件系统</h4>
+
+<ul>
+<li><strong>数据项</strong>是文件系统中最底层的数据组织形式。</li>
+<li>逻辑文件：从<strong>用户</strong>观点出发所观察到的文件组织形式。</li>
+<li>采用树形目录结构后，不同用户对同一个文件定义的文件名<strong>可以不同</strong>。</li>
+<li>对一个文件的访问，常由<strong>用户访问权限和文件属性</strong>共同限制。</li>
+<li>逻辑文件存放在到存储介质上时，采用的组织形式是与<strong>存储介质特性</strong>有关的。</li>
+<li>文件控制块包含：文件名、存取控制信息、文件的物理结构</li>
+<li>UNIX系统中，<strong>管道</strong>文件用于把一个进程的输出连接到另一个进程的输入。</li>
+<li>索引文件：和主文件配合使用，空间换取时间，加快对主文件的检索速度。</li>
+<li>操作系统中对目录管理的主要要求
+
+<ul>
+<li>对文件实现按名存取</li>
+<li>允许文件重名</li>
+<li>提高对目录的检索速度</li>
+</ul></li>
+</ul>
+
+<h4 id="第八章-磁盘存储器管理">第八章 磁盘存储器管理</h4>
+
+<ul>
+<li>文件存储空间管理方法
+
+<ul>
+<li>空闲表法</li>
+<li>空闲链表法</li>
+<li>位示图法</li>
+<li>成组链接法</li>
+</ul></li>
+<li>提高磁盘IO方法
+
+<ul>
+<li>使用磁盘高速缓存</li>
+<li>提前读</li>
+<li>延迟写</li>
+<li>优化物理块分布</li>
+</ul></li>
+<li>UNIX文件系统对盘空间的管理采用<strong>空闲块成组链接法</strong>，物理结构是<strong>索引</strong>分配方式。</li>
+<li>文件系统采用<strong>多级目录结构</strong>可以解决命名冲突。</li>
+</ul>
+
+<h3 id="0x01-重要概念">0x01. 重要概念</h3>
+
+<h4 id="1-多道程序设计及其特点">1. 多道程序设计及其特点</h4>
+
+<p>多道程序设计指在内存同时放若干道程序，使它们在系统中并发执行，共享系统中的各种资源。当一道程序暂停执行时，CPU立即转去执行另一道程序。</p>
+
+<p>特点：</p>
+
+<ul>
+<li>资源利用率高</li>
+<li>系统吞吐量大</li>
+<li>平均周转时间长</li>
+<li>无交互能力</li>
+</ul>
+
+<h4 id="2-死锁-死锁产生的必要条件及预防">2. 死锁、死锁产生的必要条件及预防</h4>
+
+<p><strong>定义</strong>：如果一组进程中的每一个进程都在等待由该组进程中的其他进程才能引发的事件，那么该组进程是死锁的。</p>
+
+<p><strong>同时满足四个必要条件：</strong></p>
+
+<ul>
+<li>互斥：进程所分配的到的资源是临界资源，需要互斥访问</li>
+<li>请求和保持：进程已经持有了至少一个资源，同时又提出新的资源请求</li>
+<li>不可抢占：进程所获得的资源在未使用完前不能被抢占</li>
+<li>循环等待：在发生死锁时，必然存在一条进程-资源的循环链</li>
+</ul>
+
+<p><strong>预防：</strong></p>
+
+<ul>
+<li>资源静态分配法：资源全分配全释放</li>
+<li>资源可剥夺法：新申请不能满足则释放已获得资源</li>
+<li>资源有序分配法：为资源编号，申请时需按编号进行</li>
+</ul>
+
+<p><strong>避免</strong>：防止进入不安全状态（允许动态申请资源，银行家算法）</p>
+
+<p><strong>检测</strong>：当且仅当当前状态的资源分配图是不可完全简化的（死锁定理）</p>
+
+<p><strong>解除</strong>：</p>
+
+<ul>
+<li>剥夺资源</li>
+<li>进程回退</li>
+<li>撤销进程</li>
+</ul>
+
+<h4 id="3-影响缺页率的因素">3. 影响缺页率的因素</h4>
+
+<p><strong>缺页率</strong>：在进程的运行过程中，访问页面成功的次数，与访问页面的总次数的比例。</p>
+
+<ul>
+<li>页面大小：页面大小与缺页率呈负相关</li>
+<li>进程所分配的物理块的数目：物理块的数目与缺页率呈负相关</li>
+<li>页面置换算法：决定缺页中断的次数</li>
+<li>程序的编写方法：程序编写的局部化程度与缺页率呈负相关</li>
+</ul>
+
+<h4 id="4-设备独立性及其实现">4. 设备独立性及其实现</h4>
+
+<p>定义：即设备无关性，指应用程序独立于具体使用的物理设备。</p>
+
+<p>实现：在应用程序中，使用逻辑设备名称来请求使用某类设备；而系统执行时，是使用物理设备名称。鉴于驱动程序是一个与硬件紧密相关的软件，必须其上设置一层软件，称为设备独立性软件，以执行所有设备的公有操作、通过设置一张逻辑设备表完成逻辑设备名到物理设备名的转换，并向用户层（或文件层）软件提供统一接口，从而实现设备的独立性。</p>
+
+<h4 id="5-程序的局部性原理">5. 程序的局部性原理</h4>
+
+<p>指在一段时间内，整个程序的执行仅限于程序中的某一部分。相应地，执行所访问的存储空间也局限于某个内存区域。
+局部性原理又表现为：</p>
+
+<ul>
+<li>时间局部性：如果程序中的某条指令一旦执行，则不久之后该指令可能再次被执行；如果某数据被访问，则不久之后该数据可能再次被访问。</li>
+<li>空间局部性：一旦程序访问了某个存储单元，则不久之后。其附近的存储单元也将被访问。</li>
+</ul>
+
+<h4 id="6-spooling技术及假脱机系统的组成">6. SPOOling技术及假脱机系统的组成</h4>
+
+<p>SPOOling技术是一种可将一台独占的物理I/O设备虚拟为多台允许用户共享的逻辑I/O设备的技术。系统组成：</p>
+
+<ul>
+<li>输入井和输出井：在磁盘上开辟的两个大存储空间。用文件队列的方式存储I/O设备输入或用户程序输出的数据。</li>
+<li>输入缓冲区和输出缓冲区：为了缓和和CPU和磁盘之间速度不匹配的矛盾而在内存中开辟。
+
+<ul>
+<li>输入缓冲区：暂存由输入设备送来的数据，以后再传送到输入井。</li>
+<li>输出缓冲区：暂存从输出井送来的数据，以后在传送给输出设备。</li>
+</ul></li>
+<li>输入进程和输入进程：这里利用两个进程来模拟脱机I/O时的外围控制机。
+
+<ul>
+<li>输入进程：将用户要求的数据从输入机通过输入缓冲区再送到输入井，当CPU需要输入数据时，直接从输入井读入内存；</li>
+<li>输出进程：把用户要求输出的数据从先内存送到输出井，待输出设备空闲时，在将输出井中的数据经过输出缓冲区送到输出设备上。</li>
+</ul></li>
+<li>井管理程序：用于控制作业和磁盘井间的信息交换。</li>
+</ul>
+
+<h3 id="0x03-分析设计">0x03. 分析设计</h3>
+
+<h4 id="1-p-v操作">1. P、V操作</h4>
+
+<h5 id="1-生产者-消费者问题">（1）生产者 - 消费者问题</h5>
+
+<p>描述一组生产者向一组消费者提供消息，它们共享一个包含n个缓冲区的有界缓冲池，生产者向其中投放消息，消费者从中取得消息。</p>
+
+<h6 id="a-利用记录型信号量解决">a. 利用记录型信号量解决</h6>
+
+<p>定义互斥信号量mutex，使诸进程互斥地访问缓冲池，empty、 full，表示空、满缓冲区数量。初值分别为1，n，0。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/pc.png" alt="pc" /></p>
+
+<pre><code class="language-c">semaphore mutex = 1,  // 互斥访问缓冲池
+			empty = n, 	// 缓冲池中空缓冲区数
+				full = 0; 		// 缓冲池中满缓冲区数
+item buffer[n]; 	// 公共缓冲池
+int in = 0, out = 0; 	// in和out两个指针
+
+consumer() {
+    while(1) {   
+        wait(full);
+		wait(mutex);
+		nextc = buffer(out);
+		out = (out + 1) mod n;
+		signal(mutex);
+		signal(empty);
+		Consumer the item in nextc;
+	}
+}
+
+producer() {
+    while(1) { 
+	 	Produce an item in nextp;
+        …
+      	wait(empty);
+     	wait(mutex);
+      	buffer(in) = nextp;
+      	in = (in + 1) % n;
+      	signal(mutex);
+      	signal(full);
+    }
+}
+
+main() { 
+    cobegin 	//并发执行
+       producer();
+       consumer();
+    coend
+} 
+</code></pre>
+
+<p>注意</p>
+
+<ul>
+<li>P操作的顺序至关重要，顺序不当可能导致死锁；</li>
+<li>V操作的顺序无关紧要；</li>
+<li>当缓冲区只有一个时，mutex可省略。</li>
+</ul>
+
+<h6 id="b-利用and信号量解决">b. 利用AND信号量解决</h6>
+
+<pre><code class="language-c">semaphore mutex = 1, empty = n, full = 0; 
+item buffer[n];
+int in = 0, out = 0;
+
+producer() {
+	while(1) {
+		produce an item in nextp;
+		…
+		swait(empty, mutex);
+		buffer(in) = nextp;
+        in := (in + 1) mod n;
+        ssingal(mutex, full);
+    }
+}
+
+Consumer() {
+    while(1) { 
+        swait(full, mutex);
+   		nextc = buffer(out);
+   		out = (out + 1) mod n;
+   		ssignal(mutex, empty);
+		consumer the item in nextc;
+    } 
+}
+
+main() { 
+    cobegin
+       producer();
+       consumer();
+    coend
+}  
+</code></pre>
+
+<h5 id="2-哲学家进餐问题">（2）哲学家进餐问题</h5>
+
+<p>方案一：至多只允许有四位哲学家同时去拿左边的筷子，最终能保证至少有一位哲学家能够进餐，并在用毕时能释放出他用过的两只筷子，从而使更多的哲学家能够进餐。设置信号量Sm来限制同时进餐的哲学家数目，初值为4。</p>
+
+<pre><code class="language-c">philopher(i) {
+    while(1) {    
+        wait(Sm);
+        wait(chopstick[i]);
+    	wait(chopstick[(i + 1) % 5]);
+        eat;
+   	  	signal(chopstick[i]);
+   	  	signal(chopstick[(i + 1) % 5]);
+        signal(Sm);
+   	  	think;
+    } 
+}
+</code></pre>
+
+<p>方案二：规定奇数号哲学家先拿他左边的筷子，然后再去拿右边的筷子；而偶数号哲学家则相反。第i个哲学家的活动可描述为：</p>
+
+<pre><code class="language-c">philopher(i) {
+    While(1) {
+        if(i % 2 == 0) { 
+            wait(chopstick[i]);  
+            wait(chopstick]((i + 1) % 5]);
+            eat;
+   	      	signal(chopstick[i]); 
+            signal(chopstick[(i + 1) % 5]);
+         }else { 
+             wait(chopstick[(i + 1) % 5]); 
+             wait(chopstick[i]); 
+             eat;
+   	         signal(chopstick[(i + 1) % 5]); 
+             signal(chopstick［i］); 
+         }
+   	 	think;
+	}
+}
+</code></pre>
+
+<p>方案三：仅当左、右两只筷子均可用时，才拿起筷子进餐。利用AND信号量解决哲学家进餐问题，可得最简洁的解：</p>
+
+<pre><code class="language-c">semaphore chopstick[5] = {1,1,1,1,1};
+philopher(i) { 
+    while(1) {
+        think;
+     	Sswait(chopstick[(i + 1) % 5], chopstick[i]);
+     	eat;
+     	Ssignal(chopstick[(i + 1) % 5],chopstick[i]);
+    }
+ }
+</code></pre>
+
+<h5 id="3-读者-写者问题">（3）读者 - 写者问题</h5>
+
+<p>读进程可共享同一对象。写进程不可共享同一对象。</p>
+
+<pre><code class="language-c">int readcount=0;	// 读者数
+semaphore rmutex = 1, 	// 互斥访问readcount
+		wmutex = 1;		// 读写互斥
+// semaphore wirteFirst = 1;		// 写者优先
+
+reader() { 
+    while(1) { 
+        // wait(wirteFirst);
+        wait(rmutex);
+        if (readcount == 0) 
+            wait(wmutex);
+        readcount++;
+        signal(rmutex);
+        // signal(wirteFirst);
+        perform read operation;
+        wait(rmutex);
+        readcount--;
+     	if (readcount=0) 
+            signal(wmutex);
+    	signal(rmutex);
+   }
+}
+
+Writer() {  
+    while(1) {	 
+        // wait(wirteFirst);
+        wait(wmutex);
+	    perform write operation;
+		signal(wmutex);
+        // signal(wirteFirst);
+	}  
+}
+
+Main() {
+    cobegin
+  		reader(); 
+  		writer();
+  	coend
+}
+</code></pre>
+
+<p>利用信号量集实现多读，当第RN+1个读者要进入读时P失败而阻塞</p>
+
+<pre><code class="language-c">#define  RN  20  // 最大读者数
+semaphore L = RN, mx = 1;   
+
+reader() { 
+    while(1) {
+        swait(L,1,1);
+        swait(mx,1,0);
+  	    perform read operation;
+	    ssignal(L,1);  
+    }
+}
+               
+writer() {
+    while(1) {
+        swait(mx, 1, 1; L, RN, 0);
+        perform write operation;
+        ssignal(mx, 1);
+    }
+}
+
+Main() {
+    cobegin
+  		reader(); 
+  		writer();
+  	coend
+}
+</code></pre>
+
+<h4 id="2-调度算法">2. 调度算法</h4>
+
+<p>作业调度 - FCFS与SJF比较</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/FCFS.png" alt="FCFS" /></p>
+
+<p>RR</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/RR.png" alt="RR" /></p>
+
+<h4 id="3-利用银行家算法避免死锁">3. 利用银行家算法避免死锁</h4>
+
+<p>假定系统中有五个进程{P<sub>0</sub>，P<sub>1</sub>，P<sub>2</sub>，P<sub>3</sub>，P<sub>4</sub>}和三类资源{A，B，C}，各种资源的数量分别为 10、5、7，在 T<sub>0</sub>时刻的资源分配情况如图所示。求：</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/bank1.png" alt="bank1" /></p>
+
+<p>(1) T<sub>0</sub>时刻的安全性：利用安全性算法对 T<sub>0</sub>时刻的资源分配情况进行分析（见下图示）可知，在 T<sub>0</sub>时刻存在着一个安全序列{P<sub>1</sub>，P<sub>3</sub>，P<sub>4</sub>，P<sub>2</sub>，P<sub>0</sub>}，故系统是安全的。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/bank2.png" alt="bank2" /></p>
+
+<p>(2) P<sub>1</sub>请求资源：P<sub>1</sub>发出请求向量 Request<sub>1</sub>(1，0，2)，系统按银行家算法进行检查：</p>
+
+<ul>
+<li>Request<sub>1</sub>(1，0，2)≤Need<sub>1</sub>(1，2，2)</li>
+<li>Request<sub>1</sub>(1，0，2)≤Available<sub>1</sub>(3，3，2)</li>
+<li>系统先假定可为 P<sub>1</sub>分配资源，并修改 Available<sub>1</sub>，Allocation<sub>1</sub>和 Need<sub>1</sub>向量，由此形成的资源变化情况如图3-16圆括号所示</li>
+<li>再利用安全性算法检查此时系统是否安全。如下图所示。</li>
+</ul>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/bank3.png" alt="bank3" /></p>
+
+<h4 id="5-地址重定位">5. 地址重定位</h4>
+
+<p>已知某分页系统，主存容量为64K，页面大小为1K，对一个4页大的作业，其0、1、2、3页分别被分配到主存的2、4、6、7块中。</p>
+
+<p>（1）将十进制的逻辑地址1023、2500、3500、4500转换成物理地址。</p>
+
+<ul>
+<li>逻辑地址1023：1023/1024，得页号0，页内地址1023，查页表的相应块号2，故物理地址为2*1024+1023=3071</li>
+<li>逻辑地址2500： 2500/1024，得页号2，页内地址452，查页表的相应块号6，故物理地址为6*1024+452=6596</li>
+<li>逻辑地址3500： 3500/1024，得页号3，页内地址428，查页表的相应块号7，故物理地地址为7*1024+428=7596</li>
+<li>逻辑地址4500： 4500/1024，得页号4，页内地址404，因页号大于页表长度产生越界中断。</li>
+</ul>
+
+<p>（2）以十进制的逻辑地址1023为例画出地址变换过程图。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/cdw.png" alt="cdw" /></p>
+
+<h4 id="6-页面置换算法">6. 页面置换算法</h4>
+
+<h5 id="1-最佳-optimal-置换算法">（1）最佳(Optimal)置换算法</h5>
+
+<p>人们目前还无法预知一个进程在内存的若干个页面中，哪一个页面是未来最长时间内不再被访问的，因而该算法是无法实现的
+<img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/opt.png" alt="opt" /></p>
+
+<h5 id="2-先进先出-fifo-页面置换算法">（2）先进先出(FIFO)页面置换算法</h5>
+
+<p>总是淘汰最先进入内存的页面</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/fifo.png" alt="fifo" /></p>
+
+<h5 id="3-最近最久未使用-lru-置换算法">（3）最近最久未使用(LRU)置换算法</h5>
+
+<p>由于无法预测各页面将来的使用情况，只能利用“最近的过去”作为“最近的将来”的近似，因此，LRU置换算法是选择最近最久未使用的页面予以淘汰。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/lru.png" alt="lru" /></p>
+
+<h5 id="4-改进型-clock-置换算法">（4）改进型 Clock 置换算法</h5>
+
+<p>由访问位 A 和修改位 M 可以组合成下面四种类型的页面</p>
+
+<ul>
+<li>A=0，M=0：表示该页最近既未被访问，又未被修改，是最佳淘汰页。</li>
+<li>A=0，M=1：表示该页最近未被访问，但已被修改，并不是很好的淘汰页。</li>
+<li>A=1，M=0：表示该页最近已被访问，但未被修改，该页有可能再被访问。</li>
+<li>A=1，M=1：表示该页最近已被访问且被修改，该页可能再被访问。</li>
+</ul>
+
+<h4 id="7-文件的索引结构">7. 文件的索引结构</h4>
+
+<ol>
+<li>如果每个磁盘索引块的大小为 1024 个字节，每个盘块号占 4 个字节，则在一个索引块中可存放 256 个盘块号。这样，在两级索引时， 最多可包含的存放文件的盘块的盘块号总数 N = 256 × 256 = 64 K 个盘块号。由此可得出结论:  采用两级索引时，所允许的文件最大长度为 L = 64k x 1k =64 MB。</li>
+</ol>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/index.png" alt="index" /></p>
+
+<ol>
+<li>设文件索引结点中有 8 个地址项，每个地址项大小为 4 字节，其中 5 个地址项为直接地址索引，2 个地址项是一级间接地址索引，1 个地址项是二级间接地址索引，磁盘索引块和磁盘数据块大小均为 1 KB。则可表示的单个文件最大长度是多少KB？</li>
+</ol>
+
+<p>解：磁盘索引块为 1KB 字节，每个地址项大小为 4 字节，故每个磁盘索引块可存放 <sup>1024</sup>&frasl;<sub>4</sub>=256 个物理地址块。又因为文件索引节点中有 8 个地址项，其中 5 个地址项为直接地址索引，这意味着逻辑块号为 0-4 的为直接地址索引；2 个地址项是一级间接地址索引，这意味着第一个地址项指出的物理块中存放逻辑块号为 5-260 的物理块号，第二个地址项指出的物理块中存放逻辑块号为 261-516 的物理块号；1个地址项是二级间接地址索引，该地址项指出的物理块存放了 256 个间接索引表的地址，这256个间接索引表存放逻辑块号为 517-66052 的物理块号（256*256=65536个）。单个文件的逻辑块号范围是0-66052，而磁盘数据块大小为1KB，所以单个文件最大长度为：66053KB。</p>
+
+<h4 id="8-磁盘调度">8. 磁盘调度</h4>
+
+<p>先来先服务（FCFS）：根据进程请求访问磁盘的先后次序进行调度，由于未对寻道进行优化，致使平均寻道时间可能较长。仅适用于请求磁盘 I/O 的进程数目较少的场合。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/disk1.png" alt="disk1" /></p>
+
+<p>最短寻道优先（SSTF）：要求访问的磁道与当前磁头所在的磁道距离最近，以使每次的寻道时间最短，不能保证平均寻道时间最短。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/disk2.png" alt="disk1" /></p>
+
+<p>扫描算法（SCAN）算法：即电梯调度算法，对SSTF进行修改，防止饥饿，优先考虑磁头的移动方向上的最近的的要访问的磁道。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/scan.png" alt="disk1" /></p>
+
+<p>循环扫描（CSCAN）：在SCAN的基础上将磁头设为单向，去到最外圈回到最外圈。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/os_sc/disk3.png" alt="disk1" /></p>
+
+<p>NSTepSCAN：避免出现<strong>磁臂粘道</strong>，将磁盘请求队列分成多个子队列，队间使用FCFS，队内使用SCAN。</p>
+
+<p>FSACN：将磁盘请求队列分成两个子队列，当前处理的队列使用SCAN，新进来的请求进入等待队列</p>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/security/app/ssl-config/"><h4>Homemade Certificate and Config Unidirectional Authentication</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+
