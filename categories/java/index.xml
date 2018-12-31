@@ -75,18 +75,17 @@ Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的
     </item>
     
     <item>
-      <title>An Arithmetic Expression Generator Based on Binary Tree Structure</title>
+      <title>Arithmetic Expression Generator</title>
       <link>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</link>
       <pubDate>Tue, 18 Sep 2018 20:25:43 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</guid>
-      <description>Github仓库
-前言 : 学校软件工程课程作业， 需求大概是根据参数随机产生n道算术表达式，将表达式及结果写到文件中，将用户提交的答案文件与正确答案进行比对，输出比对结果。
+      <description>前言 : 学校软件工程课程作业， 需求大概是根据参数随机产生n道算术表达式，将表达式及结果写到文件中，将用户提交的答案文件与正确答案进行比对，输出比对结果。
 一. PSP2.1表格    PSP2.1 Personal Software Process Stages 预估耗时（分钟） 实际耗时（分钟）     Planning 计划 20 25   · Estimate · 估计这个任务需要多少时间 20 25   Development 开发 1280 1740   · Analysis · 需求分析 (包括学习新技术) 40 55   · Design Spec · 生成设计文档 40 41   · Design Review · 设计复审 (和同事审核设计文档) 30 20   · Coding Standard · 代码规范 (为目前的开发制定合适的规范) 30 31   · Design · 具体设计 40 66   · Coding · 具体编码 1000 1422   · Code Review · 代码复审 40 41   · Test · 测试（自我测试，修改代码，提交修改） 60 64   Reporting 报告 70 103   · Test Report · 测试报告 20 24   · Size Measurement · 计算工作量 20 21   · Postmortem &amp;amp; Process Improvement Plan · 事后总结, 并提出过程改进计划 30 58   合计  1370 1868    二.</description>
     </item>
     
     <item>
-      <title>Code File Analyser and Counter Based on Chain of Responsibility Disgn Pattern</title>
+      <title>Code File Analyser and Counter</title>
       <link>https://jordonyang.github.io/post/code-file-analyser-and-counter-based-on-chain-of-responsibility-disgn-pattern/</link>
       <pubDate>Fri, 14 Sep 2018 12:23:56 +0800</pubDate>
       
@@ -97,7 +96,7 @@ Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的
     </item>
     
     <item>
-      <title>Digging in Source Code of HashMap (JDK1.7)</title>
+      <title>Touch Source of HashMap (1)</title>
       <link>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</link>
       <pubDate>Mon, 27 Aug 2018 12:01:48 +0800</pubDate>
       
@@ -127,7 +126,7 @@ GC停顿：亦称Stop The World（STW），即在整个可达性分析期间，�
     </item>
     
     <item>
-      <title>Digging in Source Code of LinkedList</title>
+      <title>Dive into LinkedList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
       <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
       
@@ -139,7 +138,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Digging in Source Code of ArrayList</title>
+      <title>Dive into ArrayList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
       <pubDate>Sat, 23 Jun 2018 22:40:02 +0800</pubDate>
       
@@ -153,7 +152,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Thread Run Method Execution Process Tracking and Thinking</title>
+      <title>Thread Run Method Execution Process</title>
       <link>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</link>
       <pubDate>Sun, 25 Mar 2018 21:46:51 +0800</pubDate>
       
@@ -171,7 +170,7 @@ JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到�
     </item>
     
     <item>
-      <title>Understanding the Foreach Syntax Sugar by Decompilation</title>
+      <title>Decompilation for Foreach Syntax Sugar</title>
       <link>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</link>
       <pubDate>Sun, 25 Feb 2018 22:03:56 +0800</pubDate>
       
@@ -184,7 +183,7 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>Constructing Binary Heap with Java</title>
+      <title>Construct Binary Heap with Java</title>
       <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       

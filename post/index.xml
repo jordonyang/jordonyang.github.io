@@ -7,10 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Sun, 23 Dec 2018 21:05:05 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 31 Dec 2018 00:40:04 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Touch MySQL Storage Engine</title>
+      <link>https://jordonyang.github.io/post/mysql/engine/base/</link>
+      <pubDate>Mon, 31 Dec 2018 00:40:04 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/mysql/engine/base/</guid>
+      <description>前言：和大多数数据库不同，MySQL 中有一个存储引擎的概念，针对不同的存储需求可以选择最优的存储引擎。
+0x00. 概述 MySQL 数据库最重要的一个特性是支持插件式存储引擎，用户可以根据应用的需要选择如何存储和索引数据、是否使用事务等。MySQL 默认支持多种存储引擎，以适用于不同领域的数据库应用需要，用户可以通过选择使用不同的存储引擎提高应用的效率，提供灵活的存储，用户甚至可以按照自己的需要定制和使用自己的存储引擎，以实现最大程度的可定制性。 MySQL 5.0 支持的存储引擎包括 MyISAM、InnoDB、BDB、MEMORY、MERGE、EXAMPLE、NDB Cluster、ARCHIVE、CSV、BLACKHOLE、FEDERATED 等，其中 InnoDB 和 BDB 提供事务安全表，其他存储引擎都是非事务安全表。
+0x01. 简单的引擎相关命令 1. 查看引擎信息 可以通过show engines命令查询当前数据库支持的存储引擎，下面以MySQL 5.7（Ubuntu）进行试验。可以看到MySQL 5.7版本支持的存储引擎包括：MyISAM、CSV、MRG_MYISAM、BLACKHOLE、PERFORMANCE_SCHEMA、InnoDB、ARCHIVE、MEMORY、FEDERATED ，其中默认的存储引擎是InnoDB，其他几列给出了这些引擎的一些概要的特性说明。
+第二种方法是采用show variables like &#39;%storage_engine%&#39;命令搜索与存储引擎相关的信息，如下面的右图所示。据《深入浅出MySQL》这本书说，使用show variables like &#39;have%&#39;可以查看当前版本支持的引擎类型，看一下它的环境是MySQL 5.0，而在5.7版本中显然这些信息已被去除了（如下面左图所示），只能看到一些关于安全、压缩和缓存之类的信息。
+在创建新表的时候，可以通过增加 ENGINE 关键字设置新建表的存储引擎，例如，在下面的例子中，表 user 因为没有指明而使用默认的 InnoDB 存储引擎，而 city 表则是指明为 MyISAM 存储引擎的。当然也可以通过alter table user engine=MyISAM修改表定义将 user 表的存储引擎改为 MyISAM，这样它就可以使用 MyISAM 引擎相关的存储特性了，实验证明可以，在此不贴图。
+2. 修改引擎信息 默认情况下，创建新表不指定表的存储引擎，则新表是默认存储引擎的，如果需要修改默认的存储引擎，可以通过命令set default_storage_engine = engine_name设置
+还可以修改 MySQL 的配置文件my.cnf，下面使用locate命令定位该文件，可以看到其中的default-storage-enine为InnoDB，将其修改后保存退出。
+重启mysql服务器：使用mysqladmin -u root -p shutdown或者service mysqld restart。登录mysql数据库，使用show engines;命令默认引擎是否修改成功。</description>
+    </item>
     
     <item>
       <title>Notes for OS Exam</title>
@@ -23,7 +39,7 @@
     </item>
     
     <item>
-      <title>Homemade Certificate and Config Unidirectional Authentication</title>
+      <title>Homemade Certificate and Unidirectional Authentication</title>
       <link>https://jordonyang.github.io/post/security/app/ssl-config/</link>
       <pubDate>Mon, 10 Dec 2018 23:42:48 +0800</pubDate>
       
@@ -52,7 +68,7 @@ OpenSSL&amp;gt; genrsa Generating RSA private key, 2048 bit long modulus .......
 0x03. 应用  多个子类有公有的方法，并且逻辑基本相同时。 重要、复杂的算法，可以把核心算法设计为模板方法，周边的相关细节功能则由各个子类实现。 重构时，模板方法模式是一个经常使用的模式，把相同的代码抽取到父类中，然后通过钩子函数（见模板方法模式的扩展） 约束其行为。  0x04. 扩展 - 控制反转 模板方法设计模式的一个更加常见的形式是除了使用abstract的基本方法和final的不可变的模板方法外，还应用了钩子函数，所谓的钩子函数一般是指一系列定义在抽象父类中非抽象方法，子类可以选择性地重写这些方法（当然也可以使用父类的默认实现），通常地，它们拥有布尔型的返回值，在通过子类对象调用父类的模板方法时，模板方法会根据子类的钩子函数结果决定其执行逻辑。
 不难发现，这种情况中的模板方法跟上面的的有所不同，在上面的通用代码中，父类直接决定整个模板的执行，而现在父类的模板方法的运行过程需要需要依赖于子类某个方法的执行结果，这种情况其实属于控制反转的一种，因为高层代码不再在运行前决定整个代码块的执行流程，而是在运行时动态地选择低层代码。
 0x05. 实例 如果你看过AQS源码，那么很自然地你会发现它使用了模板方法设计模式。虽然AQS定义为抽象类，但是其中并没有抽象的基本方法，其中定义了5个钩子函数和10个模板方法，钩子函数的具体实现由AQS子类提供，而且这些返回值会影响模板方法的执行结果。
-0x06. 参考  Wikipedia - IoC Wikipedia - Template_method_pattern 《设计模式之禅》（秦小波著，第二版，机械工业出版社）  </description>
+0x06. 参考  Wikipedia：IoC Wikipedia：Template_method_pattern 《设计模式之禅》（秦小波著，第二版，机械工业出版社）  </description>
     </item>
     
     <item>
@@ -208,18 +224,17 @@ $$P_1[i]&amp;rsquo;\ =\ IV[i]&amp;rsquo;\ ㊉\ D(K,\ C_1)[i]$$
     </item>
     
     <item>
-      <title>An Arithmetic Expression Generator Based on Binary Tree Structure</title>
+      <title>Arithmetic Expression Generator</title>
       <link>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</link>
       <pubDate>Tue, 18 Sep 2018 20:25:43 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</guid>
-      <description>Github仓库
-前言 : 学校软件工程课程作业， 需求大概是根据参数随机产生n道算术表达式，将表达式及结果写到文件中，将用户提交的答案文件与正确答案进行比对，输出比对结果。
+      <description>前言 : 学校软件工程课程作业， 需求大概是根据参数随机产生n道算术表达式，将表达式及结果写到文件中，将用户提交的答案文件与正确答案进行比对，输出比对结果。
 一. PSP2.1表格    PSP2.1 Personal Software Process Stages 预估耗时（分钟） 实际耗时（分钟）     Planning 计划 20 25   · Estimate · 估计这个任务需要多少时间 20 25   Development 开发 1280 1740   · Analysis · 需求分析 (包括学习新技术) 40 55   · Design Spec · 生成设计文档 40 41   · Design Review · 设计复审 (和同事审核设计文档) 30 20   · Coding Standard · 代码规范 (为目前的开发制定合适的规范) 30 31   · Design · 具体设计 40 66   · Coding · 具体编码 1000 1422   · Code Review · 代码复审 40 41   · Test · 测试（自我测试，修改代码，提交修改） 60 64   Reporting 报告 70 103   · Test Report · 测试报告 20 24   · Size Measurement · 计算工作量 20 21   · Postmortem &amp;amp; Process Improvement Plan · 事后总结, 并提出过程改进计划 30 58   合计  1370 1868    二.</description>
     </item>
     
     <item>
-      <title>Code File Analyser and Counter Based on Chain of Responsibility Disgn Pattern</title>
+      <title>Code File Analyser and Counter</title>
       <link>https://jordonyang.github.io/post/code-file-analyser-and-counter-based-on-chain-of-responsibility-disgn-pattern/</link>
       <pubDate>Fri, 14 Sep 2018 12:23:56 +0800</pubDate>
       
@@ -230,7 +245,7 @@ $$P_1[i]&amp;rsquo;\ =\ IV[i]&amp;rsquo;\ ㊉\ D(K,\ C_1)[i]$$
     </item>
     
     <item>
-      <title>Digging in Source Code of HashMap (JDK1.7)</title>
+      <title>Touch Source of HashMap (1)</title>
       <link>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</link>
       <pubDate>Mon, 27 Aug 2018 12:01:48 +0800</pubDate>
       
@@ -260,7 +275,7 @@ GC停顿：亦称Stop The World（STW），即在整个可达性分析期间，�
     </item>
     
     <item>
-      <title>Digging in Source Code of LinkedList</title>
+      <title>Dive into LinkedList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
       <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
       
@@ -272,7 +287,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Digging in Source Code of ArrayList</title>
+      <title>Dive into ArrayList</title>
       <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
       <pubDate>Sat, 23 Jun 2018 22:40:02 +0800</pubDate>
       
@@ -286,7 +301,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Thread Run Method Execution Process Tracking and Thinking</title>
+      <title>Thread Run Method Execution Process</title>
       <link>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</link>
       <pubDate>Sun, 25 Mar 2018 21:46:51 +0800</pubDate>
       
@@ -304,7 +319,7 @@ JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到�
     </item>
     
     <item>
-      <title>Understanding the Foreach Syntax Sugar by Decompilation</title>
+      <title>Decompilation for Foreach Syntax Sugar</title>
       <link>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</link>
       <pubDate>Sun, 25 Feb 2018 22:03:56 +0800</pubDate>
       
@@ -336,7 +351,7 @@ keys pattern:
     </item>
     
     <item>
-      <title>Achieving Video Live Broadcasting with Nginx and RTMP, FFmpeg and video.Js</title>
+      <title>Video Live Broadcasting</title>
       <link>https://jordonyang.github.io/post/network/nginx/nginx-rtmp/</link>
       <pubDate>Wed, 15 Nov 2017 19:46:54 +0800</pubDate>
       
@@ -352,7 +367,21 @@ nginx-rtmp-module ：一个由俄罗斯人Roman Arutyunyan开发出来的支持r
     </item>
     
     <item>
-      <title>Constructing Binary Heap with Java</title>
+      <title>Awesome Terminator for Ubuntu</title>
+      <link>https://jordonyang.github.io/post/linux/tools/terminator/</link>
+      <pubDate>Sun, 01 Oct 2017 11:22:17 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/linux/tools/terminator/</guid>
+      <description>前言：Terminator是CrunchBang的默认终端，该终端基于GNOME terminal。Terminator最大的特点就是可以在一个屏幕下同时显示多个终端，可以自由的在一个窗口中分割区域建立新终端，通过鼠标拉伸调整每个终端的大小，对同时需要操作多个终端的用户非常方便。 同时操作多个VPS的时候不用切换终端窗口，在一个窗口中就可以非常方便地完成。这里做个简单的记录，免得下次换机器的时候又得找配置。
+0x00. 下载与卸载 sudo add-apt-repository ppa:gnome-terminator sudo apt-get update sudo apt-get install terminator # 卸载 sudo apt-get remove terminator  0x01. 设置为默认终端  安装dconfig-editor  sudo apt-get install dconf-tools  安装成功后，就可以在终端中通过命令 dconf-editor来打开这个工具，然后从左边的的菜单栏中按照下面的步骤依次进入指定的菜单项： org &amp;gt; gnome &amp;gt; desktop &amp;gt; applications &amp;gt; terminal 此时，我们可以看到使用 Terminator 作为默认终端工具的配置为：
+exec terminator exec-arg -e  如果想使用 gnome-terminal 为默认终端工具的话，就将上面的配置更改为：
+exec gnome-terminal exec-arg -x  保存退出之后，就可以使用快捷键Ctrl + Alt + T启动terminator了。
+0x02. 美化 terminator的默认样式比较丑，不符合我这种追求cool stuff的人的审美，那怎么折腾呢？通过文件配置或者界面选择（说到底也是使用配置文件，但配置起来比较直观）就行了。
+需要自己在~/.config下创建terminator/config文件，或者在terminator界面右键进入Preferences的Layout标签选择Add，将自动创建该文件。然后使用下面的命令编辑该文件；</description>
+    </item>
+    
+    <item>
+      <title>Construct Binary Heap with Java</title>
       <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       

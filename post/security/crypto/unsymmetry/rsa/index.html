@@ -122,7 +122,7 @@
     },
     "headline": Principle and Implementation of RSA Algorithm,
     "name": Principle and Implementation of RSA Algorithm,
-    "wordCount": 1658,
+    "wordCount": 1659,
     "timeRequired": "PT8M",
     "inLanguage": {
       "@type": "Language",
@@ -299,35 +299,35 @@
 <h2 id="0x00-toc">0x00. TOC</h2>
 
 <ul>
-<li><a style="color:#0366d6;" href="#0x01-简介">0x01.简介</a></li>
-<li><a style="color:#0366d6;" href="#0x02-应用">0x02.应用</a></li>
-<li><a style="color:#0366d6;" href="#0x03-原理">0x03.原理</a></li>
-<li><a style="color:#0366d6;" href="#0x04-实现">0x04.实现</a>
+<li><a style="color:blue;text-decoration:none" href="#0x01-简介">0x01.简介</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x02-应用">0x02.应用</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x03-原理">0x03.原理</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x04-实现">0x04.实现</a>
 
 <ul>
-<li><a style="color:#0366d6;" href="#1-素数的选择与判断">1.素数的选择与判断</a></li>
-<li><a style="color:#0366d6;" href="#2-实现模逆算法">2.实现模逆算法</a>
+<li><a style="color:blue;text-decoration:none" href="#1-素数的选择与判断">1.素数的选择与判断</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-实现模逆算法">2.实现模逆算法</a>
 
 <ul>
-<li><a style="color:#0366d6;" href="#2-1-欧几里得算法">2.1.欧几里得算法</a></li>
-<li><a style="color:#0366d6;" href="#2-2-扩展欧几里得算法">2.2.扩展欧几里得算法</a></li>
-<li><a style="color:#0366d6;" href="#2-3-求解同余方程算法">2.3.求解同余方程算法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-1-欧几里得算法">2.1.欧几里得算法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-2-扩展欧几里得算法">2.2.扩展欧几里得算法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-3-求解同余方程算法">2.3.求解同余方程算法</a></li>
 </ul></li>
-<li><a style="color:#0366d6;" href="#3-实现快速模指运算">3.实现快速模指运算</a></li>
-<li><a style="color:#0366d6;" href="#4-编程实现rsa算法">4.编程实现RSA算法</a></li>
-<li><a style="color:#0366d6;" href="#5-利用rsa进行数据加解密">5.利用RSA进行数据加解密 </a></li>
-<li><a style="color:#0366d6;" href="#6-实现对大数据进行加密">6.实现对大数据进行加密 </a></li>
-<li><a style="color:#0366d6;" href="#7-实现简单的gui界面 ">7.实现简单的GUI界面</a></li>
-<li><a style="color:#0366d6;" href="#8-分析总结">8.分析总结</a></li>
+<li><a style="color:blue;text-decoration:none" href="#3-实现快速模指运算">3.实现快速模指运算</a></li>
+<li><a style="color:blue;text-decoration:none" href="#4-编程实现rsa算法">4.编程实现RSA算法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#5-利用rsa进行数据加解密">5.利用RSA进行数据加解密 </a></li>
+<li><a style="color:blue;text-decoration:none" href="#6-实现对大数据进行加密">6.实现对大数据进行加密 </a></li>
+<li><a style="color:blue;text-decoration:none" href="#7-实现简单的gui界面 ">7.实现简单的GUI界面</a></li>
+<li><a style="color:blue;text-decoration:none" href="#8-分析总结">8.分析总结</a></li>
 </ul></li>
-<li><a style="color:#0366d6;" href="#0x05-攻击方法">0x05.攻击方法</a></li>
-<li><a style="color:#0366d6;" href="#0x06-密钥分发">0x06.密钥分发</a></li>
-<li><a style="color:#0366d6;" href="#0x07-参考">0x07.参考</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x05-攻击方法">0x05.攻击方法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x06-密钥分发">0x06.密钥分发</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x07-参考">0x07.参考</a></li>
 </ul>
 
 <h2 id="0x01-简介">0x01. 简介</h2>
 
-<p>最初的公钥方案是在1977年由Ron <code>R</code>ivest、Adi <code>S</code>hamir和Len <code>A</code>dleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>最初的公钥方案是在1977年由Ron <code>R</code>ivest、Adi <code>S</code>hamir和Len <code>A</code>dleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <h2 id="0x02-应用">0x02. 应用</h2>
 
@@ -337,7 +337,7 @@
 
 <p>相反，对称密钥算法使用的是一个秘密密钥，它必须由发送方（用于加密)和接收方）用于解密)共享并保持私有。要使用对称加密方案，发送方和接收方必须事先安全地共享密钥。</p>
 
-<p>由于对称密钥算法几乎总是比非对称密钥算法计算量小得多，所以通常使用密钥交换算法交换密钥，然后使用该密钥和对称密钥算法传输数据。PGP和SSL/TLS方案家族使用这个过程，因此称为混合加密系统。综上非对称算法适用于 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>由于对称密钥算法几乎总是比非对称密钥算法计算量小得多，所以通常使用密钥交换算法交换密钥，然后使用该密钥和对称密钥算法传输数据。PGP和SSL/TLS方案家族使用这个过程，因此称为混合加密系统。综上非对称算法适用于 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>密钥交换</li>
@@ -385,7 +385,7 @@ $$M = C^d \ mod \ n = (M^e)^d \ mod\ n = M^{ed} mod \ n$$</p>
 
 <p>这样就得到公钥PU = <7, 187>，私钥 PR = <23, 187>。下面的例子说明输入明文M= 88时密钥的使用情况。</p>
 
-<p>对于加密，需要计算C = 88<sup>7</sup>modl 87。利用模运算的性质，计算如下： <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>对于加密，需要计算C = 88<sup>7</sup>modl 87。利用模运算的性质，计算如下： <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p>$$88^7 mod \ 187= [(88^4 \ mod \ 187) \ x \ (88^2 \ mod \ 187) \ x\ (88^1 \ modi \ 87)] \ mod \ 187$$</p>
 
@@ -405,7 +405,7 @@ $$11^{23} \ mod \ 187 = (11 \ x \ 121 \ x \ 55 \ x\ 33 \ x\ 33)\ mod\ 187 = 79 7
 
 <h2 id="0x04-实现">0x04. 实现</h2>
 
-<p>显然，需要实现RSA算法，需要解决下面的数学问题： <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>显然，需要实现RSA算法，需要解决下面的数学问题： <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>如何产生素数？怎么进行素数测试？</li>
@@ -417,7 +417,7 @@ $$11^{23} \ mod \ 187 = (11 \ x \ 121 \ x \ 55 \ x\ 33 \ x\ 33)\ mod\ 187 = 79 7
 
 <h3 id="1-素数的选择与判断">1. 素数的选择与判断</h3>
 
-<p>详细过程可以参考我的另外一篇文章<a style="color:#0645ad" href="http://geekeye.cc/post/security/crypto/unsymmetry/prime">如何产生大素数？怎么进行素数测试？</a></p>
+<p>详细过程可以参考我的另外一篇文章 <a style="color:blue;text-decoration:none" href="http://geekeye.cc/post/security/crypto/unsymmetry/prime">如何产生大素数？怎么进行素数测试？</a></p>
 
 <pre><code class="language-java">/**
  * 随机生成一个可能是素数的数
@@ -442,7 +442,7 @@ public static long probablePrime(int range, int rounds) {
 
 <h4 id="2-1-欧几里得算法">2.1. 欧几里得算法</h4>
 
-<p>利用辗转相除法求最大公约数 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>利用辗转相除法求最大公约数 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <pre><code class="language-java">public static long gcd(long m, long n) {
     while(true){
@@ -456,7 +456,7 @@ public static long probablePrime(int range, int rounds) {
 
 <h4 id="2-2-扩展欧几里得算法">2.2. 扩展欧几里得算法</h4>
 
-<p>使用实现非递归的扩展欧几里得算法求解<code>ax + by = gcd(a,b)</code> <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>使用实现非递归的扩展欧几里得算法求解<code>ax + by = gcd(a,b)</code> <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <pre><code class="language-java">private static long extendedEuclid(long a, long b) {
     long x = 0, y = 1, lastX = 1, lastY = 0, temp;
@@ -486,7 +486,7 @@ public static long probablePrime(int range, int rounds) {
 
 <h4 id="2-3-求解同余方程算法">2.3. 求解同余方程算法</h4>
 
-<p>通过求解线性同余方程<code>ax ≡ b(mod m)</code>求解乘法逆元  <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>通过求解线性同余方程<code>ax ≡ b(mod m)</code>求解乘法逆元  <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <pre><code class="language-java">public static long linearCongruence(long a, long b, long m) {
     if(b % gcd(a, m) != 0)
@@ -505,7 +505,7 @@ public static long probablePrime(int range, int rounds) {
 
 <h3 id="3-实现快速模指运算">3. 实现快速模指运算</h3>
 
-<p>实现了模指运算的递归及非递归算法，因为是理论性实验，将实验数据控制在不会发生溢出的范围内，所以可以选用非递归的做法。<code>modExpNonRec()</code>实现了快速的运算算法，即反复平方乘算法。 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>实现了模指运算的递归及非递归算法，因为是理论性实验，将实验数据控制在不会发生溢出的范围内，所以可以选用非递归的做法。<code>modExpNonRec()</code>实现了快速的运算算法，即反复平方乘算法。 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <pre><code class="language-java">public static int exp(int x, int b, int n) {
     if (b == 1) {
@@ -526,7 +526,7 @@ public static long modExpNonRec(long a, long b, long c) {
 
 <h3 id="4-编程实现rsa算法">4. 编程实现RSA算法</h3>
 
-<p>基于上述的基础函数，可以写出RSA加解密算法，并进行封装。在加密时，因为当数值val超过<code>2 &lt;&lt; 16</code>时，将val转换为char类型会发生溢出问题，所以将模逆结果值分割成两个字符表示，在解密时再进行还原。 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>基于上述的基础函数，可以写出RSA加解密算法，并进行封装。在加密时，因为当数值val超过<code>2 &lt;&lt; 16</code>时，将val转换为char类型会发生溢出问题，所以将模逆结果值分割成两个字符表示，在解密时再进行还原。 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <pre><code class="language-java">package org.jordon.security.core.crypto.assymmetry;
 
@@ -637,7 +637,7 @@ public class RawRSACipherService {
 
 <h3 id="5-利用rsa进行数据加解密">5. 利用RSA进行数据加解密</h3>
 
-<p>使用JUnit编写测试代码，为了便于查看，随机生成可打印的明文样例的进行n轮测试。为了便于查看，将素数选择范围调到100，明文长度调到20个以内。 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>使用JUnit编写测试代码，为了便于查看，随机生成可打印的明文样例的进行n轮测试。为了便于查看，将素数选择范围调到100，明文长度调到20个以内。 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <pre><code class="language-java">package org.jordon.security.core.crypto.assymmetry;
 
@@ -810,7 +810,7 @@ plaintext                     sGp/
 <li>模逆云散：modInverse()</li>
 </ul>
 
-<p>所以很容易就能写出相应的RSA算法：<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>所以很容易就能写出相应的RSA算法：<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <pre><code class="language-java">package org.jordon.security.core.crypto.assymmetry;
 
@@ -900,7 +900,7 @@ decrypted = 64817416795314078589627041975736817397997584028795185521897274181295
 
 <h3 id="7-实现简单的gui界面">7. 实现简单的GUI界面</h3>
 
-<p>实现了普通RSA加解密界面<code>RSAView</code>和对大数据进行加解密的界面<code>RSABigIntegerView</code>, 代码很长不贴了，可见Github工程<code>cipher4j</code> <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup>
+<p>实现了普通RSA加解密界面<code>RSAView</code>和对大数据进行加解密的界面<code>RSABigIntegerView</code>, 代码很长不贴了，可见Github工程<code>cipher4j</code> <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup>
 <img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/RSA/rsa-gui.png" alt="img" /></p>
 
 <h3 id="8-分析总结">8. 分析总结</h3>
@@ -919,11 +919,11 @@ decrypted = 64817416795314078589627041975736817397997584028795185521897274181295
 
 <p>关于分析破译RSA的大部分讨论都集中于如何分解n为两个素数。由于大数n具有很大的素因子，因式分解问题非常困难，但是它已经不如以前那么困难了。发生在1977年的著名事件恰好反映了这种情况。RSA的三名创始人挑战“Scientific American”的读者，让读者去破译他们发表在Martin Gardner的“Mathematical Games”专栏中的密文[GARD77J。</p>
 
-<p>每翻译出来一句明文，他们就提供100美元的奖励。他们预计在大约4X10<sup>16</sup>年之内都不可 能有人破译出明文。1994年4月，Internet上的一个工作组使用了<code>1600</code>多台计算机仅仅工作了<code>8个月</code>便获得了该奖项[LEUT94]。该挑战使用的<strong>公钥长度（n的大小）为129比特的十进制数字或者大约428比特的二进制数字。</strong>这样的结果并没有使RSA失效；它只是意味着必须使用更大长度的密钥。<strong>目前1024比特（大约300比特的十进制数）的密钥对于几乎所有的应用都可以认为强度己经足够了。</strong> <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>每翻译出来一句明文，他们就提供100美元的奖励。他们预计在大约4X10<sup>16</sup>年之内都不可 能有人破译出明文。1994年4月，Internet上的一个工作组使用了<code>1600</code>多台计算机仅仅工作了<code>8个月</code>便获得了该奖项[LEUT94]。该挑战使用的<strong>公钥长度（n的大小）为129比特的十进制数字或者大约428比特的二进制数字。</strong>这样的结果并没有使RSA失效；它只是意味着必须使用更大长度的密钥。<strong>目前1024比特（大约300比特的十进制数）的密钥对于几乎所有的应用都可以认为强度己经足够了。</strong> <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <h2 id="0x06-密钥分发">0x06. 密钥分发</h2>
 
-<p><strong>RSA公钥如何公开？RSA私钥如何分发？</strong> <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p><strong>RSA公钥如何公开？RSA私钥如何分发？</strong> <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p><strong>RSA公钥公开方法：</strong></p>
 

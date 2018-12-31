@@ -120,7 +120,7 @@
     },
     "headline": Simply Understanding Compare-And-Swap,
     "name": Simply Understanding Compare-And-Swap,
-    "wordCount": 204,
+    "wordCount": 201,
     "timeRequired": "PT1M",
     "inLanguage": {
       "@type": "Language",
@@ -295,12 +295,12 @@
 <h2 id="0x00-toc">0x00. TOC</h2>
 
 <ul>
-<li><a style="color:#0366d6;" href="#0x01-简介">0x01.简介</a></li>
-<li><a style="color:#0366d6;" href="#0x02-应用">0x02.应用</a></li>
-<li><a style="color:#0366d6;" href="#0x03-aba问题">0x03.ABA问题</a></li>
-<li><a style="color:#0366d6;" href="#0x04-实现">0x04.实现</a></li>
-<li><a style="color:#0366d6;" href="#0x05-java中的cas">0x05.Java中的CAS</a></li>
-<li><a style="color:#0366d6;" href="#0x06-参考">0x06.参考</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x01-简介">0x01.简介</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x02-应用">0x02.应用</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x03-aba问题">0x03.ABA问题</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x04-实现">0x04.实现</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x05-java中的cas">0x05.Java中的CAS</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x06-参考">0x06.参考</a></li>
 </ul>
 
 <h2 id="0x01-简介">0x01. 简介</h2>
@@ -430,14 +430,14 @@ public final long getAndAddLong(Object var1, long var2, long var4) {
 }
 </code></pre>
 
-<p>我们可以发现，该类检查了当前引用与当前标志是否与预期相同，如果全部相等，才会以原子方式将该引用和该标志的值设为新的更新值，这样CAS操作中的比较就不依赖于变量的值了。</p>
+<p>可以发现，该类检查了当前引用与当前标志是否与预期相同，如果全部相等，才会以原子方式将该引用和该标志的值设为新的更新值，这样CAS操作中的比较就不依赖于变量的值了。</p>
 
 <h2 id="0x06-参考">0x06. 参考</h2>
 
 <ul>
-<li><a href="https://zhuanlan.zhihu.com/p/28049542">知乎 - 细谈CAS与ABA</a></li>
-<li><a href="https://zh.wikipedia.org/wiki/%E6%AF%94%E8%BE%83%E5%B9%B6%E4%BA%A4%E6%8D%A2">wikipedia - 比较并交换</a></li>
-<li><a href="https://www.cnblogs.com/Mainz/p/3546347.html">博客园 - 非阻塞同步算法与CAS无锁算法</a></li>
+<li>Wikipedia: <a style="color:blue;text-decoration:none" href="https://zh.wikipedia.org/wiki/%E6%AF%94%E8%BE%83%E5%B9%B6%E4%BA%A4%E6%8D%A2">比较并交换</a></li>
+<li>知乎: <a style="color:blue;text-decoration:none" href="https://zhuanlan.zhihu.com/p/28049542">细谈CAS与ABA</a></li>
+<li>博客园: <a style="color:blue;text-decoration:none" href="https://www.cnblogs.com/Mainz/p/3546347.html">非阻塞同步算法与CAS无锁算法</a></li>
 </ul>
 
     </section>

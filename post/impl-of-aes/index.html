@@ -299,49 +299,49 @@
 <h2 id="0x00-toc">0x00. TOC</h2>
 
 <ul>
-<li><a style="color:#0366d6;" href="#0x01-概述">0x01.概述</a></li>
-<li><a style="color:#0366d6;" href="#0x02-aes算法的数学基础">0x02.AES算法的数学基础</a>
+<li><a style="color:blue;text-decoration:none" href="#0x01-概述">0x01.概述</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x02-aes算法的数学基础">0x02.AES算法的数学基础</a>
 
 <ul>
-<li><a style="color:#0366d6;" href="#1-有限域">1.有限域</a></li>
-<li><a style="color:#0366d6;" href="#2-aes在有限域上的表示">2. AES在有限域上的表示</a></li>
-<li><a style="color:#0366d6;" href="#2-aes的字表示与运算">2. AES的字表示与运算</a></li>
-<li><a style="color:#0366d6;" href="#2-1-字表示">2.1. 字表示</a></li>
-<li><a style="color:#0366d6;" href="#2-2-字运算">2.2. 字运算</a></li>
+<li><a style="color:blue;text-decoration:none" href="#1-有限域">1.有限域</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-aes在有限域上的表示">2. AES在有限域上的表示</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-aes的字表示与运算">2. AES的字表示与运算</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-1-字表示">2.1. 字表示</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-2-字运算">2.2. 字运算</a></li>
 </ul></li>
-<li><a style="color:#0366d6;" href="#0x03-aes的加密过程">0x03.AES的加密过程</a>
+<li><a style="color:blue;text-decoration:none" href="#0x03-aes的加密过程">0x03.AES的加密过程</a>
 
 <ul>
-<li><a style="color:#0366d6;" href="#1-状态">1.状态</a></li>
-<li><a style="color:#0366d6;" href="#2-加密过程概述">2.加密过程概述</a></li>
-<li><a style="color:#0366d6;" href="#3-aes有限域上的加法">3.AES有限域上加加法</a></li>
-<li><a style="color:#0366d6;" href="#4-轮密钥的生成">4.轮密钥的生成</a>
+<li><a style="color:blue;text-decoration:none" href="#1-状态">1.状态</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-加密过程概述">2.加密过程概述</a></li>
+<li><a style="color:blue;text-decoration:none" href="#3-aes有限域上的加法">3.AES有限域上加加法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#4-轮密钥的生成">4.轮密钥的生成</a>
 
 <ul>
-<li><a style="color:#0366d6;" href="#4-1-密钥扩展">4.1.密钥扩展</a></li>
-<li><a style="color:#0366d6;" href="#4-2-轮密钥的选择">4.2.轮密钥的选择</a></li>
-<li><a style="color:#0366d6;" href="#4-3-代码实现">4.3.代码实现</a></li>
+<li><a style="color:blue;text-decoration:none" href="#4-1-密钥扩展">4.1.密钥扩展</a></li>
+<li><a style="color:blue;text-decoration:none" href="#4-2-轮密钥的选择">4.2.轮密钥的选择</a></li>
+<li><a style="color:blue;text-decoration:none" href="#4-3-代码实现">4.3.代码实现</a></li>
 </ul></li>
-<li><a style="color:#0366d6;" href="#5-aes基本变换">5.AES基本变换</a>
+<li><a style="color:blue;text-decoration:none" href="#5-aes基本变换">5.AES基本变换</a>
 
 <ul>
-<li><a style="color:#0366d6;" href="#5-1-s盒变换">5.1.S盒变换</a></li>
-<li><a style="color:#0366d6;" href="#5-2-行移位变换">5.2.行移位变换</a></li>
-<li><a style="color:#0366d6;" href="#5-3-列混合变换">5.3.列混合变换</a></li>
+<li><a style="color:blue;text-decoration:none" href="#5-1-s盒变换">5.1.S盒变换</a></li>
+<li><a style="color:blue;text-decoration:none" href="#5-2-行移位变换">5.2.行移位变换</a></li>
+<li><a style="color:blue;text-decoration:none" href="#5-3-列混合变换">5.3.列混合变换</a></li>
 </ul></li>
-<li><a style="color:#0366d6;" href="#6-对外加密接口">6.对外加密接口</a></li>
-<li><a style="color:#0366d6;" href="#7-核心加密逻辑">7.核心加密逻辑 </a></li>
+<li><a style="color:blue;text-decoration:none" href="#6-对外加密接口">6.对外加密接口</a></li>
+<li><a style="color:blue;text-decoration:none" href="#7-核心加密逻辑">7.核心加密逻辑 </a></li>
 </ul></li>
-<li><a style="color:#0366d6;" href="#0x05-解密过程">0x04.解密过程</a>
+<li><a style="color:blue;text-decoration:none" href="#0x05-解密过程">0x04.解密过程</a>
 
 <ul>
-<li><a style="color:#0366d6;" href="#1-aes基本逆变换">1.AES基本逆变换</a></li>
-<li><a style="color:#0366d6;" href="#2-对外解密接口">2.对外解密接口</a></li>
-<li><a style="color:#0366d6;" href="#3-核心解密逻辑">3.核心解密逻辑</a></li>
+<li><a style="color:blue;text-decoration:none" href="#1-aes基本逆变换">1.AES基本逆变换</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-对外解密接口">2.对外解密接口</a></li>
+<li><a style="color:blue;text-decoration:none" href="#3-核心解密逻辑">3.核心解密逻辑</a></li>
 </ul></li>
-<li><a style="color:#0366d6;" href="#0x05-测试">0x05.测试</a></li>
-<li><a style="color:#0366d6;" href="#0x06-说明">0x06.说明</a></li>
-<li><a style="color:#0366d6;" href="#0x07-参考">0x07.参考</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x05-测试">0x05.测试</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x06-说明">0x06.说明</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x07-参考">0x07.参考</a></li>
 </ul>
 
 <h2 id="0x01-概述">0x01. 概述</h2>
@@ -350,15 +350,15 @@
 
 <p>Rijndael算法之所以最终能够被选为AES的原因是其安全、性能好、效率高、实用灵活。</p>
 
-<p>Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <h2 id="0x02-aes算法的数学基础">0x02. AES算法的数学基础</h2>
 
-<p>Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <h3 id="1-有限域">1. 有限域</h3>
 
-<p>AES的基础域是有限域 GF(2<sup>8</sup>)  <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>AES的基础域是有限域 GF(2<sup>8</sup>)  <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>一个字节的全体256种取值构成一个GF(2<sup>8</sup>)</li>
@@ -369,7 +369,7 @@
 
 <h3 id="2-aes在有限域上的表示">2. AES在有限域上的表示</h3>
 
-<p>有限域GF(2<sup>8</sup>sup&gt;)上的元素有多种表示方法，为了方便，Rijndaels算法采用多项式表示法，下面是与还表示方法相关的几个定义 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>有限域GF(2<sup>8</sup>sup&gt;)上的元素有多种表示方法，为了方便，Rijndaels算法采用多项式表示法，下面是与还表示方法相关的几个定义 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p><strong>定义1</strong> : 一个由比特位b<sub>7</sub>b<sub>6</sub>b<sub>5</sub>b<sub>4</sub>b<sub>3</sub>b<sub>2</sub>b<sub>1</sub>b<sub>0</sub> 组成的字节可表示成系数为(0, 1)的二进制多项式：b<sub>7</sub>X<sup>7</sup> + b<sub>6</sub>X<sup>6</sup> + b<sub>5</sub>X<sup>5</sup> + b<sub>4</sub>X<sup>4</sup> + b<sub>3</sub>X<sup>3</sup> + b<sub>2</sub>X<sup>2</sup> + b<sub>1</sub>X + b<sub>0</sub></p>
 
@@ -399,7 +399,7 @@
 
 <h4 id="3-1-字表示">3.1. 字表示</h4>
 
-<p>AES数据处理的单位是字节和字，一个字由四个字节组成，表示为系数取自GF(2<sup>8</sup>)上的次数低于4次的多项式    <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>AES数据处理的单位是字节和字，一个字由四个字节组成，表示为系数取自GF(2<sup>8</sup>)上的次数低于4次的多项式    <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p>例: 字<code>57 83 4A D1</code>等价于 $$57x^3+83x^2+4Ax+D1$$</p>
 
@@ -431,7 +431,7 @@
 
 <h3 id="1-状态">1. 状态</h3>
 
-<p>在AES中除了字节和字外，还有一种被称为状态的数据处理方式，它用来存储加解密过程中的中间数据，一般用以字节为元素的矩阵或二维数组表示。<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>在AES中除了字节和字外，还有一种被称为状态的数据处理方式，它用来存储加解密过程中的中间数据，一般用以字节为元素的矩阵或二维数组表示。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p>如果用Nb代表明密文所含的字数。 Nk代表密钥所含的字数。 Nr代表迭代轮数，则当Nb和Nk都等于4时的状态与密钥数组分别如下面的（图 3-1）和（图 3-2）  所示</p>
 
@@ -443,7 +443,7 @@
 
 <h3 id="2-加密过程概述">2. 加密过程概述</h3>
 
-<p>AES加密算法的主要步骤有<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>AES加密算法的主要步骤有<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>轮密钥生成</li>
@@ -490,7 +490,7 @@ private short[][] xor(short[][] first, short[][] second) {
 
 <h3 id="4-轮密钥生成-generateroundkeys">4.  轮密钥生成 （GenerateRoundKeys）</h3>
 
-<p>轮密钥根据密钥产生算法通过主密钥得到。密钥产生分两步进行： 密钥扩展和轮密钥选择，且郡守以下规则<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>轮密钥根据密钥产生算法通过主密钥得到。密钥产生分两步进行： 密钥扩展和轮密钥选择，且郡守以下规则<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>轮密钥的比特总数为明文数据块长度与轮数加1的积。例如，对于128位的分组长度和10轮迭代，轮密钥长度为128 x (10 + 1) = 1408位，即11个状态长</li>
@@ -500,7 +500,7 @@ private short[][] xor(short[][] first, short[][] second) {
 
 <h4 id="4-1-密钥扩展">4.1. 密钥扩展</h4>
 
-<p>用一个字元素的一维数组<code>W[Nb*(Nr+1)]</code>表示扩展密钥。把密钥放在该数组最开始的Nk个字中，其它的字由它前面的字经过处理后得到。分Nk≤6 和Nk&gt;6两种密钥扩展算法：    <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>用一个字元素的一维数组<code>W[Nb*(Nr+1)]</code>表示扩展密钥。把密钥放在该数组最开始的Nk个字中，其它的字由它前面的字经过处理后得到。分Nk≤6 和Nk&gt;6两种密钥扩展算法：    <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p><strong>① Nk≤6的密钥扩展</strong></p>
 
@@ -526,7 +526,7 @@ private short[][] xor(short[][] first, short[][] second) {
 
 <h4 id="4-2-轮密钥的选择">4.2. 轮密钥的选择</h4>
 
-<p>根据分组的大小，依次从扩展密钥中取出轮密钥。 前面的Nb个字作为轮密钥0，接下来的Nb个字作为轮密钥1，以此类推                             <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>根据分组的大小，依次从扩展密钥中取出轮密钥。 前面的Nb个字作为轮密钥0，接下来的Nb个字作为轮密钥1，以此类推                             <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p>​                                   <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/keySelection1.png" alt="img" /></p>
 
@@ -559,7 +559,7 @@ private short[][] generateRoundKeys(short[][] originalKey) {
 
 <h4 id="5-1-s盒变换">5.1. S盒变换</h4>
 
-<p>一种作用在状态中每一个字节上的非线性变换，对比于DES <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>一种作用在状态中每一个字节上的非线性变换，对比于DES <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <ul>
 <li>因为AES-126明文数据块为16个字节，所以AES使用16个相同的S盒(其实是可重复16次使用同一个)；DES使用8个不相同的S盒。</li>
@@ -587,7 +587,7 @@ private short[][] generateRoundKeys(short[][] originalKey) {
 
 <p><strong>代码实现</strong></p>
 
-<p>通过建表查表代替运算，同时将该操作拆分为<code>substituteState</code>、<code>substituteWord</code>和<code>substituteByte</code>三个子操作<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>通过建表查表代替运算，同时将该操作拆分为<code>substituteState</code>、<code>substituteWord</code>和<code>substituteByte</code>三个子操作<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p>​         <img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/subbytes1.png" alt="img" /></p>
 
@@ -860,7 +860,7 @@ private short[][] coreEncrypt(short[][] initialPTState,
 
 <h2 id="0x04-解密过程">0x04. 解密过程</h2>
 
-<p>说到加密先纵观整个AES的加解密流程，由于Rijndael算法不是对合运算，所以其解密算法与加密算法不同，根据解密算法应当是加密算法的逆，最直接的做法就是把加密算法倒序执行，便得到解密算法，但是这样不便于工程实现。<sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>说到加密先纵观整个AES的加解密流程，由于Rijndael算法不是对合运算，所以其解密算法与加密算法不同，根据解密算法应当是加密算法的逆，最直接的做法就是把加密算法倒序执行，便得到解密算法，但是这样不便于工程实现。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/aes/big.png" alt="img" /></p>
 
@@ -1184,7 +1184,7 @@ plaintext                     passwordTextCase
 
 <h3 id="1-源码">1. 源码</h3>
 
-<p>本AES实现的代码已经发布到<a href="https://github.com/jordonyang/cipher4j">Github</a>，如果你觉得写得还不错，欢迎star和fork; 如果对代码有疑惑，欢迎通过邮箱<code>linfengit@qq.com</code>与我讨论 <sup><a style="color:#0366d6;" href="#0x00-toc">TOC</a></sup></p>
+<p>本AES实现的代码已经发布到<a href="https://github.com/jordonyang/cipher4j">Github</a>，如果你觉得写得还不错，欢迎star和fork; 如果对代码有疑惑，欢迎通过邮箱<code>linfengit@qq.com</code>与我讨论 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
 
 <h3 id="2-todo">2. TODO</h3>
 
@@ -1197,8 +1197,8 @@ plaintext                     passwordTextCase
 <h2 id="0x07-参考">0x07. 参考</h2>
 
 <ul>
-<li><a style="color:#0366d6;" href="https://www.baidu.com/link?url=QhLf4SboJVjBsfe1JGiOB6nzvzmo0xZ0QU_Mxoft1fB6bJK_H8o2ffPXMY4-cv-W&wd=&eqid=bea9a25000020bc8000000065bc6115b">FIPS 197 &ndash; Advanced Encryption Standard</a></li>
-<li><a style="color:#0366d6;" href="http://www.formaestudio.com/rijndaelinspector/">动画演示AES运行过程</a></li>
+<li><a style="color:blue;text-decoration:none" href="https://www.baidu.com/link?url=QhLf4SboJVjBsfe1JGiOB6nzvzmo0xZ0QU_Mxoft1fB6bJK_H8o2ffPXMY4-cv-W&wd=&eqid=bea9a25000020bc8000000065bc6115b">FIPS 197 &ndash; Advanced Encryption Standard</a></li>
+<li><a style="color:blue;text-decoration:none" href="http://www.formaestudio.com/rijndaelinspector/">动画演示AES运行过程</a></li>
 <li>《密码学引论》（第三版，张焕国、唐明编著，武汉大学出版社）</li>
 </ul>
 

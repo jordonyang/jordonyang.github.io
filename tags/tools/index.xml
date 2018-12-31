@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tools on 临风博客</title>
+    <link>https://jordonyang.github.io/tags/tools/</link>
+    <description>Recent content in Tools on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Sun, 01 Oct 2017 11:22:17 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/tags/tools/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Awesome Terminator for Ubuntu</title>
+      <link>https://jordonyang.github.io/post/linux/tools/terminator/</link>
+      <pubDate>Sun, 01 Oct 2017 11:22:17 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/linux/tools/terminator/</guid>
+      <description>前言：Terminator是CrunchBang的默认终端，该终端基于GNOME terminal。Terminator最大的特点就是可以在一个屏幕下同时显示多个终端，可以自由的在一个窗口中分割区域建立新终端，通过鼠标拉伸调整每个终端的大小，对同时需要操作多个终端的用户非常方便。 同时操作多个VPS的时候不用切换终端窗口，在一个窗口中就可以非常方便地完成。这里做个简单的记录，免得下次换机器的时候又得找配置。
+0x00. 下载与卸载 sudo add-apt-repository ppa:gnome-terminator sudo apt-get update sudo apt-get install terminator # 卸载 sudo apt-get remove terminator  0x01. 设置为默认终端  安装dconfig-editor  sudo apt-get install dconf-tools  安装成功后，就可以在终端中通过命令 dconf-editor来打开这个工具，然后从左边的的菜单栏中按照下面的步骤依次进入指定的菜单项： org &amp;gt; gnome &amp;gt; desktop &amp;gt; applications &amp;gt; terminal 此时，我们可以看到使用 Terminator 作为默认终端工具的配置为：
+exec terminator exec-arg -e  如果想使用 gnome-terminal 为默认终端工具的话，就将上面的配置更改为：
+exec gnome-terminal exec-arg -x  保存退出之后，就可以使用快捷键Ctrl + Alt + T启动terminator了。
+0x02. 美化 terminator的默认样式比较丑，不符合我这种追求cool stuff的人的审美，那怎么折腾呢？通过文件配置或者界面选择（说到底也是使用配置文件，但配置起来比较直观）就行了。
+需要自己在~/.config下创建terminator/config文件，或者在terminator界面右键进入Preferences的Layout标签选择Add，将自动创建该文件。然后使用下面的命令编辑该文件；</description>
+    </item>
+    
+  </channel>
+</rss>
