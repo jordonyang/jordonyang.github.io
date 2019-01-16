@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Principle and Implementation of RSA Algorithm"/>
+<meta name="twitter:description" content="RSA公钥密码算法原理及实现"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Principle and Implementation of RSA Algorithm &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="RSA公钥密码算法原理及实现" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-11-10T14:23:26&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    <meta property="article:tag" content="security" />
+    
+    
+
+    <title>Principle and Implementation of RSA Algorithm &middot; 临风博客</title>
+
+    
+    <meta name="description" content="RSA公钥密码算法原理及实现" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Principle and Implementation of RSA Algorithm,
+    "name": Principle and Implementation of RSA Algorithm,
+    "wordCount": 1659,
+    "timeRequired": "PT8M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/,
+    "datePublished": 2018-11-10T14:23Z,
+    "dateModified": 2018-11-10T14:23Z,
+    
+    "keywords": Java, security,
+    "description": RSA公钥密码算法原理及实现,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Principle and Implementation of RSA Algorithm</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Principle and Implementation of RSA Algorithm</h1>
+        <em style="color: blue">RSA公钥密码算法原理及实现</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-11-10T14:23:26&#43;08:00">
+            2018/Nov/10
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h2 id="0x00-toc">0x00. TOC</h2>
+
+<ul>
+<li><a style="color:blue;text-decoration:none" href="#0x01-简介">0x01.简介</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x02-应用">0x02.应用</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x03-原理">0x03.原理</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x04-实现">0x04.实现</a>
+
+<ul>
+<li><a style="color:blue;text-decoration:none" href="#1-素数的选择与判断">1.素数的选择与判断</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-实现模逆算法">2.实现模逆算法</a>
+
+<ul>
+<li><a style="color:blue;text-decoration:none" href="#2-1-欧几里得算法">2.1.欧几里得算法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-2-扩展欧几里得算法">2.2.扩展欧几里得算法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#2-3-求解同余方程算法">2.3.求解同余方程算法</a></li>
+</ul></li>
+<li><a style="color:blue;text-decoration:none" href="#3-实现快速模指运算">3.实现快速模指运算</a></li>
+<li><a style="color:blue;text-decoration:none" href="#4-编程实现rsa算法">4.编程实现RSA算法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#5-利用rsa进行数据加解密">5.利用RSA进行数据加解密 </a></li>
+<li><a style="color:blue;text-decoration:none" href="#6-实现对大数据进行加密">6.实现对大数据进行加密 </a></li>
+<li><a style="color:blue;text-decoration:none" href="#7-实现简单的gui界面 ">7.实现简单的GUI界面</a></li>
+<li><a style="color:blue;text-decoration:none" href="#8-分析总结">8.分析总结</a></li>
+</ul></li>
+<li><a style="color:blue;text-decoration:none" href="#0x05-攻击方法">0x05.攻击方法</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x06-密钥分发">0x06.密钥分发</a></li>
+<li><a style="color:blue;text-decoration:none" href="#0x07-参考">0x07.参考</a></li>
+</ul>
+
+<h2 id="0x01-简介">0x01. 简介</h2>
+
+<p>最初的公钥方案是在1977年由Ron <code>R</code>ivest、Adi <code>S</code>hamir和Len <code>A</code>dleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<h2 id="0x02-应用">0x02. 应用</h2>
+
+<p>用于在开放的网络环境（如Internet）上保护电子通信，而不依赖于隐藏或隐蔽的通道，甚至用于密钥交换。开放的网络环境容易受到各种通信安全问题的影响，比如中间人攻击和欺骗。通信安全通常包括要求通信不得在运输途中可读（保存保密），通信在运输途中不能修改（保证沟通完整性），沟通必须来自一个确定原（发送方真实性），和收件人必须不能否定或拒绝接收的通信。将非对称加密与Enveloped Public Key Encryption（EPKE）方法相结合，允许在开放的网络环境中安全发送通信。换句话说，即使密码分析者听了包括密钥交换在内的整个对话也无法解释对话。</p>
+
+<p>公钥密码术中使用的区别技术是使用非对称密钥算法，其中一方用于执行加密的密钥与另一方用于解密的密钥不同。每个用户都有一对加密密钥——一个公共加密密钥和一个私有解密密钥。例如，用于数字签名的密钥对（包括一个私有签名密钥和一个公共验证密钥）。公钥可以广泛分发，而私钥只有其所有者知道。它们在数学上是相关的，但是选择参数是为了从公钥计算私钥是不可行的。</p>
+
+<p>相反，对称密钥算法使用的是一个秘密密钥，它必须由发送方（用于加密)和接收方）用于解密)共享并保持私有。要使用对称加密方案，发送方和接收方必须事先安全地共享密钥。</p>
+
+<p>由于对称密钥算法几乎总是比非对称密钥算法计算量小得多，所以通常使用密钥交换算法交换密钥，然后使用该密钥和对称密钥算法传输数据。PGP和SSL/TLS方案家族使用这个过程，因此称为混合加密系统。综上非对称算法适用于 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<ul>
+<li>密钥交换</li>
+<li>数字签名</li>
+<li>与对称加密算法混合使用（PGP, SSL, TLS）</li>
+</ul>
+
+<h2 id="0x03-原理">0x03. 原理</h2>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/RSA/public_key_cryptography.jpg" alt="rsa" /></p>
+
+<p>对于某一明文块M和密文块C，加密和解密有如下的形式：
+$$C = M^e \ mod \ n$$
+$$M = C^d \ mod \ n = (M^e)^d \ mod\ n = M^{ed} mod \ n$$</p>
+
+<p>发送方和接收方都必须知道n和e的值，并且只有接收者知道d的值。RSA公钥密码算法的<code>公钥KU=&lt;e, n&gt;</code>， <code>私钥KR=&lt;d, n&gt;</code>。为使该算法能够用于公钥加密，它必须满足下列要求：</p>
+
+<ul>
+<li>可以找到e、d、n的值，使得对所有的M<n, M<sup>ed</sup>mod n = M成立。</li>
+<li>对所有满足M &lt; n的值，计算M<sup>e</sup>和C<sup>d</sup>相对容易。</li>
+<li>给定e和n不可能推出d</li>
+</ul>
+
+<p>前两个要求很容易得到满足。当e和n取很大的值时，第三个要求也能够得到满足。下面的图1总结了RSA算法。</p>
+
+<ul>
+<li>开始时选择两个素数p和q，计算它们的积n作为加密和解密时的模。</li>
+<li>接着需要计算n的欧拉函数值φ(n)。φ(n)表示小于n且与n互素的正整数的个数。</li>
+<li>然后选择与φ(n)互素的整数e (即e和φ(n)的最大公约数为1)。</li>
+<li>最后，计算e关于模φ(n)的乘法逆元d。d和e具有所期望的属性。</li>
+</ul>
+
+<p>假设用户A已经公布了他的公钥，且用户B希望给A发送消息M。那么B计算C = M<sup>e</sup>(mod n)并且发送C。当接收到密文时，用户A通过计算M = C<sup>d</sup> (mod n)解密密文。
+<img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/RSA/rsa1.png" alt="img" /></p>
+
+<p>上面的图2显示了[SING99]中的一个例子。对于这个例子，按下列步骤生成密钥:</p>
+
+<ul>
+<li>选择两个素数：p=17 和 q=11。</li>
+<li>计算n = pq = 17x11 = 187。</li>
+<li>计算φ(n) = (p-l)(q-l) = 16xl0 = 160。</li>
+<li>选择e，使得 e与φ(n) =160互素且小于φ(n)：选择 e=7</li>
+<li>计算d，使得 de mod 160 = 1 且 d&lt;160。 正确的值是 d=23 。这是因为 23x7 = 161 = 10x16 + 1。</li>
+</ul>
+
+<p>这样就得到公钥PU = <7, 187>，私钥 PR = <23, 187>。下面的例子说明输入明文M= 88时密钥的使用情况。</p>
+
+<p>对于加密，需要计算C = 88<sup>7</sup>modl 87。利用模运算的性质，计算如下： <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<p>$$88^7 mod \ 187= [(88^4 \ mod \ 187) \ x \ (88^2 \ mod \ 187) \ x\ (88^1 \ modi \ 87)] \ mod \ 187$$</p>
+
+<p>$$88^1\ mod \ 187 = 88$$</p>
+
+<p>$$88^2 \ mod \ 187 = 7744 \ mod \ 187 = 77$$</p>
+
+<p>$$88^4 \ mod \ 187 = 59969536 \ mod \ 187 = 132$$
+$$88^7 \ mod \ 187 = (88 \ x \ 77\ x\ 132) \ modl \ 87 = 894432 \ mod \ 187=11$$
+对于解密，计算M = 11<sup>23</sup> mod 187:
+$$11^{23} \ mod \ 187 = [(11^1 \ mod \ 187) \ x \ (11^2 \ mod \ 187) \  x \ (11^4 \ mod \ 187) \ x \ (11^8 \ mod \ 187) \ x \ (11^8 \ mod \ 187)] \ mod \ 187$$
+$$11^1 \ modl\ 87 = 11$$
+$$11^2 \ mod \ 187 = 121$$
+$$11^4 \ mod \ 187 = 14 641 \ mod \ 187 = 55 $$
+$$l11^8 \ mod \ 187 = 214 358 881 \ mod \ 187 = 33 $$
+$$11^{23} \ mod \ 187 = (11 \ x \ 121 \ x \ 55 \ x\ 33 \ x\ 33)\ mod\ 187 = 79 720 245\  mod\ 187 = 88$$</p>
+
+<h2 id="0x04-实现">0x04. 实现</h2>
+
+<p>显然，需要实现RSA算法，需要解决下面的数学问题： <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<ul>
+<li>如何产生素数？怎么进行素数测试？</li>
+<li>怎么进行模幂运算，怎么实现快速模幂？</li>
+<li>如何用欧几里得算法求最大公因子？</li>
+<li>怎么用中国剩余定理（扩展欧几里得算法）求解ax = b (mod m) ？</li>
+<li>怎么构造一次同余方程，求乘法逆元？</li>
+</ul>
+
+<h3 id="1-素数的选择与判断">1. 素数的选择与判断</h3>
+
+<p>详细过程可以参考我的另外一篇文章 <a style="color:blue;text-decoration:none" href="http://geekeye.cc/post/security/crypto/unsymmetry/prime">如何产生大素数？怎么进行素数测试？</a></p>
+
+<pre><code class="language-java">/**
+ * 随机生成一个可能是素数的数
+ * @param range 随机数产生范围
+ * @return 一个可能是素数的数
+ */
+public static long probablePrime(int range, int rounds) {
+    if (range &gt; 0 &amp;&amp; rounds &gt; 0) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        while (true) {
+            int num = random.nextInt(range) + 2;
+            // 进行rounds轮素性测试
+            if (PrimalityTester.isProbablePrime(num, rounds))
+                return num;
+        }
+    }
+    return  -1;
+}
+</code></pre>
+
+<h3 id="2-实现模逆算法">2. 实现模逆算法</h3>
+
+<h4 id="2-1-欧几里得算法">2.1. 欧几里得算法</h4>
+
+<p>利用辗转相除法求最大公约数 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<pre><code class="language-java">public static long gcd(long m, long n) {
+    while(true){
+        if ((m = m % n) == 0)
+            return n;
+        if ((n = n % m) == 0)
+            return m;
+    }
+}
+</code></pre>
+
+<h4 id="2-2-扩展欧几里得算法">2.2. 扩展欧几里得算法</h4>
+
+<p>使用实现非递归的扩展欧几里得算法求解<code>ax + by = gcd(a,b)</code> <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<pre><code class="language-java">private static long extendedEuclid(long a, long b) {
+    long x = 0, y = 1, lastX = 1, lastY = 0, temp;
+
+    if (a &lt; b) {
+        temp = a;
+        a = b;
+        b = temp;
+    }
+
+    while (b != 0) {
+        long q = a / b, r = a % b;
+        a = b;
+        b = r;
+
+        temp = x;
+        x = lastX - q * x;
+        lastX = temp;
+
+        temp = y;
+        y = lastY - q * y;
+        lastY = temp;
+    }
+    return lastY;
+}
+</code></pre>
+
+<h4 id="2-3-求解同余方程算法">2.3. 求解同余方程算法</h4>
+
+<p>通过求解线性同余方程<code>ax ≡ b(mod m)</code>求解乘法逆元  <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<pre><code class="language-java">public static long linearCongruence(long a, long b, long m) {
+    if(b % gcd(a, m) != 0)
+        return - 1;
+    /*
+      通过扩展欧几里得算法求得x的逆元x'
+      x = kx', b = k(a, m)
+      所以要求地 x = (b / gcd(a, m)) * x'
+     */
+    long result = (b / gcd(a, m)) * extendedEuclid(a, m);
+    if(result &lt; 0)
+        result += m;
+    return result;
+}
+</code></pre>
+
+<h3 id="3-实现快速模指运算">3. 实现快速模指运算</h3>
+
+<p>实现了模指运算的递归及非递归算法，因为是理论性实验，将实验数据控制在不会发生溢出的范围内，所以可以选用非递归的做法。<code>modExpNonRec()</code>实现了快速的运算算法，即反复平方乘算法。 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<pre><code class="language-java">public static int exp(int x, int b, int n) {
+    if (b == 1) {
+        return x % n;
+    }
+    if ((b &amp; 1) 
+L
+/** Function to calculate (a ^ b) % c **/
+public static long modExpNonRec(long a, long b, long c) {
+    long res = 1;
+    for (int i = 0; i &lt; b; i++) {
+        res *= a;
+        res %= c;
+    }
+    return res % c;
+}
+</code></pre>
+
+<h3 id="4-编程实现rsa算法">4. 编程实现RSA算法</h3>
+
+<p>基于上述的基础函数，可以写出RSA加解密算法，并进行封装。在加密时，因为当数值val超过<code>2 &lt;&lt; 16</code>时，将val转换为char类型会发生溢出问题，所以将模逆结果值分割成两个字符表示，在解密时再进行还原。 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<pre><code class="language-java">package org.jordon.security.core.crypto.assymmetry;
+
+import org.jordon.security.util.MathUtil;
+
+import java.util.Base64;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+/**
+ * 原生RSA加解密算法实现
+ * @author Jrodon
+ * @since 2018/10
+ */
+public class RawRSACipherService {
+    // 密钥属性组
+    private long n, d, e;
+    // 素数的选择范围
+    private static final int RANGE = 2 &lt;&lt; 10;
+    // 加密完得到的
+    private static final int SPLIT_POINT = 2 &lt;&lt; 8;
+    // 素性测试轮数
+    private static final int PRIMALITY_TESTING_ROUNDS = 4;
+    // Base64编码工具
+    private static final Base64.Encoder encoder = Base64.getEncoder();
+    private static final Base64.Decoder decoder = Base64.getDecoder();
+
+    public RawRSACipherService() {
+        Random random = ThreadLocalRandom.current();
+        // 随机选择两个大素数
+        long p = MathUtil.probablePrime(RANGE, PRIMALITY_TESTING_ROUNDS), q;
+        do {
+            q = MathUtil.probablePrime(RANGE, PRIMALITY_TESTING_ROUNDS);
+        } while (p == q);
+
+        this.n = p * q;
+        long eulerVal = (p - 1) * (q - 1);
+
+        // 随机地取一个正整数e，1&lt;e&lt;φ(n)且(e,φ(n))=1，将e公开
+        do {
+            e = Math.abs(random.nextLong()) % eulerVal + 1;
+        }while (MathUtil.gcd(e, eulerVal) != 1);
+
+        // 根据ed = 1 (mod φ(n))，求出d，并对d保密
+        d = (MathUtil.linearCongruence(e, 1, eulerVal)) % eulerVal;
+    }
+
+    /**
+     * 加密函数，当数值val超过2 &lt;&lt; 16时，将val转换为char类型会发生溢出问题
+     *         所以将模逆结果值分割成两个字符表示,在解密时再进行还原
+     * @param plaintext 明文
+     * @return 密文
+     */
+    public String encrypt(String plaintext) {
+        int[] plaintextBytes = changeToInts(plaintext.toCharArray());
+        StringBuilder builder = new StringBuilder();
+        for (int plaintextByte : plaintextBytes) {
+            int modExpResult = (int) MathUtil.modExpNonRec(plaintextByte, e, n);
+            builder.append((char) (modExpResult / SPLIT_POINT)).
+                    append((char) (modExpResult % SPLIT_POINT));
+        }
+        return encoder.encodeToString(builder.toString().getBytes());
+    }
+
+    /**
+     * 解密函数
+     * @param cipher 密文
+     * @return 明文
+     */
+    public String decrypt(String cipher) {
+        // 获取解码后的字符串的字符数组
+        char[] cipherChars = new String(decoder.decode(cipher)).toCharArray();
+
+        // 将相邻两个字符合并，用一个整型数表示，得到原加密结果数组
+        int[] cipherInts = new int[cipherChars.length / 2];
+        for(int i = 0; i &lt; cipherInts.length; i++)
+            cipherInts[i] = (int)cipherChars[i * 2] * SPLIT_POINT
+                                    + (int)cipherChars[i * 2 + 1];
+        // 解密
+        int[] plaintextInts = new int[cipherInts.length];
+        for(int i = 0; i &lt; cipherInts.length; i++)
+            plaintextInts[i] = (int)MathUtil.modExpNonRec(cipherInts[i], d, n);
+
+        StringBuilder plainText = new StringBuilder();
+        for (int plaintextInt : plaintextInts)
+            plainText.append((char) plaintextInt);
+        return plainText.toString();
+    }
+
+    /**
+     * 考虑到Java的字符编码问题和扩展性，将字符数组转化为int数组
+     * 而不用字节表示
+     * @param chars 字符数组
+     * @return int数组
+     */
+    private int[] changeToInts(char[] chars) {
+        if (chars != null &amp;&amp; chars.length &gt; 0) {
+            int[] result = new int[chars.length];
+            for (int i = 0; i &lt; chars.length; i++) {
+                result[i] = chars[i];
+            }
+            return result;
+        }
+        return null;
+    }
+}
+</code></pre>
+
+<h3 id="5-利用rsa进行数据加解密">5. 利用RSA进行数据加解密</h3>
+
+<p>使用JUnit编写测试代码，为了便于查看，随机生成可打印的明文样例的进行n轮测试。为了便于查看，将素数选择范围调到100，明文长度调到20个以内。 <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<pre><code class="language-java">package org.jordon.security.core.crypto.assymmetry;
+
+import org.jordon.security.util.ArrayUtil;
+import org.junit.Test;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+public class RawRSACipherServiceTest {
+    private Random random = ThreadLocalRandom.current();
+
+    @Test
+    public void test() {
+        RawRSACipherService service = new RawRSACipherService();
+        for (int i = 0; i &lt; 30; i++) { // 进行30次测试
+            String example = genPlaintext();
+            ArrayUtil.printInfo(&quot;example&quot;, example, false);
+            String cipher = service.encrypt(example);
+            ArrayUtil.printInfo(&quot;cipher&quot;, cipher, false);
+            String plaintext = service.decrypt(cipher);
+            ArrayUtil.printInfo(&quot;plaintext&quot;, plaintext, true);
+        }
+    }
+
+    // 随机生成明文样例
+    private String genPlaintext() {
+        // 随机生成含有[1, 50]个可打印字符的字符串
+        int count = random.nextInt(20) + 1;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i &lt; count; i++) {
+            // 在可打印字符范围内随机获取
+            int val = random.nextInt(126 -33) + 33;
+            builder.append((char) val);
+        }
+        return builder.toString();
+    }
+}
+</code></pre>
+
+<p>测试结果</p>
+
+<pre><code>example                       PQ?j+fMFCVcql`Q!W&quot;Ca                                                  
+cipher                        AMKeAC8ASQDCjAArAMKIAE0AJABDAMKJAFgAfQDCtQAoAC8AIQBXACIAQwAF          
+plaintext                     PQ?j+fMFCVcql`Q!W&quot;Ca                                                  
+
+example                       qX(zN0&quot;X                                                              
+cipher                        AH0AYwBgAMKFAMKxAAMAIgBj                                              
+plaintext                     qX(zN0&quot;X                                                              
+
+example                       \QWD6XO*=k?D6                                                         
+cipher                        AMKSAC8AVwARAEEAYwAGAF0AGAAdAEkAEQBB                                  
+plaintext                     \QWD6XO*=k?D6                                                         
+
+example                       abXluHtY}37j5                                                         
+cipher                        AAUAYgBjAMK1AMKXAHsAwpwAWQBxAFUANwDCjABo                              
+plaintext                     abXluHtY}37j5                                                         
+
+example                       J                                                                     
+cipher                        AD4=                                                                  
+plaintext                     J                                                                     
+
+example                       qc.JHo                                                                
+cipher                        AH0AWAAnAD4AewBv                                                      
+plaintext                     qc.JHo                                                                
+
+example                       ,xzOTP?MR'CaOTZ[                                                      
+cipher                        AMKPAHgAwoUABgB2AMKeAEkATQAUAC4AQwAFAAYAdgDCtgDCkw==                  
+plaintext                     ,xzOTP?MR'CaOTZ[                                                      
+
+example                       ued{Gp*                                                               
+cipher                        AMKXADIAZABIAB8AwqAAXQ==                                              
+plaintext                     ued{Gp*                                                               
+
+example                       *!uO]T                                                                
+cipher                        AF0AIQDClwAGACoAdg==                                                  
+plaintext                     *!uO]T                                                                
+
+example                       /f0X={;8tIs&quot;Rg                                                        
+cipher                        AFEAwogAAwBjABgASAAZAAwAwpwAPwBAACIAFABF                              
+plaintext                     /f0X={;8tIs&quot;Rg                                                        
+
+example                       IF2;kp#1c}0!lU}Vc                                                     
+cipher                        AD8AJABlABkAHQDCoADCqwDCuQBYAHEAAwAhAMK1ADMAcQDCiQBY                  
+plaintext                     IF2;kp#1c}0!lU}Vc                                                     
+
+example                       [J.q1|&amp;dMX}:E|E?@X                                                    
+cipher                        AMKTAD4AJwB9AMK5AHIAwq4AZABNAGMAcQDCtABnAHIAZwBJAHMAYw==              
+plaintext                     [J.q1|&amp;dMX}:E|E?@X                                                    
+
+example                       $;{5G                                                                 
+cipher                        AEYAGQBIAGgAHw==                                                      
+plaintext                     $;{5G                                                                 
+
+example                       W                                                                     
+cipher                        AFc=                                                                  
+plaintext                     W                                                                     
+
+example                       mKr:FrJ(_X[ydct                                                       
+cipher                        AAoAGwB8AMK0ACQAfAA+AGAAKQBjAMKTAHkAZABYAMKc                          
+plaintext                     mKr:FrJ(_X[ydct                                                       
+
+example                       %y(mu                                                                 
+cipher                        AA4AeQBgAAoAwpc=                                                      
+plaintext                     %y(mu                                                                 
+
+example                       6L*tFu                                                                
+cipher                        AEEATABdAMKcACQAwpc=                                                  
+plaintext                     6L*tFu                                                                
+
+example                       k;k$?2G7&quot;F                                                            
+cipher                        AB0AGQAdAEYASQBlAB8ANwAiACQ=                                          
+plaintext                     k;k$?2G7&quot;F                                                            
+
+example                       wpT+An0{iK                                                            
+cipher                        AMKqAMKgAHYAKwA2AG4AAwBIAMKnABs=                                      
+plaintext                     wpT+An0{iK                                                            
+
+example                       7t[KD.e3#|:$0                                                         
+cipher                        ADcAwpwAwpMAGwARACcAMgBVAMKrAHIAwrQARgAD                              
+plaintext                     7t[KD.e3#|:$0                                                         
+
+example                       ,L                                                                    
+cipher                        AMKPAEw=                                                              
+plaintext                     ,L                                                                    
+
+example                       (ESI8G                                                                
+cipher                        AGAAZwDChgA/AAwAHw==                                                  
+plaintext                     (ESI8G                                                                
+
+example                       &gt;})                                                                   
+cipher                        AEoAcQBf                                                              
+plaintext                     &gt;})                                                                   
+
+example                       gh9Oj_km%m*T9(x(Qxqf                                                  
+cipher                        AEUANQAcAAYAwowAKQAdAAoADgAKAF0AdgAcAGAAeABgAC8AeAB9AMKI              
+plaintext                     gh9Oj_km%m*T9(x(Qxqf                                                  
+
+example                       *+                                                                    
+cipher                        AF0AKw==                                                              
+plaintext                     *+                                                                    
+
+example                       AW9l;32wc&amp;`TU),Pa$Z                                                   
+cipher                        ADYAVwAcAMK1ABkAVQBlAMKqAFgAwq4AKAB2ADMAXwDCjwDCngAFAEYAwrY=          
+plaintext                     AW9l;32wc&amp;`TU),Pa$Z                                                   
+
+example                       {O5                                                                   
+cipher                        AEgABgBo                                                              
+plaintext                     {O5                                                                   
+
+example                       y6}|+45ni\f&gt;h^mla:Y                                                   
+cipher                        AHkAQQBxAHIAKwASAGgAbgDCpwDCkgDCiABKADUAwpEACgDCtQAFAMK0AFk=          
+plaintext                     y6}|+45ni\f&gt;h^mla:Y                                                   
+
+example                       wJH#*lDw[iZ]KG-2                                                      
+cipher                        AMKqAD4AewDCqwBdAMK1ABEAwqoAwpMAwqcAwrYAKgAbAB8AFwBl                  
+plaintext                     wJH#*lDw[iZ]KG-2                                                      
+
+example                       sGp/                                                                  
+cipher                        AEAAHwDCoABR                                                          
+plaintext                     sGp/                                                                 
+</code></pre>
+
+<h3 id="6-实现对大数据进行加密">6. 实现对大数据进行加密</h3>
+
+<p>为了实现对大数据进行加密，可以将上述过程中的数据类型从long改成BigInteger，因为<code>BigInteger</code>中提供一系列专门用于RSA设计的方法</p>
+
+<ul>
+<li>大素数产生： BigInteger.probablePrime （内置两重素性检验）</li>
+<li>模幂运算：modPow()</li>
+<li>模逆云散：modInverse()</li>
+</ul>
+
+<p>所以很容易就能写出相应的RSA算法：<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<pre><code class="language-java">package org.jordon.security.core.crypto.assymmetry;
+
+import lombok.Getter;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+@Getter
+public class RSACipherService {
+    private final static BigInteger one      = new BigInteger(&quot;1&quot;);
+    private final static SecureRandom random = new SecureRandom();
+
+    private BigInteger privateKey;
+    private BigInteger publicKey;
+    private BigInteger modulus;
+
+    // generate an N-bit (roughly) public and private key
+    public RSACipherService(int N) {
+        // 随机选取选取素数p，q
+        BigInteger p = BigInteger.probablePrime(N / 2, random);
+        BigInteger q = BigInteger.probablePrime(N / 2, random);
+        // 计算欧拉函数值
+        BigInteger phi = (p.subtract(one)).multiply(q.subtract(one));
+
+        modulus    = p.multiply(q);
+        // 在实际应用中公钥通常为2^16 + 1
+        publicKey  = new BigInteger(&quot;65537&quot;);
+        // 模逆运算
+        privateKey = publicKey.modInverse(phi);
+    }
+	// 加密
+    public BigInteger encrypt(BigInteger message) {
+        return message.modPow(publicKey, modulus);
+    }
+	// 解密
+    public BigInteger decrypt(BigInteger encrypted) {
+        return encrypted.modPow(privateKey, modulus);
+    }
+
+    public String toString() {
+        String s = &quot;&quot;;
+        s += &quot;public  = &quot; + publicKey  + &quot;\n&quot;;
+        s += &quot;private = &quot; + privateKey + &quot;\n&quot;;
+        s += &quot;modulus = &quot; + modulus;
+        return s;
+    }
+}
+</code></pre>
+
+<p>添加单元测试</p>
+
+<pre><code class="language-java">package org.jordon.security.core.crypto.assymmetry;
+
+import org.junit.Test;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+public class RSACipherServiceTest {
+    private RSACipherService service = new RSACipherService(2 &lt;&lt; 10);
+    private final static SecureRandom random = new SecureRandom();
+
+    @Test
+    public void test() {
+        int N = 1024;
+        RSACipherService key = new RSACipherService(N);
+        System.out.println(key);
+        // create random message, encrypt and decrypt
+        BigInteger message = new BigInteger(N - 1, random);
+        BigInteger encrypt = key.encrypt(message);
+        BigInteger decrypt = key.decrypt(encrypt);
+        System.out.println(&quot;message   = &quot; + message);
+        System.out.println(&quot;encrypted = &quot; + encrypt);
+        System.out.println(&quot;decrypted = &quot; + decrypt);
+    }
+}
+</code></pre>
+
+<p>测试结果</p>
+
+<pre><code>public  = 65537
+private = 78525902072320391608737916884640910364505357174525590710167120993759405509547140594627878863225003441361395545158796231923361941968429447718551660867382833237960574251865474859924434185132857131903215178186236747385107077061523018585463899345444036005905759639826169641884190715470009961170662302049779058113
+modulus = 111123511057904247384303352454411628574852901907645613196843638982726078745879922118460167927517210453802508633681810948599960519752655050853574023973606618611715320478128088434295076817222464874390543837050033282496413714543565095232472865740444355218882825770580971590396819382161816782243359703760806220343
+message   = 64817416795314078589627041975736817397997584028795185521897274181295008592767171589585106415811184609379911184733318659651706555695848036601359747359521829105599014520845612387012461222627857364612289243289267763784602632108473742072081572298228631598483984218130386362800051626492833278994468945333676583030
+encrypted = 67902482420062658281496748456690089583528632570276215918392904236166977373756787220355016586353876542515948791235556706391024025337777674873358863284240161449718904162441130678507273673627624342258514489584294519298979557329482563284543751683385911800817642057923152429340572932972532657573862337149437977501
+decrypted = 64817416795314078589627041975736817397997584028795185521897274181295008592767171589585106415811184609379911184733318659651706555695848036601359747359521829105599014520845612387012461222627857364612289243289267763784602632108473742072081572298228631598483984218130386362800051626492833278994468945333676583030
+</code></pre>
+
+<h3 id="7-实现简单的gui界面">7. 实现简单的GUI界面</h3>
+
+<p>实现了普通RSA加解密界面<code>RSAView</code>和对大数据进行加解密的界面<code>RSABigIntegerView</code>, 代码很长不贴了，可见Github工程<code>cipher4j</code> <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup>
+<img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/RSA/rsa-gui.png" alt="img" /></p>
+
+<h3 id="8-分析总结">8. 分析总结</h3>
+
+<ul>
+<li>RSA算法是基于大合数难分解的数学事实实现的，只要n选的足够大，密码是很难被攻破的。</li>
+<li>在确定<p, q, d, e>密码参数情况下，解密时使用不同的d，不能还原明文。</li>
+<li>在大素数产生环节，需要确定较可靠的素性检验算法，并进行足够多轮的测试验证。</li>
+<li>随机数产生环节应考虑使用较安全的随机数生成算法，如对种子进行哈希等。</li>
+<li>模幂运算是RSA的核心运算，在设计RSA实现时应该考虑使用更加高效的模幂算法，以提高RSA加解密的速度。</li>
+</ul>
+
+<h2 id="0x05-攻击方法">0x05. 攻击方法</h2>
+
+<p>有两种可能的方法可以用来攻击RSA算法。第一种方法是蛮力攻击：试遍所有可能的私钥。所以e和d的比特数越大，算法越安全。然而，因为密钥的生成和加密/解密所需的运算都比较复杂，所以密钥越大，系统运行得越慢。</p>
+
+<p>关于分析破译RSA的大部分讨论都集中于如何分解n为两个素数。由于大数n具有很大的素因子，因式分解问题非常困难，但是它已经不如以前那么困难了。发生在1977年的著名事件恰好反映了这种情况。RSA的三名创始人挑战“Scientific American”的读者，让读者去破译他们发表在Martin Gardner的“Mathematical Games”专栏中的密文[GARD77J。</p>
+
+<p>每翻译出来一句明文，他们就提供100美元的奖励。他们预计在大约4X10<sup>16</sup>年之内都不可 能有人破译出明文。1994年4月，Internet上的一个工作组使用了<code>1600</code>多台计算机仅仅工作了<code>8个月</code>便获得了该奖项[LEUT94]。该挑战使用的<strong>公钥长度（n的大小）为129比特的十进制数字或者大约428比特的二进制数字。</strong>这样的结果并没有使RSA失效；它只是意味着必须使用更大长度的密钥。<strong>目前1024比特（大约300比特的十进制数）的密钥对于几乎所有的应用都可以认为强度己经足够了。</strong> <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<h2 id="0x06-密钥分发">0x06. 密钥分发</h2>
+
+<p><strong>RSA公钥如何公开？RSA私钥如何分发？</strong> <sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<p><strong>RSA公钥公开方法：</strong></p>
+
+<p>在RSA中，任何参与者都可以给其他参与者发送他的或她的公钥，或向群体广播自己的公钥。虽然这种方法非常方便，但是它也有个很大的缺点。任何人都可以伪造公共通告。即某用户可以伪装用户A向其他参与者发送公钥或者广播公钥。直到一段时间后用户A发觉了伪造并且警告其他参与者，伪装者在此之前都可以读到试图发送给A的加密消息，并且使用假的公钥进行认证。</p>
+
+<p>解决这种问题的方法是<code>使用公钥证书</code>。 实际上，公钥证书由公钥加上公钥所有者的用户ID以及可信的第三方签名的整个数据块组成。通常，第三 方就是用户团体所信任的认证中心（CA), 如政府机构或金融机构。用户可通过安全渠道把他或她的公钥提交给这个CA，获取证书。然后用户就可以发布这个证书。任何需要该用户公钥的人都可以获取这个证书，并且通过所附的可信签名验证其有效性。</p>
+
+<p>人们广泛接受的公钥证书格式是X.509标准。X.509证书应用于大多数的网络安全设施，包括IP安全、安全套接字层（SSL)、安全电子交易（SET）和S/MIME。</p>
+
+<p><strong>RSA私钥分发方法：</strong></p>
+
+<p><code>使用Diffie-Hellman密钥交换</code>。然而，这种方案也有它的缺点。最简单形式的Diffie-Hellman不能为两个通信者提供认证。</p>
+
+<p>一种很好的替代方法就是<code>使用公钥证书</code>。例如当Bob想要与Alice通信时，他按下面的步骤操作：</p>
+
+<ul>
+<li>准备消息</li>
+<li>利用一次性传统会话密钥，使用传统加密方法加密消息</li>
+<li>利用Alice的公钥，使用公钥加密的方法加密会话密钥</li>
+<li>把加密的会话密钥附在消息上，并且把它发送给Alice</li>
+</ul>
+
+<p>只有Alice能够解密会话密钥进而恢复原始消息。如果Bob通过Alice的公钥证书获得Alice的公钥，则Bob能够确认它是有效的密钥。</p>
+
+<h2 id="0x07-参考">0x07. 参考</h2>
+
+<ul>
+<li>《网络安全基础 - 应用与标准》（William Stallings著，第五版，清华大学出版社）</li>
+<li>《密码学引论》（第三版，张焕国、唐明编著，武汉大学出版社）</li>
+<li>《信息安全数学基础》（第二版，翡定一、徐祥、童军武著，人民邮电出版社、中国工信出版集团出版）</li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/security/ssl/base/"><h4>SSL - Architecture and Basic Protocols</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/security/crypto/symmetry/rc4/"><h4>Understand Stream Cipher and Implement RC4</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

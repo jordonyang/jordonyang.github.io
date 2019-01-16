@@ -14,10 +14,10 @@
     
     <item>
       <title>Big Prime Number Generation And Primality Testing</title>
-      <link>https://jordonyang.github.io/post/security/crypto/unsymmetry/prime/</link>
+      <link>https://jordonyang.github.io/post/security/crypto/asymmetry/prime/</link>
       <pubDate>Mon, 05 Nov 2018 21:06:29 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/security/crypto/unsymmetry/prime/</guid>
+      <guid>https://jordonyang.github.io/post/security/crypto/asymmetry/prime/</guid>
       <description>前言: RSA算法基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。那么也就是说要使用RSA算法，前提是必须有两个大素数才行，那么大素数是怎么生成的呢？考虑到RSA算法的高效性和安全性，怎样快速生成一个大素数呢？
 0x01. 素性测试 (Primality Testing) 素数又称质数，是在大于1的整数中，只能被1和其自身整除的数（如2、3、5等）。素性测试是检验一个给定的整数是否为素数的测试。
 1. 试除法 ( Trial Division ) 如果要判定n是否是素数，写一个循环从2到sqrt(n)判断其能否整除n，若都不能则n为素数。这个方法我们一般称之为试除法。

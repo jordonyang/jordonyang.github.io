@@ -7,17 +7,30 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Sat, 10 Nov 2018 14:23:26 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 11 Jan 2019 21:28:33 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>JVM - Class Loading Process</title>
+      <link>https://jordonyang.github.io/post/java/vm/class_loading/</link>
+      <pubDate>Fri, 11 Jan 2019 21:28:33 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/vm/class_loading/</guid>
+      <description>0x00. TOC  0x01.概述 0x02.类的生命周期 0x03.加载时机 0x04.加载过程  1.加载 2.连接  2.1.验证 2.2.准备 2.3.解析  3.初始化  0x05.载加载器  1.双亲委派模型 2.Tomcat类加载器  0x06.参考  0x01. 概述 类加载：虚拟机把描述类的数据从字节码文件加载待内存中，并对数据进行校验、转换解析和初始化，最终形成可被虚拟机直接使用的 Java 类型的过程。
+0x02. 类的生命周期 其中类加载的过程包括了加载、验证、准备、解析、初始化五个阶段。在这五个阶段中，加载、验证、准备和初始化这四个阶段发生的顺序是确定的，而解析阶段则不一定，它在某些情况下可以在初始化阶段之后开始，这是为了支持 Java 语言的运行时绑定（也成为动态绑定或晚期绑定）。另外注意这里的几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常都是互相交叉地混合进行的，通常在一个阶段执行的过程中调用或激活另一个阶段。
+0x03. 加载时机 JVMS 规定有且只有下面5种发生主动引用的场景才会触发类的初始化，这意味着在此之前的加载、验证和准备也会随之发生：TOC
+ 遇到new、getstatic、putstatic或invokestatic这 4 条字节码指令时，如果类没有进行过初始化，则需要先触发其初始化。生成这 4 条指令的最常见的 Java 代码场景是：  使用 new 关键字实例化对象 读取或设置一个类的静态字段（static 修饰，已在编译期把结果放人常量池的静态字段除外〉 调用一个类的静态方法  使用·java.lang.reflect包的方法对类进行反射调用的时候，如果类没有进行过初始化，则需要先触发其初始化。 当初始化一个类时，发现其父类未初始化，则需先初始化其父类。 虚拟机启动时先初始化用户指定的执行主类（main 方法所在类） 当使用 JDK 1.7 的动态语言支持时，若一个java.lang.invoke.MethodHandle实例最后解析为REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，且该方法对应的类未初始化，则先触发其初始化。  除了以上五种虚拟机限定的触发类初始化的场景外，其他的引用类的场景都不会触发类初始化，如：
+ 尝试通过子类来引用父类中定义的静态变量，只会触发父类的初始化而不会触发子类的初始化。 数组对象的初始化由 JVM 实现，不会触发数组元素类的初始化，而且会做越界检查，防止缓冲区溢出。 每个类都有属于自己的运行时常量池，当类A尝试访问类B中的常量C时，javac会将常量C复制一份到类A的字节码文件中，到运行时再装入运行时常量池，所以访问某个类的常量时不会触发其初始化。  0x04 加载过程 1.</description>
+    </item>
+    
+    <item>
       <title>Principle and Implementation of RSA Algorithm</title>
-      <link>https://jordonyang.github.io/post/security/crypto/unsymmetry/rsa/</link>
+      <link>https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/</link>
       <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/security/crypto/unsymmetry/rsa/</guid>
+      <guid>https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/</guid>
       <description>0x00. TOC  0x01.简介 0x02.应用 0x03.原理 0x04.实现  1.素数的选择与判断 2.实现模逆算法  2.1.欧几里得算法 2.2.扩展欧几里得算法 2.3.求解同余方程算法  3.实现快速模指运算 4.编程实现RSA算法 5.利用RSA进行数据加解密  6.实现对大数据进行加密  7.实现简单的GUI界面 8.分析总结  0x05.攻击方法 0x06.密钥分发 0x07.参考  0x01. 简介 最初的公钥方案是在1977年由Ron Rivest、Adi Shamir和Len Adleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。TOC
 0x02. 应用 用于在开放的网络环境（如Internet）上保护电子通信，而不依赖于隐藏或隐蔽的通道，甚至用于密钥交换。开放的网络环境容易受到各种通信安全问题的影响，比如中间人攻击和欺骗。通信安全通常包括要求通信不得在运输途中可读（保存保密），通信在运输途中不能修改（保证沟通完整性），沟通必须来自一个确定原（发送方真实性），和收件人必须不能否定或拒绝接收的通信。将非对称加密与Enveloped Public Key Encryption（EPKE）方法相结合，允许在开放的网络环境中安全发送通信。换句话说，即使密码分析者听了包括密钥交换在内的整个对话也无法解释对话。
 公钥密码术中使用的区别技术是使用非对称密钥算法，其中一方用于执行加密的密钥与另一方用于解密的密钥不同。每个用户都有一对加密密钥——一个公共加密密钥和一个私有解密密钥。例如，用于数字签名的密钥对（包括一个私有签名密钥和一个公共验证密钥）。公钥可以广泛分发，而私钥只有其所有者知道。它们在数学上是相关的，但是选择参数是为了从公钥计算私钥是不可行的。
@@ -46,10 +59,10 @@
     
     <item>
       <title>Implementation of AES Algorithm</title>
-      <link>https://jordonyang.github.io/post/impl-of-aes/</link>
+      <link>https://jordonyang.github.io/post/security/crypto/symmetry/aes/</link>
       <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/impl-of-aes/</guid>
+      <guid>https://jordonyang.github.io/post/security/crypto/symmetry/aes/</guid>
       <description>0x00. TOC  0x01.概述 0x02.AES算法的数学基础  1.有限域 2. AES在有限域上的表示 2. AES的字表示与运算 2.1. 字表示 2.2. 字运算  0x03.AES的加密过程  1.状态 2.加密过程概述 3.AES有限域上加加法 4.轮密钥的生成  4.1.密钥扩展 4.2.轮密钥的选择 4.3.代码实现  5.AES基本变换  5.1.S盒变换 5.2.行移位变换 5.3.列混合变换  6.对外加密接口 7.核心加密逻辑   0x04.解密过程  1.AES基本逆变换 2.对外解密接口 3.核心解密逻辑  0x05.测试 0x06.说明 0x07.参考  0x01. 概述 美国政府在1997年9月12日公开征集更高效更安全的替代DES加密算法，第一轮共有15种算法入选，其中5种算法入围了决赛，分别是MARS，RC6，Rijndael，Serpent和Twofish。又经过3年的验证、评测及公众讨论之后Rijndael算法最终入选。
 Rijndael算法之所以最终能够被选为AES的原因是其安全、性能好、效率高、实用灵活。
 Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。TOC
@@ -61,10 +74,10 @@ Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的
     
     <item>
       <title>Implementation of DES Algorithm</title>
-      <link>https://jordonyang.github.io/post/impl-of-des/</link>
+      <link>https://jordonyang.github.io/post/security/crypto/symmetry/des/</link>
       <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/impl-of-des/</guid>
+      <guid>https://jordonyang.github.io/post/security/crypto/symmetry/des/</guid>
       <description>0x00. DES概述 数据加密标准（Data Encryption Standard），一种使用密钥加密的块算法，1977年被美国联邦政府的国家标准局确定为联邦资料处理标准（FIPS），并授权在非密级政府通信中使用，随后该算法在国际上广泛流传开来。需要注意的是，在某些文献中，作为算法的DES称为数据加密算法（Data Encryption Algorithm,DEA），已与作为标准的DES区分开来。
 1. 几个重要的历史时间  1973年美国国家标准局（NBS）向社会公开征集加 密算法，以制定加密算法标准； 1974年第二次征集； 1975年选中IBM的算法，并公布征求意见； 1977年1月15日正式颁布； 1998年底以后停用； 1999年颁布3DES为新标准。  2. 标准加密算法的目标  用于加密保护政府机构和商业部门的非机密的敏感 数据。 用于加密保护静态存储和传输信道中的数据。 安全使用10 ~ 15年。
   3.密码的整体特点  分组密码，明文、密文和密钥的分组长度都是64位。 面向二进制的密码算法，因而能够加解密任何形式的计算机数据。 对合运算:
@@ -75,21 +88,34 @@ Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的
     </item>
     
     <item>
+      <title>Touch and Parse Java Class File</title>
+      <link>https://jordonyang.github.io/post/java/vm/bytecode_base/</link>
+      <pubDate>Mon, 01 Oct 2018 11:31:12 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/vm/bytecode_base/</guid>
+      <description>0x00. TOC  0x01.概述 0x02.字节码文件结构  1.魔数 2.版本号 3.常量池 4.访问标志 5.类索引、父类索引与结构索引集合 6.字段表集合 7.方法表集合 8.属性表集合  8.1 Code 8.2 Exception 8.3 LineNumberTable 8.4 LocalVariableTable 8.5 LocalVariableTypeTable 8.6 SourceFile 8.7 ConstantValue    0x03.解析 0x04.参考  0x01. 概述 为了实现在不同的操作系统和硬件体系结构下的平台无关性和语言无关性，Java 语言设计者定义了一套程序存储结构的格式规范，即把源程序编译成具有一定格式的字节码文件，各个平台上的虚拟机再按照相应的规范把该字节码文件解析成其平台下的运行代码。
+​ 这样不仅实现了一处编写，到处运行(Write Once, Run Anywhere)的平台无关性，还为在 Java 虚拟机上运行非 Java 语言代码提供了可能。时至今日，已经发展出有很多其他能够在 Java 虚拟机上运行的语言，如Clojure、Groovy、JRuby、Jython、Scala等。
+​ 0x02. 字节码文件结构 Class 文件是一组以8位字节为单位的二进制流，各个数据项严格按照顺序无间隙地紧凑排列在 Class 文件中。当遇到需要占用8位字节以上的空间的数据项时，则会将其按照大端(Big-Endian)方式分割成若干个8位字节进行存储（大端方式指数据的最高位字节存储在地址的最低位，最低位字节存储在地址的最高位）。
+根据 JVM 规范，Class 文件格式采用包含无符号数和表的类结构体存储数据，无符号数以u1、u2、u4、u8分别代表1、2、4、8个字节的无符号数，用来描述数字、索引引用、UTF-8字符串值等；表是由多个无符号数或其他表作为数据项构成的符合数据类型，用于描述有层次关系的符合结构的数据，一般以_info结尾。另外，除了表和无符号数外，当需要表示一个长度不定的数据时，往往需要前置一个容量计数器。Class 文件格式具体如下图所示：
+1. 魔数 如 gif 和 jpeg 等文件的存储标准一样，为了标识和验证其文件的身份，每个 Class 文件使用前四个字节作为魔数(Magic Number)，用于确定该文件是否为一个能被虚拟机接受的文件，其值固定为oxCAFEBABE。</description>
+    </item>
+    
+    <item>
       <title>Arithmetic Expression Generator</title>
-      <link>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</link>
+      <link>https://jordonyang.github.io/post/projects/java/expression_generator/</link>
       <pubDate>Tue, 18 Sep 2018 20:25:43 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/arithmetic-expression-generator-based-on-binary-tree-structure/</guid>
+      <guid>https://jordonyang.github.io/post/projects/java/expression_generator/</guid>
       <description>前言 : 学校软件工程课程作业， 需求大概是根据参数随机产生n道算术表达式，将表达式及结果写到文件中，将用户提交的答案文件与正确答案进行比对，输出比对结果。
 一. PSP2.1表格    PSP2.1 Personal Software Process Stages 预估耗时（分钟） 实际耗时（分钟）     Planning 计划 20 25   · Estimate · 估计这个任务需要多少时间 20 25   Development 开发 1280 1740   · Analysis · 需求分析 (包括学习新技术) 40 55   · Design Spec · 生成设计文档 40 41   · Design Review · 设计复审 (和同事审核设计文档) 30 20   · Coding Standard · 代码规范 (为目前的开发制定合适的规范) 30 31   · Design · 具体设计 40 66   · Coding · 具体编码 1000 1422   · Code Review · 代码复审 40 41   · Test · 测试（自我测试，修改代码，提交修改） 60 64   Reporting 报告 70 103   · Test Report · 测试报告 20 24   · Size Measurement · 计算工作量 20 21   · Postmortem &amp;amp; Process Improvement Plan · 事后总结, 并提出过程改进计划 30 58   合计  1370 1868    二.</description>
     </item>
     
     <item>
       <title>Code File Analyser and Counter</title>
-      <link>https://jordonyang.github.io/post/code-file-analyser-and-counter-based-on-chain-of-responsibility-disgn-pattern/</link>
+      <link>https://jordonyang.github.io/post/projects/java/word_counter/</link>
       <pubDate>Fri, 14 Sep 2018 12:23:56 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/code-file-analyser-and-counter-based-on-chain-of-responsibility-disgn-pattern/</guid>
+      <guid>https://jordonyang.github.io/post/projects/java/word_counter/</guid>
       <description>Github仓库地址
 前言 ： 该项目是学校软件工程课程的一个小作业，要求大概是分析统计代码文件中的一些数据（如行数、词数、注释行数、代码行数、字符数等），下面简单介绍下我的完成情况。
 一. PSP2.1表格    PSP2.1 Personal Software Process Stages 预估耗时（分钟） 实际耗时（分钟）     Planning 计划 20 35   · Estimate · 估计这个任务需要多少时间 20 35   Development 开发 460 842   · Analysis · 需求分析 (包括学习新技术) 100 221   · Design Spec · 生成设计文档 30 41   · Design Review · 设计复审 (和同事审核设计文档) 20 38   · Coding Standard · 代码规范 (为目前的开发制定合适的规范) 30 39   · Design · 具体设计 30 54   · Coding · 具体编码 200 367   · Code Review · 代码复审 20 38   · Test · 测试（自我测试，修改代码，提交修改） 30 44   Reporting 报告 130 43   · Test Report · 测试报告 60 128   · Size Measurement · 计算工作量 40 51   · Postmortem &amp;amp; Process Improvement Plan · 事后总结, 并提出过程改进计划 30 46   合计  610 920    二.</description>
@@ -97,20 +123,20 @@ Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的
     
     <item>
       <title>Touch Source of HashMap (1)</title>
-      <link>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</link>
+      <link>https://jordonyang.github.io/post/java/collections/map/hashmap_source0/</link>
       <pubDate>Mon, 27 Aug 2018 12:01:48 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/digging-in-sourse-of-hashmap-jdk1.7/</guid>
+      <guid>https://jordonyang.github.io/post/java/collections/map/hashmap_source0/</guid>
       <description>概述  横向维护一个Entry数组，用来存放最近一次添加的(key,value)形式的元素 每个数组元素纵向维护一个Entry链表，当发生哈希冲突时，将原先的Entry往后挪，即链地址法解决哈希冲突  方法签名 public class HashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt; implements Map&amp;lt;K,V&amp;gt;, Cloneable, Serializable  具有Map的基本方法，可克隆、可序列化（自定义的序列化规则）
 基本属性 // 默认容量为16 static final int DEFAULT_INITIAL_CAPACITY = 1 &amp;lt;&amp;lt; 4; // 最大容量 static final int MAXIMUM_CAPACITY = 1 &amp;lt;&amp;lt; 30; // 默认加载因子，值为0.75，扩容时用 static final float DEFAULT_LOAD_FACTOR = 0.75f; // 空的入口数组 static final Entry&amp;lt;?,?&amp;gt;[] EMPTY_TABLE = {}; /** * 入口数组，用来存储链表的头结点 * 一开始将它指向 EMPTY_TABLE，这样的意图直到在第一次添加元素时 * 才正式将table指向大小接近threshold的Entry对象 */ transient Entry&amp;lt;K,V&amp;gt;[] table = (Entry&amp;lt;K,V&amp;gt;[]) EMPTY_TABLE; // 当前表中的元素个数 transient int size; /** * 阈值，超过后扩容，值为capacity * load factor * 一开始table为 EMPTY_TABLE，即创建HashMap对象但未往其中添加元素， * 当第一次往其中添加元素时，表的大小会膨胀到这个值 */ int threshold; // 加载因子 final float loadFactor; // 结构性修改的次数，与fail-fast机制有关 transient int modCount;  构造方法 1.</description>
     </item>
     
     <item>
       <title>The Garbage Collection Mechanism of the JVM</title>
-      <link>https://jordonyang.github.io/post/garbage-collection-of-jvm/</link>
+      <link>https://jordonyang.github.io/post/java/vm/gc_base/</link>
       <pubDate>Sat, 04 Aug 2018 23:25:14 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/garbage-collection-of-jvm/</guid>
+      <guid>https://jordonyang.github.io/post/java/vm/gc_base/</guid>
       <description>一. 概念 什么是垃圾收集?
 垃圾收集（Garbage Collection，GC），指的是对Java堆和方法区的死对象进行回收。它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，现已十分成熟。
 二. 收集的范围 哪些内存需要回收
@@ -127,10 +153,10 @@ GC停顿：亦称Stop The World（STW），即在整个可达性分析期间，�
     
     <item>
       <title>Dive into LinkedList</title>
-      <link>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</link>
+      <link>https://jordonyang.github.io/post/java/collections/list/linkedlist_source/</link>
       <pubDate>Mon, 25 Jun 2018 16:44:03 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/digging-in-source-code-of-linkedlist/</guid>
+      <guid>https://jordonyang.github.io/post/java/collections/list/linkedlist_source/</guid>
       <description>一. 概述  LinkedList 是一个继承于AbstractSequentialList的双向链表。它也可以被当作堆栈、队列或双端队列进行操作。 LinkedList 实现 List 接口，能对它进行队列操作。 LinkedList 实现 Deque 接口，即能将LinkedList当作双端队列使用。 LinkedList 实现了Cloneable接口，即覆盖了函数clone()，能克隆。 LinkedList 实现java.io.Serializable接口，这意味着LinkedList支持序列化，能通过序列化去传输。 LinkedList 是非同步的。
  二. 基本属性 其中 size 为 LinkedList 的大小，first 和 last 分别为链表的头结点和尾结点。Node 为结点对象。
 // 表中已有元素个数 transient int size = 0; // 头结点指针 transient Node&amp;lt;E&amp;gt; first; // 尾结点指针 transient Node&amp;lt;E&amp;gt; last;  Node是LinkedList的一个静态内部类，采用典型的双链表结构，定义了存储的数据元素，前一个结点和后一个结点
@@ -139,10 +165,10 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     
     <item>
       <title>Dive into ArrayList</title>
-      <link>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</link>
+      <link>https://jordonyang.github.io/post/java/collections/list/arraylist_source/</link>
       <pubDate>Sat, 23 Jun 2018 22:40:02 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/digging-in-source-code-of-arraylist/</guid>
+      <guid>https://jordonyang.github.io/post/java/collections/list/arraylist_source/</guid>
       <description>一. 继承体系  1.基于数组实现，是一个动态数组，其容量能自动增长。
 2.ArrayList不是线程安全的，建议在单线程中使用，多线程可以选择Vector或CopyOnWriteArrayList。
 3.实现了RandomAccess接口，可以通过下标序号进行快速访问。
@@ -153,11 +179,11 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     
     <item>
       <title>Thread Run Method Execution Process</title>
-      <link>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</link>
+      <link>https://jordonyang.github.io/post/java/concurrency/base/run_exec/</link>
       <pubDate>Sun, 25 Mar 2018 21:46:51 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/thread-run-method-execution-process-tracking-and-thinking/</guid>
-      <description>前言 之前听到很多说法都是:“单纯地执行Thread子类的run方法并没有多线程的效果，正确的做法是，用Thread子类对象执行Thread的start方法，这样start方法会自动执行子类的run方法。” 我对这种神奇的说法将信将疑，心里总感觉不踏实，于是点进Thread的源码了解了一下。
+      <guid>https://jordonyang.github.io/post/java/concurrency/base/run_exec/</guid>
+      <description>前言 : 之前听到很多说法都是:“单纯地执行Thread子类的run方法并没有多线程的效果，正确的做法是，用Thread子类对象执行Thread的start方法，这样start方法会自动执行子类的run方法。” 我对这种神奇的说法将信将疑，心里总感觉不踏实，于是点进Thread的源码了解了一下。
 一. 入坑过程 然而，纵观 start 方法，并没有找到 run 这个词，那run方法又是在哪里被调用的呢？其中最有嫌疑的地方就是native方法start0。
 Thread 类有个 registerNatives 本地方法，该方法主要的作用就是注册一些本地方法供 Thread 类使用，如 start0()，stop0() 等等，可以说，所有操作本地线程的本地方法都是由它注册的。这个方法放在一个静态代码块中，当 Thread 类被加载到 JVM 中的时候，它就会被调用，进而注册相应的本地方法。 而本地方法 registerNatives 是定义在 openjdk\jdk\src\share\native\java\lang\Thread.c文件 中的。Thread.c 是个很小的文件，它定义了各个操作系统平台都要用到的关于线程的公用数据和操作，如下：
 可以容易的看出 Java 线程调用start-&amp;gt;start0的方法，实际上会调用到 JVM_StartThread 方法，而 JVM_StartThread 方法则是在openjdk\hotspot\src\share\vm\prims\jvm.cpp中定义的
@@ -171,10 +197,10 @@ JVM_ENTRY 作为一个宏，用来定义 JVM_StartThread 函数，可以看到�
     
     <item>
       <title>Decompilation for Foreach Syntax Sugar</title>
-      <link>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</link>
+      <link>https://jordonyang.github.io/post/java/syntax/sugar/foreach_decompilation/</link>
       <pubDate>Sun, 25 Feb 2018 22:03:56 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/understanding-the-foreach-syntax-sugar-by-decompilation/</guid>
+      <guid>https://jordonyang.github.io/post/java/syntax/sugar/foreach_decompilation/</guid>
       <description>前言 最近一直在看TiJ，在持有对象那章，Bruce Eckel说到Collection的内容可以用foreach遍历，原因是Java SE%引入了Iterable接口，该接口包含一个能够产生Iterator的iterator方法，并且Iterable接口被foreach用来在序列中移动。因此任何Iterable的实现类都可以用于foreach语句。那么我们在尝着这一语法糖的甜头时，JDK底层帮我们做了哪些事情呢？
 实验 环境：IntelliJ IDEA 2018.1、jdk1.7.0_80
 下面例子的Java代码中使用了两个foreach分别遍历数组和ArrayList：
@@ -184,14 +210,14 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     
     <item>
       <title>Construct Binary Heap with Java</title>
-      <link>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</link>
+      <link>https://jordonyang.github.io/post/algorithm/heap/heap_construction/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/constructing-binary-heap-with-java/</guid>
-      <description>前言 最近在看《算法导论》，从中感受到了算法世界的神奇，看完二叉堆后觉得实现起来应该不难，所以试着根据书中的伪代码用Java实现一遍。
-概念 基本定义 二叉堆是一个数组，可近似看成完全二叉树，表示堆的数组A通常包含两个属性：A.length（数组长度）和A.heap-size（堆的有效元素）
-private int[] heap; private int heapSize; public MyHeap(int[] array) { this.heap = array; this.heapSize = array.length; }  通过下标定位亲属节点 由于堆可看做完全二叉树，所以可以通过某节点的下标获取其左右子节点和父节点
-private int left(int i) { return 2 * i + 1; } private int right(int i) { return 2 * i + 2; } private int parent(int i) { return (i - 1) / 2; }  堆的一些性质  最大堆性质：A[PARENT[i] &amp;gt;= A[i]] 最小堆性质：A[PARENT[i] &amp;lt;= A[i]] 含有n个元素的堆的高为：小于等于lgn的最大整数 当用数组表示存储了n个元素的堆时，叶节点下标分别为 (n/2) + 1, (n / 2) + 2, &amp;hellip;, n（下标从１开始）  维持堆的性质 使下标为i的节点所构成的堆成为最大堆</description>
+      <guid>https://jordonyang.github.io/post/algorithm/heap/heap_construction/</guid>
+      <description>前言 : 最近在看《算法导论》，从中感受到了算法世界的神奇，看完二叉堆后觉得实现起来应该不难，所以试着根据书中的伪代码用Java实现一遍。
+0x00. 概念 1. 基本定义 二叉堆是一个数组，可近似看成完全二叉树，表示堆的数组A通常包含两个属性：A.length（数组长度）和A.heap-size（堆的有效元素）
+private int[] heap; private int heapSize; public MyHeap(int[] array) { this.heap = array; this.heapSize = array.length; }  2. 通过下标定位亲属节点 由于堆可看做完全二叉树，所以可以通过某节点的下标获取其左右子节点和父节点
+private int left(int i) { return 2 * i + 1; } private int right(int i) { return 2 * i + 2; } private int parent(int i) { return (i - 1) / 2; }  3. 堆的一些性质  最大堆性质：A[PARENT[i] &amp;gt;= A[i]] 最小堆性质：A[PARENT[i] &amp;lt;= A[i]] 含有n个元素的堆的高为：小于等于lgn的最大整数 当用数组表示存储了n个元素的堆时，叶节点下标分别为 (n/2) + 1, (n / 2) + 2, &amp;hellip;, n（下标从１开始）  0x01.</description>
     </item>
     
   </channel>

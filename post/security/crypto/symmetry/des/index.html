@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Implementation of DES Algorithm"/>
+<meta name="twitter:description" content="DES加密算法原理及实现"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Implementation of DES Algorithm &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/security/crypto/symmetry/des/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="DES加密算法原理及实现" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-10-09T22:06:42&#43;08:00" />
+
+    
+    <meta property="article:tag" content="security" />
+    
+    <meta property="article:tag" content="Java" />
+    
+    
+
+    <title>Implementation of DES Algorithm &middot; 临风博客</title>
+
+    
+    <meta name="description" content="DES加密算法原理及实现" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/security/crypto/symmetry/des/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Implementation of DES Algorithm,
+    "name": Implementation of DES Algorithm,
+    "wordCount": 897,
+    "timeRequired": "PT5M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/security/crypto/symmetry/des/,
+    "datePublished": 2018-10-09T22:06Z,
+    "dateModified": 2018-10-09T22:06Z,
+    
+    "keywords": security, Java,
+    "description": DES加密算法原理及实现,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/security/crypto/symmetry/des/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Implementation of DES Algorithm</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Implementation of DES Algorithm</h1>
+        <em style="color: blue">DES加密算法原理及实现</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-10-09T22:06:42&#43;08:00">
+            2018/Oct/9
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h2 id="0x00-des概述">0x00. DES概述</h2>
+
+<p>数据加密标准（Data Encryption Standard），一种使用密钥加密的块算法，1977年被美国联邦政府的国家标准局确定为联邦资料处理标准（FIPS），并授权在非密级政府通信中使用，随后该算法在国际上广泛流传开来。需要注意的是，在某些文献中，作为算法的DES称为数据加密算法（Data Encryption Algorithm,DEA），已与作为标准的DES区分开来。</p>
+
+<h3 id="1-几个重要的历史时间">1. 几个重要的历史时间</h3>
+
+<ul>
+<li>1973年美国国家标准局（NBS）向社会公开征集加 密算法，以制定加密算法标准；</li>
+<li>1974年第二次征集；</li>
+<li>1975年选中IBM的算法，并公布征求意见；</li>
+<li>1977年1月15日正式颁布；</li>
+<li>1998年底以后停用；</li>
+<li>1999年颁布3DES为新标准。</li>
+</ul>
+
+<h3 id="2-标准加密算法的目标">2. 标准加密算法的目标</h3>
+
+<ul>
+<li>用于加密保护政府机构和商业部门的非机密的敏感 数据。</li>
+<li>用于加密保护静态存储和传输信道中的数据。</li>
+<li>安全使用10 ~ 15年。<br /></li>
+</ul>
+
+<h3 id="3-密码的整体特点">3.密码的整体特点</h3>
+
+<ul>
+<li>分组密码，明文、密文和密钥的分组长度都是64位。</li>
+<li>面向二进制的密码算法，因而能够加解密任何形式的计算机数据。</li>
+<li>对合运算:<br />
+
+<ul>
+<li>f = f<sup>–1</sup></li>
+<li>加密和解密共用同一算法，使工程实现的工作量减半。<br /></li>
+</ul></li>
+<li>综合运用了置换、代替、代数等基本密码技术。</li>
+<li>基本结构属于Feistel结构。<br /></li>
+</ul>
+
+<h3 id="4-应用">4. 应用</h3>
+
+<ul>
+<li>在全世界范围得到广泛应用。</li>
+<li>许多国际组织采用为标准。</li>
+<li>产品形式：软件（嵌入式，应用软件） 硬件（芯片，插卡）</li>
+</ul>
+
+<h3 id="5-结论">5. 结论</h3>
+
+<ul>
+<li>用于其设计目标是安全的。</li>
+<li>设计精巧、实现容易、使用方便，堪称典范。</li>
+<li>为国际信息安全发挥了重要作用。<br /></li>
+</ul>
+
+<h2 id="0x01-加密过程">0x01. 加密过程</h2>
+
+<ul>
+<li>64位密钥经子密钥产生算法产生出16个子密钥： K<sub>1</sub>, K<sub>2</sub>, &hellip;, K<sub>16</sub> ， 分别供第一次, 第二次, &hellip;, 第十六次加密迭代使用。</li>
+<li>64位明文经初始置换IP， 将数据打乱重排并分成左右两半。左边32位构成L<sub>0</sub> ， 右边2位构成R<sub>0 </sub>。</li>
+<li>第一次加密迭代：由加密函数f实现子密钥k<sub>1</sub>对R<sub>0</sub>的加密，得到32位的f(R<sub>0</sub>, K<sub>1</sub>)，然后L<sub>0</sub>⊕f(R<sub>0</sub>, K<sub>1</sub>)，32位的结果作为第二次加密迭代的R<sub>1</sub>，以R<sub>0</sub>作为第二次加密迭代的L<sub>1</sub>。<br /></li>
+<li>第二次加密迭代至第十六次加密迭代分别用子密钥K<sub>2</sub> ,&hellip;, K<sub>16</sub>进行，其过程与第一次加密迭代相同。</li>
+<li>第十六次加密迭代结束后，产生一个64位的数据组，以其左边32位作为R<sub>16</sub>， 以其右边32位作为L<sub>16</sub> 。</li>
+<li>R<sub>16</sub>与L<sub>16</sub>合并，再经过逆初始置换IP， 将数据重新排列，便得到64位密文。<br /></li>
+</ul>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/desMain.png" alt="img" /></p>
+
+<h3 id="1-子密钥的产生">1. 子密钥的产生</h3>
+
+<p>64位密钥经过置换选择1、循环左移、置换选择2等变换，产生16个子密钥 K<sub>1</sub>，K<sub>2</sub>。… K<sub>16</sub>，分别供各次加密迭代使用。</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/subkeysgeneration.gif" alt="img" /></p>
+
+<h4 id="1-置换选择1-permuted-choice-1">( 1 ). 置换选择1  (Permuted Choice 1)</h4>
+
+<p>64位的密钥分为8字节，每个字节的第八位是奇偶校验位，前七位才是真正的密钥位。奇偶校验位用于密钥检错，确保其完整性；它不是随机的，可由前七位密钥位算得。因此，DES真正的密钥只有56位。</p>
+
+<p>置换选择1的作用：</p>
+
+<ul>
+<li>去掉密钥中的8个奇偶校验位。</li>
+<li>把其余的56位打乱重排，将前28位作为C<sub>0</sub>， 后28位作为D<sub>0</sub>。<br /></li>
+</ul>
+
+<p>置换规则：C<sub>0</sub>的各位依次为原密钥的第57, 49, &hellip;, 1, &hellip;, 44, 36位；D<sub>0</sub>的各位依次为原密钥的第63, 55, &hellip;, 7, &hellip;, 12, 4位。</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/replaceselect1.png" alt="img" /></p>
+
+<h4 id="2-循环左移-left-shift">( 2 ). 循环左移 （Left Shift）</h4>
+
+<p>对C<sub>i</sub> ， D<sub>i</sub>分别循环左移n位，其中n是会随着迭代次数变化的，其与迭代次数映射表如下所示</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/is.png" alt="img" /></p>
+
+<h4 id="3-置换选择2-permuted-choice-2">( 3 ). 置换选择2 （Permuted Choice 2）</h4>
+
+<p>64位的密钥分成32位的两份，进过置换选择后各成为28位的数据（即C<sub>0</sub>和D<sub>0</sub>），就是说C<sub>i</sub>和D<sub>i</sub>都是28位的数据。将C<sub>i</sub>和D<sub>i</sub>合并成一个56位的数据，置换选择2从中选出一个48位的子密钥K<sub>i</sub>。规定子密钥Ki的56位依次是该56位中间数据的第14, 17, &hellip;, 5, 3, &hellip;, 29, 32位，其置换表如下所示</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/R23.png" alt="img" /></p>
+
+<h4 id="4-代码实现">( 4 ). 代码实现</h4>
+
+<p>为了方便理清生成子密钥的逻辑，其中的打印输出的代码并没有给出，完整源码见项目Github仓库</p>
+
+<pre><code class="language-java">/**
+ * 生成16个48位的子密钥
+ * @param keyBytes 64位原密钥，用字符数组存储其比特串
+ * @return 子密钥数组，用二维字符数组表示
+ */
+private char[][] generateSubKeys(char[] keyBytes) {
+    char[][] subKeys = new char[16][48];
+    // 置换选择 1
+    char[] c = ArrayUtil.disruptArray(keyBytes, DESConstants.replace1C);
+    char[] d = ArrayUtil.disruptArray(keyBytes, DESConstants.replace1D);
+
+    // 循环左移
+    for (int i = 0; i &lt; 16; i++) {
+        c = ArrayUtil.leftShift(c, DESConstants.moveBit[i]);
+        d = ArrayUtil.leftShift(d, DESConstants.moveBit[i]);
+        
+        // 将Ci和Di合并得到56位的中间数据
+        char[] concatChars = ArrayUtil.concat(c, d);
+
+        // 置换选择 2，得到48位的子密钥Ki
+        char[] key = ArrayUtil.disruptArray(concatChars, DESConstants.replace2);
+        subKeys[i] = key;
+    }
+    return subKeys;
+}
+</code></pre>
+
+<h3 id="2-初始置换ip-initial-permutation">2. 初始置换IP (Initial Permutation)</h3>
+
+<p>初始置换是DES算法的第一步密码变换，它的作用是将64位的明文打乱重排，并分成左右两半。左边32位作为L<sub>0</sub>，右边32位作为R<sub>0</sub>，供后面迭代使用。规定置换后的64位数据的各位依次是原明文数据的第58, 50, &hellip;, 2, 60, &hellip;, 15, 7位，其置换表如下所示</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/ip.png" alt="img" /></p>
+
+<h3 id="3-加密函数">3. 加密函数</h3>
+
+<p>加密函数是DES的核心，它的租用是在第i次迭代中用子密钥K<sub>i</sub>对R<sub>i-1</sub>进行加密。其运行规则是：在第i次迭代加密中选择运算E对32位的R<sub>i-1</sub>的各位进行选择排列，产生48位的结果，此结果与48位的子密钥进行异或运算，然后送入替代函数组S。S由8个替代函数（替代盒，Substitute Box）组成，每个S盒有6位输入和4位输出。8个S盒的输出合并得到一个32位的数组，此数据组经过置换运算P，将各位打乱重排，得到的结果便是加密函数的返回值f(R<sub>i-1</sub>, K<sub>i</sub>)。</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/sbox.png" alt="img" /></p>
+
+<h4 id="1-选择运算-e">1. 选择运算 E</h4>
+
+<p>该过程对32位的数据组Half Block的各位进行选择和排列，产生一个48位的结果，可见该运算是一个扩展运算，它将32位的数据扩展成了48位的数据，以便与48位的子密钥进行异或运算，下面是选择运算的运算矩阵，可见它是通过重复选择某些数据位来达到数据扩展的目的的。</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/e.png" alt="img" /></p>
+
+<h4 id="2-替代函数组-s">2. 替代函数组 S</h4>
+
+<p>由8个S盒（S<sub>1</sub>, S<sub>2</sub>, S<sub>3</sub>, S<sub>4</sub>, S<sub>5,</sub> S<sub>6</sub>, S<sub>7</sub>, S<sub>8</sub>）组成，S的输入是一个48位的数据，从1到48位依次加到8个S盒的输入端。每个S盒有一个替代矩阵，规定了其输入输出的替代规则。替代矩阵有4行16列，每行都是0到15这16个数字，但每行数字的排列都不同，且8个替代矩阵彼此不同。每个S盒有6位输入，4位输出，S盒的运算结果是用输出数据替代输入数据，故称为替代函数。</p>
+
+<p>S盒的替代规则为：6位输入的第1位和第6位组成二进制数b<sub>1</sub>b<sub>6</sub>代表对应矩阵中被选中的行号，其余四位数字b<sub>2</sub>b<sub>3</sub>b<sub>4</sub>b<sub>5</sub>组成的二进制数代表对应矩阵中被选中的列号。以S<sub>1</sub>为例，假设输入数据为b<sub>1</sub>b<sub>2</sub>b<sub>3</sub>b<sub>4</sub>b<sub>5</sub>b<sub>6</sub> = 101011，则第1位和第6位组成二进制数b<sub>1</sub>b<sub>6</sub> = 11 = 3，表示选中行号为3的那行；b<sub>2</sub>b<sub>3</sub>b<sub>4</sub>b<sub>5</sub> = 0101 = 5，表示选中列号为5的那列，行列交点为9，则S<sub>1</sub>的输出为1001。替代函数组 S中各S盒矩阵如下所示</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/sb.png" alt="img" /></p>
+
+<h4 id="3-置换运算-p">3. 置换运算 P</h4>
+
+<p>该过程是把S盒输出的32位数据打乱重排，得到32位的加密函数输出，用P置换来扩散，将S盒的混淆租用扩散开来，正是置换P与S盒的互相配合提高了DES的安全性，置换矩阵P如下所示</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/p.png" alt="img" /></p>
+
+<h4 id="4-代码实现-1">4. 代码实现</h4>
+
+<pre><code class="language-java">/**
+ * DES核心加密函数
+ * 包括扩展、替代、选择等操作
+ * @param right R(i-1)
+ * @param subKey Ki
+ * @return result 运算结果
+ */
+private char[] coreEncrypt(char[] right, char[] subKey) {
+    // 1. 选择运算 E
+    char[] extendedRight = ArrayUtil.disruptArray(right, DESConstants.E);
+	
+    // 2. 将晋国选择运算E扩展得到的48位的数据与子密钥进行异或
+    char[] xorResult = ArrayUtil.xor(extendedRight, subKey);
+
+    // 3. 用替代函数组进行替代
+    // 为便于处理，将上述1x48位的数据矩阵转换成8x6的数据矩阵
+    char[][] twoDimensionArray = ArrayUtil.segmentDimension(xorResult, 8, 6);
+    StringBuilder outputBuilder = new StringBuilder();
+    // 根据替代规则进行替代
+    for (int i = 0; i &lt; twoDimensionArray.length; i++) {
+        char[] rowBits = {twoDimensionArray[i][0], twoDimensionArray[i][5]};
+        char[] columnBits =
+        {
+            twoDimensionArray[i][1], twoDimensionArray[i][2],
+            twoDimensionArray[i][3], twoDimensionArray[i][4]
+        };
+
+        // 获取对应S盒的输出的坐标
+        int rowIndex = Integer.parseInt(String.valueOf(rowBits), 2);
+        int columnIndex = Integer.parseInt(String.valueOf(columnBits), 2);
+		// 获取对应S盒的输出
+        short output = DESConstants.SUBSTITUTE_BOX[i][rowIndex][columnIndex];
+        outputBuilder.append(Integer.toBinaryString((output &amp; 0x0f) + 0x10).substring(1));
+    }
+    char[] substitutedResult = outputBuilder.toString().toCharArray();
+    // 4. 进行置换运算 P，返回28位的数据
+    return ArrayUtil.disruptArray(substitutedResult, DESConstants.P);
+}
+</code></pre>
+
+<h3 id="4-整个加密过程">4. 整个加密过程</h3>
+
+<p>回顾DES的总体加密过程</p>
+
+<ul>
+<li>64位密钥经子密钥产生算法产生出16个子密钥： K<sub>1</sub>, K<sub>2</sub>, &hellip;, K<sub>16</sub> ， 分别供第一次, 第二次, &hellip;, 第十六次加密迭代使用。</li>
+<li>64位明文经初始置换IP， 将数据打乱重排并分成左右两半。左边32位构成L<sub>0</sub> ， 右边2位构成R<sub>0 </sub>。</li>
+<li>第一次加密迭代：由加密函数f实现子密钥k<sub>1</sub>对R<sub>0</sub>的加密，得到32位的f(R<sub>0</sub>, K<sub>1</sub>)，然后L<sub>0</sub>⊕f(R<sub>0</sub>, K<sub>1</sub>)，32位的结果作为第二次加密迭代的R<sub>1</sub>，以R<sub>0</sub>作为第二次加密迭代的L<sub>1</sub>。<br /></li>
+<li>第二次加密迭代至第十六次加密迭代分别用子密钥K<sub>2</sub> ,&hellip;, K<sub>16</sub>进行，其过程与第一次加密迭代相同。</li>
+<li>第十六次加密迭代结束后，产生一个64位的数据组，以其左边32位作为R<sub>16</sub>， 以其右边32位作为L<sub>16</sub> 。</li>
+<li>R<sub>16</sub>与L<sub>16</sub>合并，再经过逆初始置换IP， 将数据重新排列，便得到64位密文。<br /></li>
+</ul>
+
+<p>上面我们已经进行了子密钥的生成、初始置换和核心加密函数，接下来是进行中L<sub>i</sub>⊕f(R<sub>i-1</sub>), Ki)以及确定下一趟迭代的L和R。在16次迭代完之后再进行逆初始置换就可以得到加密的64位结果。</p>
+
+<p><img src="https://github.com/jordonyang/cipher4j/raw/master/imgs/des/desMain.png" alt="img" /></p>
+
+<p>整体的加密过程主要函数的代码实现如下</p>
+
+<pre><code class="language-java">/**
+ * 对外的加密接口，主要逻辑封装在encode方法中
+ * @param plaintext 明文
+ * @param key 密钥
+ * @return encrypted text
+ * @throws UnsupportedEncodingException caused by String.getBytes()
+ */
+public String encrypt(String plaintext, String key) throws UnsupportedEncodingException {
+    // 获取明文及密钥对应的比特串，用字符数组存储
+    char[] plaintextBytes = ArrayUtil.bytesToChars(
+        plaintext.getBytes(&quot;UTF-8&quot;));
+    char[] keyBytes = ArrayUtil.bytesToChars(
+        key.getBytes(&quot;UTF-8&quot;));
+	// 子密钥的生成
+    char[][] subKeys = generateSubKeys(keyBytes);
+    char[] result = encode(plaintextBytes, subKeys);
+	// 使用Base64编码对不可见及非打印字符进行编码
+    return Base64Util.encode(result);
+}
+
+/**
+ * 主体加密逻辑
+ * @param plaintextBytes 用字符数组存放的明文的比特串
+ * @param subKeys 子密钥数组
+ * @return encryption 64位加密结果
+ */
+private char[] encode(char[] plaintextBytes, char[][] subKeys) {
+    // 初始置换 IP
+    char[] chars = ArrayUtil.disruptArray(plaintextBytes, DESConstants.IP);
+
+    // 将明文分成两半
+    int length = chars.length;
+    String binaryArrayStr = String.valueOf(chars);
+    char[] left = binaryArrayStr.substring(0, length / 2).toCharArray();
+    char[] right = binaryArrayStr.substring(length / 2).toCharArray();
+    char[] coreEncrypted, xorResult;
+
+    for (int i = 0; i &lt; 16; i++) {
+        // 调用核心加密函数，用子密钥Ki对R(i-1)进行加密，得到28位数据
+        coreEncrypted = coreEncrypt(right, subKeys[i]);
+
+        // L(i - 1)与f(R(i - 1), Ki)进行异或运算
+        xorResult = String.valueOf(ArrayUtil.xor(left, coreEncrypted))
+            .substring(16).toCharArray();
+
+        left = right;
+        right = xorResult;
+    }
+    char[] calResult = ArrayUtil.concat(right, left);
+    // 逆初始置换
+    return ArrayUtil.disruptArray(calResult, DESConstants.inverseIP);
+}
+</code></pre>
+
+<h2 id="0x02-解密过程">0x02. 解密过程</h2>
+
+<p>通过数学推理可证明DES具有可逆性和对合性的（限于蝙蝠，在此不作证明），即加密和解密可共用同一个运算，只是子密钥的使用顺序调转而已，即第一次解密迭代使用子密钥K<sub>16</sub>，第十六次解密迭代使用子密钥K<sub>1</sub>。</p>
+
+<h4 id="代码实现">代码实现</h4>
+
+<p>基于上述的思想，我们可以将通过密钥获取到的子密钥数组逆转，然后调用encode方法即可</p>
+
+<pre><code class="language-java">/**
+ * 解密
+ * @param encryptedText 加密数据
+ * @param key  密钥
+ * @return decrypted origin plaintext
+ * @throws UnsupportedEncodingException caused by String.getBytes()
+ */
+@Override
+public String decrypt(String encryptedText, String key) throws UnsupportedEncodingException {
+    // 将已使用Base64编码的密文解码
+    char[] encryptedTextBytes = Base64Util.decode(encryptedText);
+    char[] keyBytes = ArrayUtil.bytesToChars(
+        key.getBytes(&quot;UTF-8&quot;));
+	
+    // 将通过密钥获取到的子密钥数组逆转
+    char[][] inverseKeys = inverseSubKeys(generateSubKeys(keyBytes));
+    // 解密
+    char[] result = encode(encryptedTextBytes, inverseKeys);
+    // 将比特串还原为字符串明文
+    return ArrayUtil.segmentAndPrintChars(&quot;decrypt plaintext text&quot;, result);
+}
+
+/**
+ * 将通过密钥获取到的子密钥数组逆转
+ * @param subKeys 原子密钥数组
+ * @return  翻转的子密钥数组
+ */ 
+private char[][] inverseSubKeys(char[][] subKeys) {
+    char[][] inverseKeys = new char[subKeys.length][];
+
+    for (int i = 0; i &lt; subKeys.length; i++) {
+        inverseKeys[i] = subKeys[subKeys.length - 1 - i];
+    }
+    return inverseKeys;
+}
+</code></pre>
+
+<h2 id="0x03-测试">0x03.  测试</h2>
+
+<p>使用Junit进行单元测试，测试结果的输出较长，为不影响阅读请见<a style="color:blue;text-decoration:none" href="https://github.com/jordonyang/cipher4j">Github仓库</a></p>
+
+<pre><code class="language-java">@Test
+public void testService() {
+    String plaintext = &quot;01234567&quot;, key = &quot;12345678&quot;;
+    CipherService cipherService = new DESCipherService();
+    try {
+        String encryptedText = cipherService.encrypt(plaintext, key);
+        cipherService.decrypt(encryptedText,key);
+    } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+    }
+}
+</code></pre>
+
+<h2 id="0x04-填充方式-工作模式及图形化界面的实现">0x04.  填充方式、工作模式及图形化界面的实现</h2>
+
+<h3 id="1-填充方式">1. 填充方式</h3>
+
+<p>实现最简单的末字节计数器填充方式，即最后一个分组的最后一个字节用来记录填充的位数，解密后读取该字节并去掉相应长度的数据</p>
+
+<pre><code class="language-java">/**
+ * 明文填充，最后一组的最后8位表示填充长度
+ */
+private char[][] padPlaintext(String plaintext) {
+    char[] plaintextBytes = ArrayUtil.bytesToChars(
+        plaintext.getBytes());
+    int length = plaintextBytes.length;
+    int lastBlockBits = length % 64;
+    // 现有块数
+    int blockCount = length / 64;
+
+    // 待伪随机填充位数
+    int randPadCount = 64 - lastBlockBits - 8;
+    char[] padded = new char[(blockCount + 1) * 64];
+    System.arraycopy(plaintextBytes, 0, padded, 0, length);
+
+    // 伪随机填充
+    for (int i = length; i &lt; padded.length - 8; i++) {
+        padded[i] = new Random().nextBoolean() ? '1' : '0';
+    }
+    // 填充最后一个字节比特串
+    char[] padCountVal = Integer.toBinaryString(
+        (randPadCount &amp; 0xff) + 0x0100).substring(1).toCharArray();
+    System.arraycopy(padCountVal, 0, padded, padded.length - 8, 8);
+
+    // 将填充完比特穿分组
+    char[][] blocks = new char[blockCount + 1][64];
+    for (int i = 0; i &lt; blockCount + 1; i++) {
+        System.arraycopy(padded, i * 64, blocks[i], 0, 64);
+    }
+    return blocks;
+}
+</code></pre>
+
+<h4 id="1-单元测试">( 1 ). 单元测试</h4>
+
+<p>使用JUnit进行单元测试</p>
+
+<pre><code class="language-java">@Test
+public void testPadPlaintext() {
+    DESCipherService desCipherService = new DESCipherService(false);
+    desCipherService.padPlaintext(&quot;password1&quot;);
+}
+</code></pre>
+
+<h4 id="2-测试结果">( 2 ). 测试结果</h4>
+
+<pre><code>明文：password1
+填充前的比特串： 011100000110000101110011011100110111011101101111011100100110010000110001
+填充后的比特串： 01110000011000010111001101110011011101110110111101110010011001000011000100101000001000010111101000100111101110010010110100110000
+</code></pre>
+
+<h3 id="2-工作方式">2. 工作方式</h3>
+
+<p>实现<code>ECB</code>、<code>CBC</code>、<code>CTR</code>三种工作模式，为了实现这些，需要将上述的加解密主逻辑代码进行部分调整，调整后的代码可以见<a style="color:blue;text-decoration:none" href="https://github.com/jordonyang/cipher4j/blob/master/src/main/java/org/jordon/security/core/crypto/symmetry/DESCipherService.java">DESCipherService.java</a></p>
+
+<h3 id="3-gui图形界面">3. GUI图形界面</h3>
+
+<p>将加密文件和加密字符串的代码进行分离，使用JFrame进行实现GUI界面，详细代码见<a style="color:blue;text-decoration:none" href="https://github.com/jordonyang/cipher4j/blob/master/src/main/java/org/jordon/security/view/DESView.java">DESView.java</a></p>
+
+<p>(1). 加密明文串效果</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sec/des//desView5.png" alt="img" /></p>
+
+<p>(2). 加密文件效果</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/sec/des//desView4.png" alt="img" /></p>
+
+<h2 id="0x05-参考">0x05. 参考</h2>
+
+<ul>
+<li>《密码学引论》（第三版，张焕国、唐明编著，武汉大学出版社）</li>
+</ul>
+
+<h2 id="0x06-相关文章">0x06. 相关文章</h2>
+
+<ul>
+<li><a style="color:blue;text-decoration:none"  href="http://geekeye.cc/post/security/crypto/symmetry/working-mode/">分组密码的工作模式</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/security/crypto/symmetry/working-mode/"><h4>Block Cipher Mode of Operation</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/java/vm/bytecode_base/"><h4>Touch and Parse Java Class File</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

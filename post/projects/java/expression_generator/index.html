@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Arithmetic Expression Generator"/>
+<meta name="twitter:description" content="ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Arithmetic Expression Generator &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/projects/java/expression_generator/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-09-18T20:25:43&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    <meta property="article:tag" content="binary tree" />
+    
+    
+
+    <title>Arithmetic Expression Generator &middot; 临风博客</title>
+
+    
+    <meta name="description" content="ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/projects/java/expression_generator/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Arithmetic Expression Generator,
+    "name": Arithmetic Expression Generator,
+    "wordCount": 242,
+    "timeRequired": "PT2M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/projects/java/expression_generator/,
+    "datePublished": 2018-09-18T20:25Z,
+    "dateModified": 2018-09-18T20:25Z,
+    
+    "keywords": Java, binary tree,
+    "description": ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/projects/java/expression_generator/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Arithmetic Expression Generator</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Arithmetic Expression Generator</h1>
+        <em style="color: blue">ExpressionGenerator - 基于二叉树数据结构的算术表达式生成器</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/binary-tree/">#binary tree</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-09-18T20:25:43&#43;08:00">
+            2018/Sep/18
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<p><strong>前言</strong> : 学校软件工程课程作业， 需求大概是根据参数随机产生n道算术表达式，将表达式及结果写到文件中，将用户提交的答案文件与正确答案进行比对，输出比对结果。</p>
+
+<h2 id="一-psp2-1表格">一. PSP2.1表格</h2>
+
+<table>
+<thead>
+<tr>
+<th><strong>PSP2.1</strong></th>
+<th><strong>Personal Software Process Stages</strong></th>
+<th><strong>预估耗时（分钟）</strong></th>
+<th><strong>实际耗时（分钟）</strong></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Planning</td>
+<td>计划</td>
+<td>20</td>
+<td>25</td>
+</tr>
+
+<tr>
+<td>· Estimate</td>
+<td>· 估计这个任务需要多少时间</td>
+<td>20</td>
+<td>25</td>
+</tr>
+
+<tr>
+<td>Development</td>
+<td>开发</td>
+<td>1280</td>
+<td>1740</td>
+</tr>
+
+<tr>
+<td>· Analysis</td>
+<td>· 需求分析 (包括学习新技术)</td>
+<td>40</td>
+<td>55</td>
+</tr>
+
+<tr>
+<td>· Design Spec</td>
+<td>· 生成设计文档</td>
+<td>40</td>
+<td>41</td>
+</tr>
+
+<tr>
+<td>· Design Review</td>
+<td>· 设计复审 (和同事审核设计文档)</td>
+<td>30</td>
+<td>20</td>
+</tr>
+
+<tr>
+<td>· Coding Standard</td>
+<td>· 代码规范 (为目前的开发制定合适的规范)</td>
+<td>30</td>
+<td>31</td>
+</tr>
+
+<tr>
+<td>· Design</td>
+<td>· 具体设计</td>
+<td>40</td>
+<td>66</td>
+</tr>
+
+<tr>
+<td>· Coding</td>
+<td>· 具体编码</td>
+<td>1000</td>
+<td>1422</td>
+</tr>
+
+<tr>
+<td>· Code Review</td>
+<td>· 代码复审</td>
+<td>40</td>
+<td>41</td>
+</tr>
+
+<tr>
+<td>· Test</td>
+<td>· 测试（自我测试，修改代码，提交修改）</td>
+<td>60</td>
+<td>64</td>
+</tr>
+
+<tr>
+<td>Reporting</td>
+<td>报告</td>
+<td>70</td>
+<td>103</td>
+</tr>
+
+<tr>
+<td>· Test Report</td>
+<td>· 测试报告</td>
+<td>20</td>
+<td>24</td>
+</tr>
+
+<tr>
+<td>· Size Measurement</td>
+<td>· 计算工作量</td>
+<td>20</td>
+<td>21</td>
+</tr>
+
+<tr>
+<td>· Postmortem &amp; Process Improvement Plan</td>
+<td>· 事后总结, 并提出过程改进计划</td>
+<td>30</td>
+<td>58</td>
+</tr>
+
+<tr>
+<td>合计</td>
+<td></td>
+<td>1370</td>
+<td>1868</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="二-设计实现过程及代码说明">二. 设计实现过程及代码说明</h2>
+
+<h3 id="1-分析及设计">1. 分析及设计</h3>
+
+<p>一个算术表达式可以由多个子表达式组成，一个子表达式运算完的结果又可以作为操作数参与另一个子表达式的运算，这样的结构让人很容易想到二叉树，而事实上通过谷歌搜索关于表达式方面的编程信息时，更多被提及的是<code>Expression Tree</code> ， 而<code>Expression Tree</code> 的经典实现就是使用二叉树（参见<a href="https://en.wikipedia.org/wiki/Binary_expression_tree">Wikipedia </a>）</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//expression-tree.png" alt="img" /></p>
+
+<p>二叉表达式树的特点有：</p>
+
+<ul>
+<li>每个叶子结点都用来存储数据，每个非叶子结点都用来存储运算符</li>
+<li>每个操作符结点的左右子结点均不为空</li>
+<li>通过先序、中序和后序遍历后，便可得到表达式的前缀、中缀和后缀书写形式</li>
+</ul>
+
+<p>利用这种特点并结合项目需求，我们可以大概将主要任务概括为</p>
+
+<ul>
+<li>构建表达式
+
+<ul>
+<li>通过指定的操作符个数随机构建二叉树</li>
+<li>递归遍历二叉树，如如果遍历到的结点是操作符结点且缺少孩子结点，则在空缺的位置添加数据随机的数字结点</li>
+</ul></li>
+<li>中序遍历表达式
+
+<ul>
+<li>递归获取每个操作符结点对应的子表达式，通过结点关系和运算符优先级添加括号及进行其他处理</li>
+<li>计算子表达式</li>
+</ul></li>
+<li>处理遍历结果
+
+<ul>
+<li>将表达式及运算结果写入文件</li>
+<li>通过人机交互获取用户输入的答案，将之与正确答案进行比对</li>
+</ul></li>
+</ul>
+
+<h3 id="2-具体实现">2. 具体实现</h3>
+
+<h4 id="1-数据结构说明">( 1 ) 数据结构说明</h4>
+
+<p>二叉表达式树及其结点的类签名如下</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//base.png" alt="img" /></p>
+
+<h4 id="2-构建二叉表达式树">( 2 ) 构建二叉表达式树</h4>
+
+<p>在构造方法中随机生成一个操作符作为根结点的数据，指定操作符的个数为下面插入操作符结点做准备，指定<code>range</code> 限制书中数据结点的数据范围， 然后调用初始化方法<code>init()</code> ；而初始化方法中主要是随机插入<code>operatorCount</code> 个操作符结点以及根据这些操作符结点的位置插入数据结点。</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//init1.png" alt="img" /></p>
+
+<h4 id="3-递归插入运算符结点">( 3 ) 递归插入运算符结点</h4>
+
+<p>随机决定插入操作符的位置是当前处理结点的左或者右结点，通过操作符类型的随机性及操作符位置的随机性减少构造出来表达式出现重复的概率</p>
+
+<p>​      <img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//insertOperators.png" alt="img" /></p>
+
+<p>以含有三个操作符的二叉表达式树为例，假如随机产生的操作符依次为<code>+</code> 、<code>÷</code>、<code>-</code>，则进行完当前操作后，可能出现的树形结构有：</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//bt2.png" alt="img" /></p>
+
+<h4 id="4-插入数据结点">( 4 ) 插入数据结点</h4>
+
+<p>逻辑比较简单，看注释即可</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//in.png" alt="img" /></p>
+
+<h4 id="5-中序递归遍历二叉树">( 5 ) 中序递归遍历二叉树</h4>
+
+<p>需要考虑的地方：</p>
+
+<ul>
+<li>如果当前处理结点是数字结点，直接返回其数据</li>
+<li>如果是操作数结点，获取其左右子树的表达式并与中间的符号连接成新的子表达式</li>
+<li>如果当前处理结点是减号操作符结点，并且子树的运算结果大于右子树的运算结果，将运算结果取绝对值，同时将左右子表达式的位置交换，而对于原二叉树的数据结构不作处理</li>
+<li>如果当前处理结点是操作符结点，通过<code>parent</code> 引用获取当前处理结点的父结点，判断当前处理结点的的优先级是否低于父结点操作符的优先级，若是，在子表达式加上左右括号</li>
+</ul>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//it1.png" alt="img" /></p>
+
+<p>每个结点的遍历结果都存放到一个<code>TraverseResult</code> 对象中，其中包含了该结点对应的子表达式（形如1、1 + 2、(1 + 2) x 3 ）及其运算结果，想获取表达式树的完整表达式，只需调用该树对象的<code>getResult()</code>方法即可</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//tr.png" alt="img" /></p>
+
+<p>假设随机产生的数字序列为<code>7</code>、<code>8</code>、<code>5</code>、<code>4</code> ，则在上述构造的树形基础上插入数字后得到的完整表达式树结构及其中序遍历的结果如下图所示：</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//inorder.png" alt="img" /></p>
+
+<h4 id="6-运算">( 6 ) 运算</h4>
+
+<p>数据结点的数据类型全为分数</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//fraction.png" alt="IMG" /></p>
+
+<p>通过随机函数产生分子和分母，然后构造<code>Fraction</code> 对象，在构造中当内部属性赋值完之后调用<code>reduce</code> 方法进行化简；重写<code>toString()</code> 方法，主要用于分数的打印展示，处理带分数和整数的情况。</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//ru.png" alt="img" /></p>
+
+<p>使用操作符枚举类定义操作符号与计算器的对应规则</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//symbol.png" alt="img" /></p>
+
+<p>具体的运算逻辑封装在<code>Calculator</code> 类中，只需通过<code>Symbol</code> 枚举类获取到当前操作符对应的计算器然后调用<code>calculate</code>方法即可。</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//Calculator.png" alt="img" /></p>
+
+<h4 id="7-程序入口">( 7 ) 程序入口</h4>
+
+<p>主程序入口在<a href="https://github.com/jordonyang/ExpressionGenerator/blob/master/src/main/java/github/pair/generator/AppEntry.java">AppEntry类</a> , 主要介绍写入题目和答案及比对答案的代码</p>
+
+<p><strong>写入题目和答案</strong> ：随机产生运算符个数（最大为3个），结合指定的数据最大取值范围及题目数量构造若干表达式树，获取这些表达式树的中序遍历结果塞进集合<code>results</code>， 将<code>results</code>丢给<code>writeList</code>函数处理写入文件逻辑</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//write.png" alt="img" /></p>
+
+<p><strong>比对答案</strong> ：同时打开正确答案文件和用户提交的答案文件，逐行比对，用集合记录正误的题目标号，然后对集合中的数据进行格式输出处理，将得到的正误情况写入文件。</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//com.png" alt="img" /></p>
+
+<h2 id="三-测试运行">三. 测试运行</h2>
+
+<h3 id="1-功能测试">1. 功能测试</h3>
+
+<p>下面是生成<a href="https://github.com/jordonyang/ExpressionGenerator/blob/master/test-result/first/exercises.txt">10000道题目</a>和<a href="https://github.com/jordonyang/ExpressionGenerator/blob/master/test-result/first/answers.txt">答案</a>， 模拟用户解答前20道题目并比对答案的例子。</p>
+
+<p>文件说明：</p>
+
+<ul>
+<li>exercies.txt ： 题目文件</li>
+<li>answer.txt : 正确答案文件</li>
+<li>submit.txt ：用户提交的答案文件</li>
+<li>Grade.txt ：对答案结果文件</li>
+</ul>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//res.png" alt="img" /></p>
+
+<p>测试用例在项目的<a href="https://github.com/jordonyang/ExpressionGenerator/tree/master/test-result">test-result</a>文件夹中</p>
+
+<h3 id="2-代码覆盖率">2. 代码覆盖率</h3>
+
+<p>使用<code>maven</code>插件对<a href="https://github.com/jordonyang/ExpressionGenerator/blob/master/src/test/java/github/pair/generator/AppTest.java">测试文件</a>进行代码覆盖率统计，结果如下所示，有些地方（比如要将入口程序类实例化）并没有必要写进测试文件，所以统计达到的覆盖会比实际需要用到的样例测试低。</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//coverage.png" alt="img" /></p>
+
+<h2 id="四-效能分析">四. 效能分析</h2>
+
+<p>在i5-3230M处理器，win10 64位操作系统，12GB主存的机器上，简单统计生成10、100、1000、10000、100000道操作符数为3、操作数最大取值为100的题目并进行遍历的所用的时间</p>
+
+<p><img src="https://github.com/jordonyang/ExpressionGenerator/raw/master/imgs//ANALY.png" alt="img" /></p>
+
+<p><strong>影响效能的因素：</strong></p>
+
+<ul>
+<li>递归：本项目中很多二叉树的操作使用了递归，而在递归的时候会进行很深层次的调用函数，所以需要调用很多函数递归（即为调用自身），需要建立许多的访问链和控制链，占用大量内存。而且调用时传递参数，申请空间，返回时恢复现场，都有时间的开销</li>
+<li>IO读写：写入题目和答案等文件、比对答案中的文件读写操作会增加程序执行时间</li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/java/vm/bytecode_base/"><h4>Touch and Parse Java Class File</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/projects/java/word_counter/"><h4>Code File Analyser and Counter</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

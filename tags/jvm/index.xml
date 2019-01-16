@@ -7,17 +7,43 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Sat, 04 Aug 2018 23:25:14 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 11 Jan 2019 21:28:33 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>JVM - Class Loading Process</title>
+      <link>https://jordonyang.github.io/post/java/vm/class_loading/</link>
+      <pubDate>Fri, 11 Jan 2019 21:28:33 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/vm/class_loading/</guid>
+      <description>0x00. TOC  0x01.概述 0x02.类的生命周期 0x03.加载时机 0x04.加载过程  1.加载 2.连接  2.1.验证 2.2.准备 2.3.解析  3.初始化  0x05.载加载器  1.双亲委派模型 2.Tomcat类加载器  0x06.参考  0x01. 概述 类加载：虚拟机把描述类的数据从字节码文件加载待内存中，并对数据进行校验、转换解析和初始化，最终形成可被虚拟机直接使用的 Java 类型的过程。
+0x02. 类的生命周期 其中类加载的过程包括了加载、验证、准备、解析、初始化五个阶段。在这五个阶段中，加载、验证、准备和初始化这四个阶段发生的顺序是确定的，而解析阶段则不一定，它在某些情况下可以在初始化阶段之后开始，这是为了支持 Java 语言的运行时绑定（也成为动态绑定或晚期绑定）。另外注意这里的几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常都是互相交叉地混合进行的，通常在一个阶段执行的过程中调用或激活另一个阶段。
+0x03. 加载时机 JVMS 规定有且只有下面5种发生主动引用的场景才会触发类的初始化，这意味着在此之前的加载、验证和准备也会随之发生：TOC
+ 遇到new、getstatic、putstatic或invokestatic这 4 条字节码指令时，如果类没有进行过初始化，则需要先触发其初始化。生成这 4 条指令的最常见的 Java 代码场景是：  使用 new 关键字实例化对象 读取或设置一个类的静态字段（static 修饰，已在编译期把结果放人常量池的静态字段除外〉 调用一个类的静态方法  使用·java.lang.reflect包的方法对类进行反射调用的时候，如果类没有进行过初始化，则需要先触发其初始化。 当初始化一个类时，发现其父类未初始化，则需先初始化其父类。 虚拟机启动时先初始化用户指定的执行主类（main 方法所在类） 当使用 JDK 1.7 的动态语言支持时，若一个java.lang.invoke.MethodHandle实例最后解析为REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，且该方法对应的类未初始化，则先触发其初始化。  除了以上五种虚拟机限定的触发类初始化的场景外，其他的引用类的场景都不会触发类初始化，如：
+ 尝试通过子类来引用父类中定义的静态变量，只会触发父类的初始化而不会触发子类的初始化。 数组对象的初始化由 JVM 实现，不会触发数组元素类的初始化，而且会做越界检查，防止缓冲区溢出。 每个类都有属于自己的运行时常量池，当类A尝试访问类B中的常量C时，javac会将常量C复制一份到类A的字节码文件中，到运行时再装入运行时常量池，所以访问某个类的常量时不会触发其初始化。  0x04 加载过程 1.</description>
+    </item>
+    
+    <item>
+      <title>Touch and Parse Java Class File</title>
+      <link>https://jordonyang.github.io/post/java/vm/bytecode_base/</link>
+      <pubDate>Mon, 01 Oct 2018 11:31:12 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/vm/bytecode_base/</guid>
+      <description>0x00. TOC  0x01.概述 0x02.字节码文件结构  1.魔数 2.版本号 3.常量池 4.访问标志 5.类索引、父类索引与结构索引集合 6.字段表集合 7.方法表集合 8.属性表集合  8.1 Code 8.2 Exception 8.3 LineNumberTable 8.4 LocalVariableTable 8.5 LocalVariableTypeTable 8.6 SourceFile 8.7 ConstantValue    0x03.解析 0x04.参考  0x01. 概述 为了实现在不同的操作系统和硬件体系结构下的平台无关性和语言无关性，Java 语言设计者定义了一套程序存储结构的格式规范，即把源程序编译成具有一定格式的字节码文件，各个平台上的虚拟机再按照相应的规范把该字节码文件解析成其平台下的运行代码。
+​ 这样不仅实现了一处编写，到处运行(Write Once, Run Anywhere)的平台无关性，还为在 Java 虚拟机上运行非 Java 语言代码提供了可能。时至今日，已经发展出有很多其他能够在 Java 虚拟机上运行的语言，如Clojure、Groovy、JRuby、Jython、Scala等。
+​ 0x02. 字节码文件结构 Class 文件是一组以8位字节为单位的二进制流，各个数据项严格按照顺序无间隙地紧凑排列在 Class 文件中。当遇到需要占用8位字节以上的空间的数据项时，则会将其按照大端(Big-Endian)方式分割成若干个8位字节进行存储（大端方式指数据的最高位字节存储在地址的最低位，最低位字节存储在地址的最高位）。
+根据 JVM 规范，Class 文件格式采用包含无符号数和表的类结构体存储数据，无符号数以u1、u2、u4、u8分别代表1、2、4、8个字节的无符号数，用来描述数字、索引引用、UTF-8字符串值等；表是由多个无符号数或其他表作为数据项构成的符合数据类型，用于描述有层次关系的符合结构的数据，一般以_info结尾。另外，除了表和无符号数外，当需要表示一个长度不定的数据时，往往需要前置一个容量计数器。Class 文件格式具体如下图所示：
+1. 魔数 如 gif 和 jpeg 等文件的存储标准一样，为了标识和验证其文件的身份，每个 Class 文件使用前四个字节作为魔数(Magic Number)，用于确定该文件是否为一个能被虚拟机接受的文件，其值固定为oxCAFEBABE。</description>
+    </item>
+    
+    <item>
       <title>The Garbage Collection Mechanism of the JVM</title>
-      <link>https://jordonyang.github.io/post/garbage-collection-of-jvm/</link>
+      <link>https://jordonyang.github.io/post/java/vm/gc_base/</link>
       <pubDate>Sat, 04 Aug 2018 23:25:14 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/garbage-collection-of-jvm/</guid>
+      <guid>https://jordonyang.github.io/post/java/vm/gc_base/</guid>
       <description>一. 概念 什么是垃圾收集?
 垃圾收集（Garbage Collection，GC），指的是对Java堆和方法区的死对象进行回收。它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，现已十分成熟。
 二. 收集的范围 哪些内存需要回收

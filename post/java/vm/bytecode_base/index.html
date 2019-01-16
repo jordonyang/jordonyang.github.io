@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Touch and Parse Java Class File"/>
+<meta name="twitter:description" content="Java字节码结构及解析过程"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Touch and Parse Java Class File &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/java/vm/bytecode_base/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="Java字节码结构及解析过程" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-10-01T11:31:12&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    <meta property="article:tag" content="JVM" />
+    
+    
+
+    <title>Touch and Parse Java Class File &middot; 临风博客</title>
+
+    
+    <meta name="description" content="Java字节码结构及解析过程" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/java/vm/bytecode_base/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Touch and Parse Java Class File,
+    "name": Touch and Parse Java Class File,
+    "wordCount": 2085,
+    "timeRequired": "PT10M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/java/vm/bytecode_base/,
+    "datePublished": 2018-10-01T11:31Z,
+    "dateModified": 2018-10-01T11:31Z,
+    
+    "keywords": Java, JVM,
+    "description": Java字节码结构及解析过程,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/java/vm/bytecode_base/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Touch and Parse Java Class File</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Touch and Parse Java Class File</h1>
+        <em style="color: blue">Java字节码结构及解析过程</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/jvm/">#JVM</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-10-01T11:31:12&#43;08:00">
+            2018/Oct/1
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="0x00-toc">0x00. TOC</h3>
+
+<ul>
+<li><a href="#0x01-概述">0x01.概述</a></li>
+<li><a href="#0x02-字节码文件结构">0x02.字节码文件结构</a>
+
+<ul>
+<li><a href="#1-魔数">1.魔数</a></li>
+<li><a href="#2-版本号">2.版本号</a></li>
+<li><a href="#3-常量池">3.常量池</a></li>
+<li><a href="#4-访问标志">4.访问标志</a></li>
+<li><a href="#5-类索引、父类索引与结构索引集合">5.类索引、父类索引与结构索引集合</a></li>
+<li><a href="#6-字段表集合">6.字段表集合</a></li>
+<li><a href="#7-方法表集合">7.方法表集合</a></li>
+<li><a href="#8-属性表集合">8.属性表集合</a>
+
+<ul>
+<li><a href="#8-1-code">8.1 Code</a></li>
+<li><a href="#8-2-exception">8.2 Exception</a></li>
+<li><a href="#8-3-linenumbertable">8.3 LineNumberTable</a></li>
+<li><a href="#8-4-localvariabletable">8.4 LocalVariableTable</a></li>
+<li><a href="#8-5-localvariabletypetable">8.5 LocalVariableTypeTable</a></li>
+<li><a href="#8-6-sourcefile">8.6 SourceFile</a></li>
+<li><a href="#8-7-constantvalue">8.7 ConstantValue </a></li>
+</ul></li>
+</ul></li>
+<li><a href="#0x03-解析">0x03.解析</a></li>
+<li><a href="#0x04-参考">0x04.参考</a></li>
+</ul>
+
+<h3 id="0x01-概述">0x01. 概述</h3>
+
+<p>为了实现在不同的操作系统和硬件体系结构下的平台无关性和语言无关性，Java 语言设计者定义了一套程序存储结构的格式规范，即把源程序编译成具有一定格式的字节码文件，各个平台上的虚拟机再按照相应的规范把该字节码文件解析成其平台下的运行代码。</p>
+
+<p>​            <img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/jvm/bytecode/platform_independence.png" alt="img" title="平台无关性" /></p>
+
+<p>这样不仅实现了<code>一处编写，到处运行(Write Once, Run Anywhere)</code>的平台无关性，还为在 Java 虚拟机上运行非 Java 语言代码提供了可能。时至今日，已经发展出有很多其他能够在 Java 虚拟机上运行的语言，如Clojure、Groovy、JRuby、Jython、Scala等。</p>
+
+<p>​                            <img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/jvm/bytecode/language_independence.png" alt="independence" title="语言无关性" /></p>
+
+<h3 id="0x02-字节码文件结构">0x02. 字节码文件结构</h3>
+
+<p>Class 文件是一组以8位字节为单位的二进制流，各个数据项严格按照顺序无间隙地紧凑排列在 Class 文件中。当遇到需要占用8位字节以上的空间的数据项时，则会将其按照<code>大端(Big-Endian)</code>方式分割成若干个8位字节进行存储（大端方式指数据的最高位字节存储在地址的最低位，最低位字节存储在地址的最高位）。</p>
+
+<p>根据 JVM 规范，Class 文件格式采用包含<code>无符号数</code>和<code>表</code>的类结构体存储数据，无符号数以<code>u1</code>、<code>u2</code>、<code>u4</code>、<code>u8</code>分别代表1、2、4、8个字节的无符号数，用来描述数字、索引引用、UTF-8字符串值等；表是由多个无符号数或其他表作为数据项构成的符合数据类型，用于描述有层次关系的符合结构的数据，一般以<code>_info</code>结尾。另外，除了表和无符号数外，当需要表示一个长度不定的数据时，往往需要前置一个容量计数器。Class 文件格式具体如下图所示：</p>
+
+<p><img src="http://i.imgur.com/YbUba2U.png" alt="class" title="字节码结构" /></p>
+
+<h4 id="1-魔数">1. 魔数</h4>
+
+<p>如 gif 和 jpeg 等文件的存储标准一样，为了标识和验证其文件的身份，每个 Class 文件使用前四个字节作为<code>魔数(Magic Number)</code>，用于确定该文件是否为一个能被虚拟机接受的文件，其值固定为<code>oxCAFEBABE</code>。</p>
+
+<h4 id="2-版本号">2. 版本号</h4>
+
+<p>第5、6字节表示<code>次版本号(Minor Version)</code>，第7、8和字节表示朱版本号(Major Veriosn)。Java的主版本号是从45开始
+的，JDK 1.1之后的每个 JDK 大版本发布主版本号向上加1 (JDK 1.0 ~ 1.1 使用了 45.0〜45.3 的版本号)，<strong>高版本的 JDK 能向下兼容以前版本的 Class 文件，但不能运行以后版本的 Class 文件</strong>，即使文件格式并未发生任何变化，虚拟机也必须拒绝执行超过其版本号的 Class 文件。例如， JDK 1.1 能支持版本号为 45.0〜45.65535 的 Class 文件，无法执行版本号为 46.0 以上的 Class 文件，而 JDK 1.2  则能支持 4 5 .0〜46.65 535 的 Class 文件，</p>
+
+<p>​     <img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/jvm/bytecode/version.png" alt="version" title="版本对照表" /></p>
+
+<h4 id="3-常量池">3. 常量池</h4>
+
+<p>由于常量池中常量的数量是不固定的，所以在常量池的人口需要放置一项u2类型的数据，代表常量池容量计数值(constant_pool_count)。与  Java 中语言习惯不一样的是，这个容量计数是从1而不是0开始的，</p>
+
+<p>常量池中主要存放两大类常量：字面量(Literal)和符号引用(Symbolic References)。字面量比较接近于 Java 语言层面的常量概念，如文本字符串、声明为 final 的常量值等。而符号引用則属于编译原理方面的概念，</p>
+
+<p>代码在使用 Javac 进行编译时，采用<code>动态链接</code>方式，即在 Class 文件中不会保存各个方法、宇段的最终内存布局信息，因此这些宇段、方法的符号引用不经过<code>运行期</code>转换的话无法得到真正的内存人口地址，也就无法直接被虚拟机使用。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析、翻译到具体的内存地址之中。</p>
+
+<p>常量池中每一项常量都是一个表，在 JDK 1 .7 之前共有14种结构各不相同的表结构，这14种表开始的第一位都是一个ul类型的标志位，代表当前这个常量属于哪种常量类型。这14种常置类型所代表的具体含义见下表：</p>
+
+<table border="1">
+<tbody>
+<tr>
+<th style="font-size:12px;background-color:#abd28e;border-width: 1px;padding: 8px;border-style: solid;border-color: #9dcc7a;text-align:left;">常量</th>
+<th style="font-size:12px;background-color:#abd28e;border-width: 1px;padding: 8px;border-style: solid;border-color: #9dcc7a;text-align:left;">项目</th>
+<th style="font-size:12px;background-color:#abd28e;border-width: 1px;padding: 8px;border-style: solid;border-color: #9dcc7a;text-align:left;">类型</th>
+<th style="font-size:12px;background-color:#abd28e;border-width: 1px;padding: 8px;border-style: solid;border-color: #9dcc7a;text-align:left;">描述</th>
+</tr>
+<tr>
+<td rowspan="3" valign="top"><p>&nbsp;</p><p>CONSTANT_Utf8</p></td>
+<td valign="top"><p align="center">tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 1</p></td>
+</tr>
+<tr>
+<td valign="top"><p>length</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>UTF-8 编码的字符串占用的字节数</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>bytes</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>长度为 length 的 UTF-8 编码的字符串</p></td>
+</tr>
+
+<tr>
+<td rowspan="2" valign="top"><p>&nbsp;</p><p>CONSTANT_Integer</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 3</p>
+</td>
+</tr>
+
+<tr>
+<td valign="top"><p>bytes</p></td>
+<td valign="top"><p>u4</p></td>
+<td valign="top"><p>按照高位在前存储的 int 值</p></td>
+</tr>
+
+<tr>
+<td rowspan="2" valign="top"><p>&nbsp;</p><p>CONSTANT_Float</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 4</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>bytes</p></td>
+<td valign="top"><p>u4</p></td>
+<td valign="top"><p>按照高位在前存储的 float 值</p></td>
+</tr>
+
+<tr>
+<td rowspan="2" valign="top"><p>&nbsp;</p><p>CONSTANT_Long</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 5</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>bytes</p></td>
+<td valign="top"><p>u8</p></td>
+<td valign="top"><p>按照高位在前存储的 long 值</p></td>
+</tr>
+
+<tr>
+<td rowspan="2" valign="top"><p>&nbsp;</p><p>CONSTANT_Double</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 6</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>bytes</p></td>
+<td valign="top"><p>u8</p></td>
+<td valign="top"><p>按照高位在前存储的 double 值</p></td>
+</tr>
+
+<tr>
+<td rowspan="2" valign="top"><p>&nbsp;</p><p>CONSTANT_Class</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 7</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>name_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向全限定名常量项的索引</p></td>
+</tr>
+
+<tr>
+<td rowspan="2" valign="top"><p>&nbsp;</p><p>CONSTANT_String</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 8</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>string_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向字符串字面量的索引</p></td>
+</tr>
+
+<tr>
+<td rowspan="3" valign="top"><p>&nbsp;</p><p>CONSTANT_Fieldref</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 9</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>class_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向声明字段的类或接口描述符 CONSTANT_Class_info 的索引项</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>name_and_type_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向字段名称及类型描述符 CONSTANT_NameAndType_info 的索引项</p></td>
+</tr>
+
+<tr>
+<td rowspan="3" valign="top"><p>&nbsp;</p><p>CONSTANT_Methodref</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 10</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>class_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向声明方法的类描述符 CONSTANT_Class_info 的索引项</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>name_and_type_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向方法名称及类型描述符 CONSTANT_NameAndType_info 的索引项</p></td>
+</tr>
+
+<tr>
+<td rowspan="3" valign="top"><p>&nbsp;</p><p>CONSTANT_InrerfaceMethodref</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 11</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>class_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向声明方法的接口描述符 CONSTANT_Class_info 的索引项</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>name_and_type_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向方法名称及类型描述符 CONSTANT_NameAndType_info 的索引项</p></td>
+</tr>
+
+<tr>
+<td rowspan="3" valign="top"><p>&nbsp;</p><p>CONSTANT_NameAndType</p></td>
+<td valign="top"><p>tag</p></td>
+<td valign="top"><p>u1</p></td>
+<td valign="top"><p>值为 12</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>name_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向字段或方法名称常量项目的索引</p></td>
+</tr>
+
+<tr>
+<td valign="top"><p>descriptor_index</p></td>
+<td valign="top"><p>u2</p></td>
+<td valign="top"><p>指向该字段或方法描述符常量项的索引</p></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="4-访问标志">4. 访问标志</h4>
+
+<p>两个字节大小，用于识别一些类或者接口层次的访问信息，包括：这个 Class 是类还是接口；是否定义为 public 类型；是否定义为 abstract 类型；如果是类的话，是否被声明为 final 等。具体的标志位以及标志的含义见下表</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/jvm/bytecode/acess_flags.png" alt="acess_flags" title="acess_flags" /></p>
+
+<h4 id="5-类索引-父类索引与接口索引集合">5. 类索引、父类索引与接口索引集合</h4>
+
+<p>类索引(this_class)和父类索引(super_class)都是—个 u2 类型的数据，而接口索引集合(interfaces)是一组 u2 类型的数据的集合，Class 文件中由这三项数据来确定这个类的继承关系。类索引用于确定这个类的全限定名，父类索引用于确定这个类的父类时全限定名。</p>
+
+<p>由于 Java 语言不允许多重继承，所以父类索引只有一个，除了 java.lang.Objcct 之外，所有的 Java 类都有父类，因此除了 java.lang.Object 外，所有 Java 类的父类索引不为0。</p>
+
+<p>接口索引集合用于描述这个类实现了哪些接口，这些被实现的接口将按 implements 语句（如果这个类本身是一个接口，则应当是 extends 语句）后的接口顺序从左到右排列在接口索引集合中。</p>
+
+<p>类索引、父类索引和接口索引集合都按順序排列在访问标志之后，类索引和父类索引用两个u2类型的索引值表示，它们各自指向一个类型为<code>CONSTANT_Class_info</code>的类描述符常童，通过<code>C0NSTANT_Class_info</code>类型的常量中的索引值可找到定义在<code>CONSTANT_Utf8_info</code>类型的常量中的全限定名字符串。</p>
+
+<p>对于接口索引集合，人口的第一项是 u2 类型的接口计数器(interfaces_count)，表示索引表的容最。如果该类没有实现任何接口，则该计数器值为 0，后面接口的索引表不再占用任何字节。</p>
+
+<h4 id="6-字段表集合">6. 字段表集合</h4>
+
+<p>宇段表(field_jnfo)用于描述接口或者类中声明的变量。字段(field)包括类级变量以及实例级变量，但不包括在方法内部声明的局部变量。一个字段可以包括的信息有：字段的作用域（public、private、protected修饰符）、是实例变量还是类变量（static修饰符）、可变性（final)、并发可见性（volatile修饰符，是否强制从主存读写）、可否被序列化（transient修饰符)、字段数据类型（基本类型、对象、数组）、宇段名称。</p>
+
+<p>上述这些信息中，各个修饰符都是布尔值，要么有某个修饰符，要么没有，很适合使用标志位来表示。而字段叫什么名字、字段被定义为什么数据类型，这些都是无法固定的，只能引用常量池中的常量来描述。下表列出了字段表的最终格式：</p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>access_flags</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>name_index</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>descriptor_index</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>attributes_count</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>attribute_info</td>
+<td>attributes</td>
+<td>attributes_count</td>
+</tr>
+</tbody>
+</table>
+
+<p>字段修饰符(access_flags)与类修饰符类似，其标志值与含义的对应关系如下表所示</p>
+
+<table>
+<thead>
+<tr>
+<th>标志名称</th>
+<th>标志值</th>
+<th>含义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ACC_PUBLIC</td>
+<td>0x0001</td>
+<td>字段是否 public</td>
+</tr>
+
+<tr>
+<td>ACC_PRIVATE</td>
+<td>0x0002</td>
+<td>字段是否 private</td>
+</tr>
+
+<tr>
+<td>ACC_PROTECTED</td>
+<td>0x0004</td>
+<td>字段是否 protected</td>
+</tr>
+
+<tr>
+<td>ACC_STATIC</td>
+<td>0x0008</td>
+<td>字段是否 static</td>
+</tr>
+
+<tr>
+<td>ACC_FINAL</td>
+<td>0x0010</td>
+<td>字段是否 final</td>
+</tr>
+
+<tr>
+<td>ACC_VOLATILE</td>
+<td>0x0040</td>
+<td>字段是否 volatile</td>
+</tr>
+
+<tr>
+<td>ACC_TRANSIENT</td>
+<td>0x0080</td>
+<td>字段是否 transient</td>
+</tr>
+
+<tr>
+<td>ACC_SYNTHETIC</td>
+<td>0x1000</td>
+<td>字段是否由编译器自动产生</td>
+</tr>
+
+<tr>
+<td>ACC_ENUM</td>
+<td>0x4000</td>
+<td>字段是否 enum</td>
+</tr>
+</tbody>
+</table>
+
+<p>描述符标识字符及其含义的对照关系如下表所示</p>
+
+<table>
+<thead>
+<tr>
+<th>标识字符</th>
+<th>含义</th>
+<th>标识字符</th>
+<th>含义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>B</td>
+<td>基本类型 byte</td>
+<td>J</td>
+<td>基本类型 long</td>
+</tr>
+
+<tr>
+<td>C</td>
+<td>基本类型 char</td>
+<td>S</td>
+<td>基本类型 short</td>
+</tr>
+
+<tr>
+<td>D</td>
+<td>基本类型 double</td>
+<td>Z</td>
+<td>基本类型 boolean</td>
+</tr>
+
+<tr>
+<td>F</td>
+<td>基本类型 int</td>
+<td>V</td>
+<td>特殊类型 void</td>
+</tr>
+
+<tr>
+<td>I</td>
+<td>基本类型 int</td>
+<td>L</td>
+<td>对象类型</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="7-方法表集合">7. 方法表集合</h4>
+
+<p>结构与属性表一样，也包括access_flags、name_index、descriptor_index、attributes_count和attributes，差异主要在访问标志，方法的访问标志及其含义如下表所示</p>
+
+<table>
+<thead>
+<tr>
+<th>标志名称</th>
+<th>标志值</th>
+<th>含义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ACC_PUBLIC</td>
+<td>0x0001</td>
+<td>方法是否 public</td>
+</tr>
+
+<tr>
+<td>ACC_PRIVATE</td>
+<td>0x0002</td>
+<td>方法是否 private</td>
+</tr>
+
+<tr>
+<td>ACC_PROTECTED</td>
+<td>0x0004</td>
+<td>方法是否 protected</td>
+</tr>
+
+<tr>
+<td>ACC_STATIC</td>
+<td>0x0008</td>
+<td>方法是否 static</td>
+</tr>
+
+<tr>
+<td>ACC_FINAL</td>
+<td>0x0010</td>
+<td>方法是否 final</td>
+</tr>
+
+<tr>
+<td>ACC_SYNCHRONIZED</td>
+<td>0x0020</td>
+<td>方法是否 synchronized</td>
+</tr>
+
+<tr>
+<td>ACC_BRIDGE</td>
+<td>0x0040</td>
+<td>方法是否是由编译器产生的桥接方法</td>
+</tr>
+
+<tr>
+<td>ACC_VARARGS</td>
+<td>0x0080</td>
+<td>方法是否接受不定参数</td>
+</tr>
+
+<tr>
+<td>ACC_NATIVE</td>
+<td>0x0180</td>
+<td>方法是否为 native</td>
+</tr>
+
+<tr>
+<td>ACC_ABSTRACT</td>
+<td>0x0400</td>
+<td>是否抽象方法</td>
+</tr>
+
+<tr>
+<td>ACC_STRICTFP</td>
+<td>0x0800</td>
+<td>方法是否为 strictfp</td>
+</tr>
+
+<tr>
+<td>ACC_SYNTHETIC</td>
+<td>0x1000</td>
+<td>方法是否由编译器自动产生</td>
+</tr>
+</tbody>
+</table>
+
+<p>除了上述对于方法的描述外，方法中的代码，经过编译器编译成字节码指令后，存放在方法属性表集合的一个名为<code>Code</code>的属性中。</p>
+
+<p>与字段表集合相对应的，如果父类方法在子类中没有被重写，方法表集合中就不会出现来自父类的方法信息。但同样的，有可能会出现由编泽器自动添加的方法，最典型的是类构造器<code>&lt;cinit&gt;</code>方法和实例构造器<code>&lt;init&gt;</code>方法。</p>
+
+<p>不同于语法层面的重载，Class 文件中允许具有相同的方法名和特征签名但返回值不同的两个方法共存。</p>
+
+<h4 id="8-属性表集合">8. 属性表集合</h4>
+
+<p>在JDK 1.7 的 JVM 规范中预定义了 20 种属性项，详情参照 <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#4.7.%20Attributes">JVM Specification</a></p>
+
+<h5 id="8-1-code">8.1. Code</h5>
+
+<p>Java 程序方法体中的代码经过 Javac 编译器处理后，最终变为字节码指令存储在 Code 属性内。Code 属性出现在方法表的属性集合中，但并非所有的方法表都必须存在这个属性，比如<strong>接口或者抽象类中的方法就不存在 Code 属性</strong>，Code 属性结构将如下表所示：</p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>指向常量池 utf-8 型常量的索引，常量值固定为<code>Code</code></td>
+</tr>
+
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性值长度</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>max_stack</td>
+<td>1</td>
+<td>操作数栈最大深度，VM根据这个值分配栈帧中的操作数深度</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>max_locals</td>
+<td>1</td>
+<td>代表当前属性表示的方法存储局部变量表所需的空间大小，单位是<code>Slot</code>，当代码的执行超出一个局部的作用域时，该变量的内存单元(Slot)会被其他局部变量占用，Javac 编译器会根据变量的作用域来分配 Slot 给每个变量使用，然后算出<code>max_locals</code></td>
+</tr>
+
+<tr>
+<td>u4</td>
+<td>code_length</td>
+<td>1</td>
+<td>方法体中的代码编译后的字节码长度，因为 JVMS 明确限制一个方法不允许超过 65535 条指令，即该值实际只使用了 16 位，若超过该限制，Javac 会拒绝编译</td>
+</tr>
+
+<tr>
+<td>u1</td>
+<td>code</td>
+<td>code_length</td>
+<td>不同于字节码文件中的其他数据项用于描述元数据，<code>Code</code>用于描述代码，一个字节最多可表示的指令数为 2<sup>8</sup>。</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>exception_table_length</td>
+<td>1</td>
+<td>异常表的长度，由于异常表对于 Code 非必须，故此项可为 0，<code>exception_table</code>为空</td>
+</tr>
+
+<tr>
+<td>exception_info</td>
+<td>exception_table</td>
+<td>exception_table_length</td>
+<td>异常表内容</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>attributes_count</td>
+<td>1</td>
+<td>代码块中的属性个数</td>
+</tr>
+
+<tr>
+<td>attribute_info</td>
+<td>attributes</td>
+<td>attributes_count</td>
+<td>属性集合</td>
+</tr>
+</tbody>
+</table>
+
+<p>异常表(exception_table)的结构及其说明如下表所示</p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>start_pc</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>end_pc</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>handler_pc</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>catch_type</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>当程序计数器(PC)的值在 [<code>start_pc</code>, <code>end_pc</code>) 范围内，异常处理器将被激活，即当在[<code>start_pc</code>, <code>end_pc</code>) 间出现类型为<code>catch_type</code>或其子类的异常（catch_type为指向一个CONSTANT_Class_info型常量的索引）时，将转向第<code>handler_pc</code>行继续处理，当<code>catch_type</code>为 0 时，代表任意异常情况都需要转向到<code>handler_pc</code>处进行处理。</li>
+<li>将<code>end_pc</code>设置为不包含的范围被证实是<code>JVMS</code>设计的一个历史错误。因为如果一个方法的 JVM 机器码刚好是 2<sup>16</sup> - 1 = 65535 字节长，并且以一个 1 字节的指令结束，那么该指令不能被一个异常处理器保护。编译器作者可以通过将任何方法、实例初始化方法或静态初始化器(任何代码数组的大小)生成的 JVM 代码的最大大小限制为 65534 字节来解决这个问题。</li>
+<li><code>handler_pc</code>项的值指示异常处理器的开始，其值必须是<code>Code</code>项目数组中的有效索引，并且必须是指令的操作码的索引。</li>
+</ul>
+
+<p><code>Code</code> 实例：编写<code>inc</code>函数，查看其编译后的字节码序列及异常表，查询字节码与指令的对照表可以得出大体的执行流程如下所示，其中只有一个变量x，因为第一个本地变量 Slot_0 用来存放 this，所以 x 值的存取涉及的都是操作栈中的第二个操作单元 Slot_1，从而使用的操作栈机器指令是以 1 结尾的。如<code>istore_1</code>、<code>iload_1</code>等等。<sup><a href="#0x00-toc">TOC</a></sup></p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/jvm/bytecode/code_attr.png" alt="code" /></p>
+
+<h5 id="8-2-exceptions">8.2. Exceptions</h5>
+
+<p>不同于<code>Code</code>中的异常表，该属性项用于列出方法中可能会抛出的受检查异常(Check Exception)，即方法描述时在<code>throws</code>关键字后面的列举的异常。其结构如下表所示：</p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>指向常量池的<code>CONSTANT_Utf8_info</code>项的索引，常量值固定为<code>Exception</code></td>
+</tr>
+
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>表示属性长度，不包括初始的 6 个字节。</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>number_of_exceptions</td>
+<td>1</td>
+<td><code>exception_index_table</code>的个数</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>exception_index_table</td>
+<td>number_of_exceptions</td>
+<td>指向<code>CONSTANT_Class_info</code>的型常量的索引</td>
+</tr>
+</tbody>
+</table>
+
+<p>方法只有在满足以下三个条件中的至少一个时才会抛出异常:</p>
+
+<ul>
+<li>异常是<code>RuntimeException</code>或它的一个子类的一个实例。</li>
+<li>异常是<code>Error</code>或其子类之一的实例。</li>
+<li>这个异常是刚才描述的<code>exception_index_table</code>中指定的一个异常类或其子类之一的实例。</li>
+</ul>
+
+<p>这些需求在 JVM 中没有强制执行，它们仅在编译时强制执行。</p>
+
+<h5 id="8-3-linenumbertable">8.3. LineNumberTable</h5>
+
+<p>用于描述源码的行号与字节码行号（字节码偏移量）之间的关系它并不是运行时必需的属性，但酞认会生成到 Class 文件中，可在 Javac 中分别使用 <code>-g:none</code>或 <code>-g:lines</code>选项来取消或要求生成这项信息。如果选择不生成该属性，对程序运行产生的最主要的影响就是当抛出异常时，堆栈中将不会显示出错的行号，并且在调试程序的时候，也无`法按照源码行来设置断点。其结构如下所示：<sup><a href="#0x00-toc">TOC</a></sup></p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>指向常量池的<code>CONSTANT_Utf8_info</code>项的索引，常量值固定为<code>LineNumberTable</code></td>
+</tr>
+
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>表示属性长度，不包括初始的 6 个字节。</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>line_number_table_length</td>
+<td>1</td>
+<td><code>line_number_table</code>个数</td>
+</tr>
+
+<tr>
+<td>line_number_info</td>
+<td>line_number_table</td>
+<td>line_number_table_length</td>
+<td><code>line_number_info</code>包括<code>start_pc</code>和<code>line_number</code>两个 u2 类型的数据项，分别表示字节码行号和 Java 源码行号。</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="8-4-localvariabletable">8.4. LocalVariableTable</h5>
+
+<p>用于描述栈帧中局部变量表中的变量与 Java 源码中定义的变量之间的关系，不是运行时必需的属性，但默认会生成到 Class 文件之中，可以在 Javac 中分别使用<code>-g:none</code>或<code>-g:vars</code>选项来取消或要求生成这项信息。如果没有生成这项厲性，最大的影响就是当其他人引用这个方法时，所有的参数名称都将会丢失，IDE 将会使用诸如 arg0、arg1 之类的占位符代替原有的参数名，这对程序运行没有影响，但是会对代码编写和阅读带来较大不便，而且在调试期间无法根据参数名称从上下文中获得参数值。该属性结构如下表所示：<sup><a href="#0x00-toc">TOC</a></sup></p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>指向常量池的<code>CONSTANT_Utf8_info</code>项的索引，常量值固定为<code>LocalVariableTable</code></td>
+</tr>
+
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>表示属性长度，不包括初始的 6 个字节。</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>local_variable_table_length</td>
+<td>1</td>
+<td><code>local_variable_table</code>个数</td>
+</tr>
+
+<tr>
+<td>local_variable_info</td>
+<td>local_variable_table</td>
+<td>local_variable_table_length</td>
+<td>本地变量表集合</td>
+</tr>
+</tbody>
+</table>
+
+<p><code>local_variable_info</code>表示一个栈帧与源码中的局部变量的关系，其结构如下表所示：</p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>start_pc</td>
+<td>1</td>
+<td>代表该局部变量的生命周期开始的字节码偏移量</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>length</td>
+<td>1</td>
+<td>代表该局部变量的作用域覆盖的范围</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>name_index</td>
+<td>1</td>
+<td>指向常量池的<code>CONSTANT_Utf8_info</code>项的索引，常量值为变量名</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>descriptor_index</td>
+<td>1</td>
+<td>指向常量池的<code>CONSTANT_Utf8_info</code>项的索引，常量值为描述符</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>index</td>
+<td>1</td>
+<td>该局部变量在栈帧局部变量表中 Slot 的位置，当该变量为 double 或 long 的 64 位类型的数据时，它占用的 Slot 为 index 和 index + 1 两个</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="8-5-localvariabletypetable">8.5. LocalVariableTypeTable</h5>
+
+<p>结构与<code>LocalVariableTable</code>非常相似，仅是把记录的字段描述符<code>descriptor_index</code>换成了<code>signature_index</code>，后者为用于表示字段的特征签名，在引入泛型后，由于描述符中泛型的参数化类型会被擦除，描述符不能准确描述泛型类型，所以才引入该属性。</p>
+
+<pre><code>LocalVariableTypeTable_attribute {
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 local_variable_type_table_length;
+    {   u2 start_pc;
+        u2 length;
+        u2 name_index;
+        u2 signature_index;
+        u2 index;
+    } local_variable_type_table[local_variable_type_table_length];
+}
+</code></pre>
+
+<h5 id="8-6-sourcefile">8.6. SourceFile</h5>
+
+<p>定长的可选属性，用于记录生成该字节码文件的源码文件名称，可分别用 Javac 的<code>-g:none</code>或<code>-g:source</code>选项来关闭或要求生成这项信息。在 Java 中，对于大多数的类来说，类名和文件名是一致的，但是有一些特殊情况（如内部类）例外。如果不生成该属性，抛出异常时，堆找中将不会显示出错代码所属的文件名。该属性结构如下表所示：</p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>指向常量池中的<code>CONSTANT_Utf8_info</code>项的索引，常量值固定为<code>SourceFile</code>。</td>
+</tr>
+
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度，固定为 2</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>sourcefile_index</td>
+<td>1</td>
+<td>指向常量池中的<code>CONSTANT_Utf8_info</code>项的索引，常量值为其源码文件名。</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="8-7-constantvalue">8.7. ConstantValue</h5>
+
+<p>用于通知虚拟机自动为静态变量赋值，只有被<code>static</code>修饰的变量才能使用该属性。其结构如下表所示</p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>指向常量池中的<code>CONSTANT_Utf8_info</code>项的索引，常量值固定为<code>ConstantValue</code>。</td>
+</tr>
+
+<tr>
+<td>u1</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度，固定为 2</td>
+</tr>
+
+<tr>
+<td>u2</td>
+<td>constantvalue_index</td>
+<td>1</td>
+<td>指向常量池中一个字面量常量的索引，，根据变量类型的不同，可为<code>CONSTANT_Long_info</code>、 <code>CONSTANT_Long_info</code>、     <code>CONSTANT_Long_info</code>、<code>CONSTANT_Integer_info</code>、<code>CONSTANT_Float_info</code>、<code>CONSTANT_Double_info</code>、、<code>CONSTANT_String_info</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>对于非静态的变量的赋值是在实例构造器<code>&lt;cinit&gt;</code>中进行的，而类变量的赋值可以在类构造方法<code>&lt;cinit&gt;</code>方法中进行或者使用<code>ConstantValue</code>属性。</p>
+
+<h3 id="0x03-解析">0x03. 解析</h3>
+
+<p>国庆之际，闲得无聊，想着自己折腾下解析字节码文件，因为我对官方性的东西常抱有质疑的想法，官方说得越不容怀疑，我反而越不愿相信，除非自己动手得到结果，听别人的传授固然可取，但没有实践过心里总不踏实，特别是当我发现周志明那本《深入理解Java虚拟机》中作者煞有其事地贴出一段错误的代码样例的时候（无意黑，书整体很好）。<sup><a href="#0x00-toc">TOC</a></sup></p>
+
+<p>回到解析字节码文件这件事上，如果没有进行编码的设置，用记事本打开字节码文件肯定会出现乱码的，可以用<code>WinHex</code>、<code>Sublime</code>等工具查看格式化的十六进制数据，当然我们也可以通过编程实现数据的格式化并进行输出打印：</p>
+
+<pre><code class="language-java">/**
+ * format binary array of a class file into
+ * hexadecimal string and print it
+ */
+public void printHexArr() {
+    System.out.println(&quot;hexadecimal code:&quot;);
+    String[] strings = ByteUnitReader.binaryToHexString(classFileBytes);
+    for (int i = 1; i &lt;= strings.length;i++) {
+        String symbol = (i % 28 == 0 || i == strings.length) ? &quot;\n&quot; : &quot;, &quot;;
+        System.out.print(strings[i - 1] + symbol);
+    }
+}
+
+public static String[] binaryToHexString(byte[] bytes){
+    String hexStr =  &quot;0123456789ABCDEF&quot;, hex;
+    String[] hexStrings = new String[bytes.length];
+    for (int i = 0; i &lt; bytes.length; i++) {
+        // 字节高4位
+        hex = String.valueOf(hexStr.charAt((bytes[i] &amp; 0xF0) &gt;&gt; 4));
+        // 字节低4位
+        hex += String.valueOf(hexStr.charAt(bytes[i] &amp; 0x0F));
+        hexStrings[i] = hex;
+    }
+    return hexStrings;
+}
+</code></pre>
+
+<p>其中在<code>ByteUnitReader.binaryToHexString(byte[] bytes)</code>中分别获取一个字节的高低四位，将其值分别作为<code>hexStr</code>的索引获取相应的十六进制表示，为了利用博客的空间，<code>printHexArr()</code>中则每 28 个字节进行换行。基于以下测试程序的字节码进行解析，只做简单的验证用：</p>
+
+<pre><code class="language-java">package decompile;
+import java.util.Iterator;
+public class IterableClass implements Iterable&lt;String&gt;{
+    private String[] arr;
+    public IterableClass(String[] arr) {
+        this.arr = arr;
+    }
+    @Override
+    public Iterator&lt;String&gt; iterator() {
+        return new Iterator&lt;String&gt;() { 
+            private int index = 0;
+            @Override
+            public boolean hasNext() {
+                return index &lt; arr.length;
+            }
+            @Override
+            public String next() {
+                return arr[index++];
+            }
+            @Override
+            public void remove() {
+               //TODO
+            }
+        };
+    }
+}
+</code></pre>
+
+<p>格式化字节码后得到的十六进制数据序列如下所示：</p>
+
+<pre><code>CA, FE, BA, BE, 00, 00, 00, 34, 00, 25, 09, 00, 05, 00, 1C, 0A, 00, 06, 00, 1D, 07, 00, 1E, 0A, 00, 03, 00, 1F
+07, 00, 20, 07, 00, 21, 07, 00, 22, 01, 00, 0C, 49, 6E, 6E, 65, 72, 43, 6C, 61, 73, 73, 65, 73, 01, 00, 03, 61
+72, 72, 01, 00, 13, 5B, 4C, 6A, 61, 76, 61, 2F, 6C, 61, 6E, 67, 2F, 53, 74, 72, 69, 6E, 67, 3B, 01, 00, 06, 3C
+69, 6E, 69, 74, 3E, 01, 00, 16, 28, 5B, 4C, 6A, 61, 76, 61, 2F, 6C, 61, 6E, 67, 2F, 53, 74, 72, 69, 6E, 67, 3B
+29, 56, 01, 00, 04, 43, 6F, 64, 65, 01, 00, 0F, 4C, 69, 6E, 65, 4E, 75, 6D, 62, 65, 72, 54, 61, 62, 6C, 65, 01
+00, 12, 4C, 6F, 63, 61, 6C, 56, 61, 72, 69, 61, 62, 6C, 65, 54, 61, 62, 6C, 65, 01, 00, 04, 74, 68, 69, 73, 01
+00, 19, 4C, 64, 65, 63, 6F, 6D, 70, 69, 6C, 65, 2F, 49, 74, 65, 72, 61, 62, 6C, 65, 43, 6C, 61, 73, 73, 3B, 01
+00, 08, 69, 74, 65, 72, 61, 74, 6F, 72, 01, 00, 16, 28, 29, 4C, 6A, 61, 76, 61, 2F, 75, 74, 69, 6C, 2F, 49, 74
+65, 72, 61, 74, 6F, 72, 3B, 01, 00, 09, 53, 69, 67, 6E, 61, 74, 75, 72, 65, 01, 00, 2A, 28, 29, 4C, 6A, 61, 76
+61, 2F, 75, 74, 69, 6C, 2F, 49, 74, 65, 72, 61, 74, 6F, 72, 3C, 4C, 6A, 61, 76, 61, 2F, 6C, 61, 6E, 67, 2F, 53
+74, 72, 69, 6E, 67, 3B, 3E, 3B, 01, 00, 0A, 61, 63, 63, 65, 73, 73, 24, 30, 30, 30, 01, 00, 2E, 28, 4C, 64, 65
+63, 6F, 6D, 70, 69, 6C, 65, 2F, 49, 74, 65, 72, 61, 62, 6C, 65, 43, 6C, 61, 73, 73, 3B, 29, 5B, 4C, 6A, 61, 76
+61, 2F, 6C, 61, 6E, 67, 2F, 53, 74, 72, 69, 6E, 67, 3B, 01, 00, 02, 78, 30, 01, 00, 3A, 4C, 6A, 61, 76, 61, 2F
+6C, 61, 6E, 67, 2F, 4F, 62, 6A, 65, 63, 74, 3B, 4C, 6A, 61, 76, 61, 2F, 6C, 61, 6E, 67, 2F, 49, 74, 65, 72, 61
+62, 6C, 65, 3C, 4C, 6A, 61, 76, 61, 2F, 6C, 61, 6E, 67, 2F, 53, 74, 72, 69, 6E, 67, 3B, 3E, 3B, 01, 00, 0A, 53
+6F, 75, 72, 63, 65, 46, 69, 6C, 65, 01, 00, 12, 49, 74, 65, 72, 61, 62, 6C, 65, 43, 6C, 61, 73, 73, 2E, 6A, 61
+76, 61, 0C, 00, 09, 00, 0A, 0C, 00, 0B, 00, 23, 01, 00, 19, 64, 65, 63, 6F, 6D, 70, 69, 6C, 65, 2F, 49, 74, 65
+72, 61, 62, 6C, 65, 43, 6C, 61, 73, 73, 24, 31, 0C, 00, 0B, 00, 24, 01, 00, 17, 64, 65, 63, 6F, 6D, 70, 69, 6C
+65, 2F, 49, 74, 65, 72, 61, 62, 6C, 65, 43, 6C, 61, 73, 73, 01, 00, 10, 6A, 61, 76, 61, 2F, 6C, 61, 6E, 67, 2F
+4F, 62, 6A, 65, 63, 74, 01, 00, 12, 6A, 61, 76, 61, 2F, 6C, 61, 6E, 67, 2F, 49, 74, 65, 72, 61, 62, 6C, 65, 01
+00, 03, 28, 29, 56, 01, 00, 1C, 28, 4C, 64, 65, 63, 6F, 6D, 70, 69, 6C, 65, 2F, 49, 74, 65, 72, 61, 62, 6C, 65
+43, 6C, 61, 73, 73, 3B, 29, 56, 00, 21, 00, 05, 00, 06, 00, 01, 00, 07, 00, 01, 00, 02, 00, 09, 00, 0A, 00, 00
+00, 03, 00, 01, 00, 0B, 00, 0C, 00, 01, 00, 0D, 00, 00, 00, 46, 00, 02, 00, 02, 00, 00, 00, 0A, 2A, B7, 00, 02
+2A, 2B, B5, 00, 01, B1, 00, 00, 00, 02, 00, 0E, 00, 00, 00, 0E, 00, 03, 00, 00, 00, 09, 00, 04, 00, 0A, 00, 09
+00, 0B, 00, 0F, 00, 00, 00, 16, 00, 02, 00, 00, 00, 0A, 00, 10, 00, 11, 00, 00, 00, 00, 00, 0A, 00, 09, 00, 0A
+00, 01, 00, 01, 00, 12, 00, 13, 00, 02, 00, 0D, 00, 00, 00, 33, 00, 03, 00, 01, 00, 00, 00, 09, BB, 00, 03, 59
+2A, B7, 00, 04, B0, 00, 00, 00, 02, 00, 0E, 00, 00, 00, 06, 00, 01, 00, 00, 00, 0F, 00, 0F, 00, 00, 00, 0C, 00
+01, 00, 00, 00, 09, 00, 10, 00, 11, 00, 00, 00, 14, 00, 00, 00, 02, 00, 15, 10, 08, 00, 16, 00, 17, 00, 01, 00
+0D, 00, 00, 00, 2F, 00, 01, 00, 01, 00, 00, 00, 05, 2A, B4, 00, 01, B0, 00, 00, 00, 02, 00, 0E, 00, 00, 00, 06
+00, 01, 00, 00, 00, 05, 00, 0F, 00, 00, 00, 0C, 00, 01, 00, 00, 00, 05, 00, 18, 00, 11, 00, 00, 00, 03, 00, 14
+00, 00, 00, 02, 00, 19, 00, 1A, 00, 00, 00, 02, 00, 1B, 00, 08, 00, 00, 00, 0A, 00, 01, 00, 03, 00, 00, 00, 00
+00, 00
+</code></pre>
+
+<p>接下来是解析的过程，使用<code>ClassFile</code>类记录解析到的字节码文件的信息，主要的解析逻辑封装在<code>ClassReader</code>类中，其中的核心方法是公开的<code>parse()</code>方法：</p>
+
+<ul>
+<li>获取字节码文件的输入流，设置最大输入限制为<code>INPUT_STREAM_DATA_CHUNK_SIZE</code>大小，将输入流转为待处理的字节数组<code>classFileBytes</code>。</li>
+<li>输出十六进制字节码信息。</li>
+<li>设置私有变量<code>byteCursor</code>记录当前解析到的字节数组的索引。</li>
+<li>顺序读取魔数、版本号、常量池表项数。</li>
+<li>根据常量池表项数读取相应个表项，使用双向链表结构暂存解析到的常量池信息，当找到的常量池表项指向另一个常量池表项时，采用二分查找的思想，从当前表项索引向某一个方向开始查询，直到找到目标索引对应的表项，输出的常量池信息参考<code>javap -v</code>的结构。</li>
+<li>定义<code>AccessFlags</code>类记录解析到访问标志信息，并在类内部封装格式化打印方法。</li>
+<li>解析本类、父类、接口、域信息和方法数目。</li>
+</ul>
+
+<pre><code>magic                         cafebabe                                                              
+minorVersion                  0                                                                     
+majorVersion                  52                                                                    
+constantPoolCount             37                                                                    
+
+constantPoolItems:
+#1 = Filedref                 #5, #28   		//decompile/IterableClass, arr:[Ljava/lang/String;        
+#2 = Methodref                #6, #29   		// java/lang/Object, &lt;init&gt;:()V                           
+#3 = Class                    #30       		//decompile/IterableClass$1                               
+#4 = Methodref                #3, #31   		// decompile/IterableClass$1, &lt;init&gt;:(Ldecompile/IterableClass;)V
+#5 = Class                    #32       		//decompile/IterableClass                                 
+#6 = Class                    #33       		//java/lang/Object                                        
+#7 = Class                    #34       		//java/lang/Iterable                                      
+#8 = Utf8                     InnerClasses                                                          
+#9 = Utf8                     arr                                                                   
+#10 = Utf8                    [Ljava/lang/String;                                                   
+#11 = Utf8                    &lt;init&gt;                                                                
+#12 = Utf8                    ([Ljava/lang/String;)V                                                
+#13 = Utf8                    Code                                                                  
+#14 = Utf8                    LineNumberTable                                                       
+#15 = Utf8                    LocalVariableTable                                                    
+#16 = Utf8                    this                                                                  
+#17 = Utf8                    Ldecompile/IterableClass;                                             
+#18 = Utf8                    iterator                                                              
+#19 = Utf8                    ()Ljava/util/Iterator;                                                
+#20 = Utf8                    Signature                                                             
+#21 = Utf8                    ()Ljava/util/Iterator&lt;Ljava/lang/String;&gt;;                            
+#22 = Utf8                    access$000                                                            
+#23 = Utf8                    (Ldecompile/IterableClass;)[Ljava/lang/String;                        
+#24 = Utf8                    x0                                                                    
+#25 = Utf8                    Ljava/lang/Object;Ljava/lang/Iterable&lt;Ljava/lang/String;&gt;;            
+#26 = Utf8                    SourceFile                                                            
+#27 = Utf8                    IterableClass.java                                                    
+#28 = NameAndType             #9, #10   		// arr:[Ljava/lang/String;                                
+#29 = NameAndType             #11, #35  		// &lt;init&gt;:()V                                             
+#30 = Utf8                    decompile/IterableClass$1                                             
+#31 = NameAndType             #11, #36  		// &lt;init&gt;:(Ldecompile/IterableClass;)V                    
+#32 = Utf8                    decompile/IterableClass                                               
+#33 = Utf8                    java/lang/Object                                                      
+#34 = Utf8                    java/lang/Iterable                                                    
+#35 = Utf8                    ()V                                                                   
+#36 = Utf8                    (Ldecompile/IterableClass;)V                                          
+
+accessFlags                   ACC_PUBLIC, ACC_SUPER                                                 
+thisClass                     #5		// decompile/IterableClass                                        
+superClass                    #6		// java/lang/Object                                               
+interfacesCount               1                                                                     
+interfaces[0]                 #7		// java.lang.Iterable                                             
+
+fieldsCount                   1                                                                     
+fields[0]                     {flags=[ACC_PRIVATE]}, nameIndex=9, descriptorIndex=10, attrCount=0, fieldName='arr', descriptorName='[Ljava/lang/String;'}
+
+methodsCount                  3 
+</code></pre>
+
+<p>暂时解析到这里吧，属性表和方法表结构的解析实在太复杂，而实际上最难的部分也在这里，除了处理字节游标的位置，确保解析长度刚好覆盖一个结构外，当前解析的结构（如<code>Code</code>属性）中还可能嵌套着多层的结构，容我暂且知难而退，浅尝辄止一回，有机会再回来折腾，代码先放到<a href="https://github.com/jordonyang/ClassParser">Github仓库</a>中。</p>
+
+<p>另外，实际上肯定有更好的解析方法，比如说应用层面的<a href="https://mvnrepository.com/artifact/org.ow2.asm/asm-commons">ASM</a>，JVM具体实现、字节码可视化工具<a href="https://www.softpedia.com/get/Programming/File-Editors/Java-Class-Viewer.shtml">JavaClassViewer</a>以及我在Github上发现的几个实验性的工程（如<a href="https://github.com/zxh0/classpy">classpy</a>、<a href="https://github.com/tinylcy/ClassAnalyzer">ClassAnalyzer</a>）等等。<sup><a href="#0x00-toc">TOC</a></sup></p>
+
+<h3 id="0x04-参考">0x04. 参考</h3>
+
+<ul>
+<li>《深入理解Java虚拟机》（第二版，周志明著，机械工业出版社）</li>
+<li>Oracle: <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html" style="color:blue;text-decoration:none;">The class File Format</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/security/crypto/symmetry/des/"><h4>Implementation of DES Algorithm</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/projects/java/expression_generator/"><h4>Arithmetic Expression Generator</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

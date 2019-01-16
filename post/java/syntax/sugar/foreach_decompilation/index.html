@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Decompilation for Foreach Syntax Sugar"/>
+<meta name="twitter:description" content="通过反编译理解Java foreach 语法糖"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Decompilation for Foreach Syntax Sugar &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/java/syntax/sugar/foreach_decompilation/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="通过反编译理解Java foreach 语法糖" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-02-25T22:03:56&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    
+
+    <title>Decompilation for Foreach Syntax Sugar &middot; 临风博客</title>
+
+    
+    <meta name="description" content="通过反编译理解Java foreach 语法糖" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/java/syntax/sugar/foreach_decompilation/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Decompilation for Foreach Syntax Sugar,
+    "name": Decompilation for Foreach Syntax Sugar,
+    "wordCount": 320,
+    "timeRequired": "PT2M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/java/syntax/sugar/foreach_decompilation/,
+    "datePublished": 2018-02-25T22:03Z,
+    "dateModified": 2018-02-25T22:03Z,
+    
+    "keywords": Java,
+    "description": 通过反编译理解Java foreach 语法糖,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/java/syntax/sugar/foreach_decompilation/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Decompilation for Foreach Syntax Sugar</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Decompilation for Foreach Syntax Sugar</h1>
+        <em style="color: blue">通过反编译理解Java foreach 语法糖</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-02-25T22:03:56&#43;08:00">
+            2018/Feb/25
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="前言">前言</h3>
+
+<p>最近一直在看TiJ，在<code>持有对象</code>那章，Bruce Eckel说到<code>Collection的内容可以用foreach遍历，原因是Java SE%引入了Iterable接口，该接口包含一个能够产生Iterator的iterator方法，并且Iterable接口被foreach用来在序列中移动。因此任何Iterable的实现类都可以用于foreach语句。</code>那么我们在尝着这一语法糖的甜头时，JDK底层帮我们做了哪些事情呢？</p>
+
+<h3 id="实验">实验</h3>
+
+<p>环境：IntelliJ IDEA 2018.1、jdk1.7.0_80</p>
+
+<!-- more -->
+
+<p>下面例子的Java代码中使用了两个foreach分别遍历数组和ArrayList：</p>
+
+<pre><code class="language-java">package reversecompile;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestForEach {
+    public static void main(String[] args) {
+        String[] arr = &quot;I am a coder&quot;.split(&quot; &quot;);
+        List&lt;String&gt; strings = new ArrayList&lt;&gt;();
+        for (String s : arr){
+            strings.add(s);
+            System.out.println(s);
+        }
+        for (String s : strings){
+            System.out.println(s);
+        }
+    }
+}
+</code></pre>
+
+<p>通过IDEA反编译后的·<code>TestForEach.class</code>：</p>
+
+<pre><code class="language-java">//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+package reversecompile;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class TestForEach {
+    public TestForEach() {
+    }
+
+    public static void main(String[] args) {
+        String[] arr = &quot;I am a coder&quot;.split(&quot; &quot;);
+        List&lt;String&gt; strings = new ArrayList();
+        String[] arr$ = arr;
+        int len$ = arr.length;
+
+        for(int i$ = 0; i$ &lt; len$; ++i$) {
+            String s = arr$[i$];
+            strings.add(s);
+            System.out.println(s);
+        }
+
+        Iterator i$ = strings.iterator();
+
+        while(i$.hasNext()) {
+            String s = (String)i$.next();
+            System.out.println(s);
+        }
+    }
+}
+</code></pre>
+
+<p>可以看到JDK1.7在遍历数组时，先获取数组长度，然后将原来foreach变成了普通的for循环，原因是数组没有实现Iterable接口；而在遍历ArrayList时则是先获取该集合对象的Iterator 对象，然后再通过这个迭代器去遍历集合的元素。</p>
+
+<p>为了验证<code>任何Iterable的实现类都可以用于foreach语句</code>，我们可以试着创建一个Iterable的实现类，并且实现Iterable的iterator()方法，为了得到一个Iterator&lt;对象，在iterator()方法方法中直接返回一个Iterator的匿名实现类，在其中实现Iterator接口的方法，由于集合操作的对象是数组，鉴于数组删除元素复杂度大所以在这个匿名内部类中并没有实现remove方法。</p>
+
+<pre><code class="language-java">package reversecompile;
+
+import java.util.Iterator;
+
+public class IterableClass implements Iterable&lt;String&gt; {
+
+    private String[] arr;
+
+    public IterableClass(String[] arr) {
+        this.arr = arr;
+    }
+
+    @Override
+    public Iterator&lt;String&gt; iterator() {
+        return new Iterator&lt;String&gt;() { //返回Iterator匿名实现类
+            private int index = 0;
+            
+            @Override
+            public boolean hasNext() {
+                return index &lt; arr.length;
+            }
+
+            @Override
+            public String next() {
+                return arr[index ++];
+            }
+
+            @Override
+            public void remove() {
+               //TODO
+            }
+        };
+    }
+}
+</code></pre>
+
+<p>在测试类中使用foreach语句，因为IterableClass持有的对象类型为String，所以直接在foreach使用<code>for (String s : iterableClass)</code>：</p>
+
+<pre><code class="language-java">package reversecompile;
+
+public class TestForEach {
+    public static void main(String[] args) {
+        String[] arr = &quot;I am a coder&quot;.split(&quot; &quot;);
+        IterableClass iterableClass = new IterableClass(arr);
+
+        for (String s : iterableClass){
+            System.out.println(s);
+        }
+    }
+}
+</code></pre>
+
+<p>使用IDEA自带反编译工具得到的<code>TestForEach.class</code>文件</p>
+
+<pre><code class="language-java">//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+package reversecompile;
+
+import java.util.Iterator;
+
+public class TestForEach {
+    public TestForEach() {
+    }
+
+    public static void main(String[] args) {
+        String[] arr = &quot;I am a coder&quot;.split(&quot; &quot;);
+        IterableClass iterableClass = new IterableClass(arr);
+        Iterator i$ = iterableClass.iterator();
+
+        while(i$.hasNext()) {
+            String s = (String)i$.next();
+            System.out.println(s);
+        }
+    }
+}
+</code></pre>
+
+<p>同样地JDK也是通过IterableClass的对象获取一个Iterator对象，然后通过该迭代器遍历IterableClass中持有的元素。</p>
+
+<p>题外话：JDK1.7操作String数组时并没有使用原来的引用，而是通过复制原引用去操作数组对象（为避免离题原因待深入）</p>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/java/concurrency/base/run_exec/"><h4>Thread Run Method Execution Process</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/db/nosql/redis/redis_api/"><h4>Notes for Redis Api Learning</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

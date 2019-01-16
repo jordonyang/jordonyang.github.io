@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="The Garbage Collection Mechanism of the JVM"/>
+<meta name="twitter:description" content="JVM垃圾收集机制"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="The Garbage Collection Mechanism of the JVM &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/java/vm/gc_base/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="JVM垃圾收集机制" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-08-04T23:25:14&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    <meta property="article:tag" content="JVM" />
+    
+    
+
+    <title>The Garbage Collection Mechanism of the JVM &middot; 临风博客</title>
+
+    
+    <meta name="description" content="JVM垃圾收集机制" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/java/vm/gc_base/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": The Garbage Collection Mechanism of the JVM,
+    "name": The Garbage Collection Mechanism of the JVM,
+    "wordCount": 151,
+    "timeRequired": "PT1M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/java/vm/gc_base/,
+    "datePublished": 2018-08-04T23:25Z,
+    "dateModified": 2018-08-04T23:25Z,
+    
+    "keywords": Java, JVM,
+    "description": JVM垃圾收集机制,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/java/vm/gc_base/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">The Garbage Collection Mechanism of the JVM</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">The Garbage Collection Mechanism of the JVM</h1>
+        <em style="color: blue">JVM垃圾收集机制</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/jvm/">#JVM</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-08-04T23:25:14&#43;08:00">
+            2018/Aug/4
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h2 id="一-概念">一. 概念</h2>
+
+<p><strong>什么是垃圾收集?</strong></p>
+
+<p><strong>垃圾收集（Garbage Collection，GC），指的是对Java堆和方法区的死对象进行回收。</strong>它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，现已十分成熟。</p>
+
+<h2 id="二-收集的范围">二. 收集的范围</h2>
+
+<p><strong>哪些内存需要回收</strong></p>
+
+<p>在Java内存运行时区域中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，栈帧随着方法的进入和退出做入栈和出栈操作，加上基本认为栈帧所分配的大小随类的结构确定而保持不变，因此这些区域的的内存分配和回收都具有确定性，所以我们的内存垃圾回收<strong>主要集中于 Java 堆和方法区中</strong>，在程序运行期间，这部分内存的分配和回收都是动态的 。</p>
+
+<h2 id="三-收集目标">三. 收集目标</h2>
+
+<ul>
+<li>Java堆：回收目标为<code>死对象</code>，即那些不会不可能再被任何途径使用的对象。</li>
+<li>方法区，即Hotspot VM中的永久代（Permanet Generation）：收集效率非常低，其中进行内存垃圾回收的两个主要内容是<strong>废弃常量和无用的类</strong>。</li>
+</ul>
+
+<h2 id="四-判活算法">四. 判活算法</h2>
+
+<p><strong>怎么判断一个对象是否死对象？</strong></p>
+
+<h3 id="1-引用计数-reference-counting">1. 引用计数（Reference Counting）</h3>
+
+<p>即每个对象都有一个引用计数器，当有引用连接至对象时，引用计数加1；当有引用离开作用域或被置为null时，引用计数减1。此方法简单、高效，但<strong>无法解决对象相互循环引用</strong>的问题。</p>
+
+<blockquote>
+<p>若对象间存在循环引用，可能出现“对象应该被回收，但引用计数却不为零”的情况。定位这样的交互自引用的对象组所需的工作量极大。引用记数常用来说明垃圾收集的工作方式，但似乎从未被应用于任何一种Java虚拟机实现中。</p>
+</blockquote>
+
+<h3 id="2-可达性分析-reachability-analysis">2. 可达性分析（Reachability Analysis）</h3>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/gc/gcroots.jpg" alt="img" /></p>
+
+<p>从GC Roots开始向下搜索，搜索所走过的路径称为引用链。当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。不可达对象。</p>
+
+<p><strong>GC停顿</strong>：亦称Stop The World（STW），即在整个可达性分析期间，整个执行系统看起来就像是被冻结在某个时间点上，不能出现在分析过程中对象引用关系还在不断变化的情况。</p>
+
+<p>在Java语言中，<strong>GC Roots</strong>包括：</p>
+
+<ul>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中类静态属性实体引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI引用的对象</li>
+</ul>
+
+<h2 id="五-收集方法">五. 收集方法</h2>
+
+<p><strong>有哪些垃圾收集算法？它们各有什么特点？</strong></p>
+
+<h3 id="1-标记-清除算法-mark-sweep">1. 标记 - 清除算法（Mark-Sweep）</h3>
+
+<h4 id="1-原始标记-清除算法-naïve-mark-and-sweep">（ 1 ）原始标记-清除算法 （Naïve mark-and-sweep）</h4>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/gc/ms.gif" alt="img" /></p>
+
+<p>每个对象在内存中都有一个标记位用于垃圾回收，标记该对象到 <code>GC roots</code> 是否可达，然后进行 <code>标记-清理</code> 过程</p>
+
+<ul>
+<li>标记：遍历整个<code>GC Roots</code> ，标记被 <code>GC root</code> 指向的对象和这些对象指向的对象的状态位为 <code>in-use</code></li>
+<li>清除：扫描所有待回收的内存，若对象未被标记为 <code>in-use</code> ，将它们的标记为清除，否则将对象清除</li>
+</ul>
+
+<p>之所以说它是最基础的收集算法，是因为后续的收集算法都是基于这种思路并对其缺点进行改进而得到的。</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/gc/MARK-SWEEP.jpg" alt="img" /></p>
+
+<h4 id="2-三色标记-tri-color-marking">（ 2 ）三色标记 （Tri-color marking）</h4>
+
+<p>三色标记算法的数据结构中包含有三个集合：<code>White Set</code> , <code>Black Set</code> 和 <code>Gray Set</code>。</p>
+
+<ul>
+<li>白色集合对象：需要被回收的对象。</li>
+<li>黑色集合对象：没有对白色集合对象的外部引用，并且是GC Root可达的对象。这些对象将不会被回收。</li>
+<li>灰色集合对象：集合中的对象全都是GC Root可达的对象，但是正在扫描或正在等待扫描其对“白色集合对象”的引用，这些对象也不会被回收，并且会在扫描结束之后被移入黑色集合。</li>
+</ul>
+
+<p>在大多数算法实现中，黑色集合初始是空，灰色集合中保存有与 <code>GC Roots</code> 对象直连的所有老年代对象，白色集合中包含有其他对象。内存中的任意对象在任意时间都仅存在于这三个集合当中的一个。</p>
+
+<p>算法步骤：</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/gc/tri-color.png" alt="img" /></p>
+
+<ol>
+<li>从灰色集合中取出一个对象放入黑色集合</li>
+<li>遍历第1步取出的对象的所有白色集合对象引用，并将它们移入灰色集合。这保证了这个对象和它的引用对象都不会被GC</li>
+<li>重复上述两步，直到灰色集合为空</li>
+</ol>
+
+<p>由于非GC Root直接可达的节点都被加入到了White Set，并且对象只能从白色集合移动到灰色集合，从灰色集合移动到黑色集合，所以算法体现了一个重要特性：黑色集合中的对象不会引用到白色集合中的对象。这就保证了<strong>在灰色集合为空时，我们可以放心地释放白色空间中的对象</strong>。这被称作<code>三色不变式</code>（The Tri-color Invariant）。</p>
+
+<p><strong>主要缺点</strong></p>
+
+<ul>
+<li>效率：标记和清除过程的效率都不高；</li>
+<li>空间：<strong>标记清除后会产生大量不连续的内存碎片</strong>，空间碎片太多可能会导致当程序在以后的运行过程中需要分配较大对象时无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。</li>
+</ul>
+
+<h3 id="2-复制算法-copying">2. 复制算法（Copying）</h3>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/gc/Copying.jpg" alt="img" /></p>
+
+<p>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。</p>
+
+<p>这样使得每次都是对其中的一块进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。只是这种算法的代价是将内存缩小为原来的一半，持续复制长生存期的对象则导致效率降低。</p>
+
+<h3 id="3-分代收集算法-generational-collection">3. 分代收集算法（Generational  Collection）</h3>
+
+<p>分代收集算法是目前大部分JVM的垃圾收集器采用的算法。它的核心思想是<strong>根据对象存活的生命周期将内存划分为若干个不同的区域，再针对不同区域的特点采用不同的收集算法</strong>。</p>
+
+<p>一般情况下将堆区划分为<code>老年代</code>（Tenured Generation）和<code>新生代</code>（Young Generation），老年代的特点是每次垃圾收集时只有少量对象需要被回收，而新生代的特点是每次垃圾回收时都有大量的对象需要被回收，那么就可以根据不同代的特点采取最适合的收集算法。</p>
+
+<h4 id="1-年轻代中的gc">( 1 ) 年轻代中的GC</h4>
+
+<p><strong>目前大部分垃圾收集器对于新生代都采取Copying算法</strong>，因为新生代中每次垃圾回收都要回收大部分对象，也就是说需要复制的操作次数较少，但是实际中并不是按照1：1的比例来划分新生代的空间的，一般来说是将新生代划分为三块：一块较大的<code>Eden空间</code>和<code>两块较小的 Survivor空间</code>，这两块Survivor空间分别是<code>From区</code>和<code>To区</code> ，顾名思义分别是内存复制的源头和终点，但From与To又是相对的，它们会随着每次垃圾收集而发生变化。</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/gc/younggc.png" alt="img" /></p>
+
+<p>大体上年轻代的清理过程如下</p>
+
+<ul>
+<li>在GC开始的时候，对象只会存在于<code>Eden空间</code>和<code>Survivor空间的From区</code>，<code>Survivor空间的 To区</code>是空的</li>
+<li>紧接着进行GC，<code>Eden空间</code>中所有存活的对象都会被复制到<code>Survivor空间的To区</code></li>
+<li>而在<code>Survivor空间的From区</code>中，仍存活的对象会根据他们的年龄值来决定去向
+
+<ul>
+<li>年龄达到一定值（年龄阈值，可通过<code>-XX:MaxTenuringThreshold</code>来设置）的对象会被移动到年老代中</li>
+<li>没有达到阈值的对象会被复制到<code>Survivor空间的To区</code></li>
+</ul></li>
+<li>经过这次GC后，<code>Eden空间和Survivor空间的From区</code>已被清空。<code>From区</code>和<code>To区</code>交换角色（即<code>From</code>和<code>To</code>会交换他们的角色，即新的<code>To</code>就是上次GC前的<code>From</code>，新的<code>From</code>就是上次GC前的`To），等待下一次GC。</li>
+</ul>
+
+<p>不管怎样，都会保证 <code>Survivor空间的To区</code> 是空的。Minor GC会一直重复这样的过程，直到 <code>To</code> 区被填满，<code>To区</code> 被填满之后，会将所有对象移动到年老代中。</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/gc/fendai.png" alt="img" /></p>
+
+<h4 id="2-老年代中的gc">( 2 ) 老年代中的GC</h4>
+
+<p>由于老年代的特点是每次回收都只回收少量对象，一般使用的是Mark-Compact算法。</p>
+
+<blockquote>
+<p>从定义及特点上看，以上收集算法的用于对Java堆的对象进行回收，但是理论上这些算法均适用于Java堆和方法区，因为有些虚拟机（如<code>Hotspot VM</code>）的GC分代收集就扩展到了方法区，这时就可像管理Java堆那样管理方法区，从而省去了为方法区独立编写收集内存管理代码的功夫。</p>
+</blockquote>
+
+<h2 id="六-参考">六. 参考</h2>
+
+<ul>
+<li>《深入理解Java虚拟机》（第二版，周志明著，机械工业出版社）</li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/java/collections/map/hashmap_source0/"><h4>Touch Source of HashMap (1)</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/java/collections/list/linkedlist_source/"><h4>Dive into LinkedList</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

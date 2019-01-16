@@ -42,7 +42,7 @@ a:focus { outline: thin dotted; }
 a:active, a:hover { outline: 0; }
 h1 { font-size: 2em; margin: 0.67em 0; }
 abbr[title] { border-bottom: 1px dotted; }
-b, strong { font-weight: 700; color: #df5000;}
+b, strong { font-weight: 700; color: #df0065;}
 dfn { font-style: italic; }
 hr {
    -moz-box-sizing: content-box;
@@ -375,20 +375,20 @@ hr {
     padding: 0;
 }
 
-blockquote {
-    -moz-box-sizing: border-box;
+/*blockquote {
+   -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: 1.75em 0 1.75em -2.2em;
     padding: 0 0 0 1.75em;
     border-left: #4A4A4A 0.4em solid;
-}
+}*/
 
-blockquote p {
+/*blockquote p {
     margin: 0.8em 0;
     font-style: italic;
-}
+}*/
 
-blockquote small {
+/*blockquote small {
     display: inline-block;
     margin: 0.8em 0 0.8em 1.5em;
     font-size: 0.9em;
@@ -401,7 +401,84 @@ blockquote cite {
     font-weight: 700;
 }
 
-blockquote cite a { font-weight: normal; }
+blockquote cite a { font-weight: normal; }*/
+
+
+/*blockquote {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
+}*/
+
+/*blockquote {
+      font: 18px/30px normal Tahoma, sans-serif;
+      padding-top: 22px;
+      margin: 5px;
+      background-image: url(http://www.webkaka.com/tutorial/html/2016/100316/images/openquote3.gif);
+      background-position: top left;
+      background-repeat: no-repeat;
+      text-indent: 65px;
+}
+
+blockquote p {
+      display: block;
+      background-image: url(http://www.webkaka.com/tutorial/html/2016/100316/images/closequote3.gif);
+      background-repeat: no-repeat;
+      background-position: bottom right;
+}*/
+
+/*blockquote {
+          font: 14px/22px normal helvetica, sans-serif;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          margin-left: 50px;
+          padding-left: 15px;
+          padding-top: 10px;
+          padding-right: 10px;
+          padding-bottom: 10px;
+          border-left: 3px solid #ccc;
+          background-color:#f1f1f1
+     }*/
+
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic);
+blockquote{
+  font-size: 1.0em;
+  width:88%
+  margin:50px auto;
+  font-family:Open Sans;
+  /*font-style:italic;*/
+  color: #555555;
+  padding:0.2em 20px 0.1em 75px;
+  border-left:8px solid #78C0A8 ;
+  line-height:1.6;
+  position: relative;
+  background:#EDEDED;
+}
+
+blockquote::before{
+  font-family:Arial;
+  content: "\201C";
+  color:#78C0A8;
+  font-size:4em;
+  position: absolute;
+  left: 10px;
+  top:-10px;
+}
+
+/*blockquote::after{
+  content: '';
+}*/
+
+blockquote p {
+  display:block;
+  color:#333333;
+  font-style: normal;
+  font-weight: bold;
+  margin-top:0.5em;
+}
 
 mark {
     background-color: #FFC336;
@@ -460,24 +537,45 @@ kbd {
 }
 
 table {
-    -moz-box-sizing: border-box;
+  /*  -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: 1.75em 0;
-    width: 100%;
+    width: 80%;
+    max-width: 80%;
+    background-color: transparent;*/
+	margin: 1.75em 0;
+    font-size:14px;
+    color:#333333;
+    width:100%;
     max-width: 100%;
-    background-color: transparent;
+    border-width: 1px;
+    border-color: #9dcc7a;
+    border-collapse: collapse;
 }
 
-table th,
+table th {
+	font-size:14px;
+	background-color:#abd28e;
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #9dcc7a;
+	text-align:left;
+}
+
+table tr {
+	background-color:#ffffff;
+}
+
+
 table td {
+    font-size:14px;
+    border-width: 1px;
     padding: 8px;
-    line-height: 20px;
-    text-align: left;
-    vertical-align: top;
-    border-top: #EFEFEF 1px solid;
+    border-style: solid;
+    border-color: #9dcc7a;
 }
 
-table th { color: #000; }
 
 table caption + thead tr:first-child th,
 table caption + thead tr:first-child td,
@@ -1082,13 +1180,14 @@ body:not(.post-template) .post-title {
     border-radius: 100%;
 }
 
+/*文章标签和类别超链接的样式*/
 .post-meta a {
-    color: #9EABB3;
+    color: #388E8E;
     text-decoration: none;
 }
 
 .post-meta a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .user-meta {
@@ -1097,7 +1196,9 @@ body:not(.post-template) .post-title {
     min-height: 77px;
 }
 
+/*发布日期样式*/
 .post-date {
+	color: #4682B4;
     display: inline-block;
     margin-left: 8px;
     padding-left: 12px;
@@ -1203,6 +1304,12 @@ body:not(.post-template) .post-title {
     -webkit-transform: translateX(-50%); /* for Safari and iOS */
     -ms-transform: translateX(-50%); /* for IE9 */
     transform: translateX(-50%);
+}
+
+/*修改正文的超链接样式*/
+.post-content a {
+	color: blue;
+	text-decoration: none;
 }
 
 /* The author credit area after the post */
@@ -1405,6 +1512,7 @@ body:not(.post-template) .post-title {
     display: inline-block;
     margin: 0 2rem 1rem 0;
     word-wrap: break-word;
+    
 }
 .author-meta a {
     text-decoration: none;
@@ -1569,9 +1677,9 @@ body:not(.post-template) .post-title {
 
 @media only screen and (max-width: 900px) {
 
-    blockquote {
+   /* blockquote {
         margin-left: 0;
-    }
+    }*/
 
     .main-header {
         -webkit-box-sizing: border-box;

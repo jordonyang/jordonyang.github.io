@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Touch Source of HashMap (1)"/>
+<meta name="twitter:description" content="基于JDK1.7的HashMap源码阅读"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Touch Source of HashMap (1) &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/java/collections/map/hashmap_source0/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="基于JDK1.7的HashMap源码阅读" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-08-27T12:01:48&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    
+
+    <title>Touch Source of HashMap (1) &middot; 临风博客</title>
+
+    
+    <meta name="description" content="基于JDK1.7的HashMap源码阅读" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/java/collections/map/hashmap_source0/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Touch Source of HashMap (1),
+    "name": Touch Source of HashMap (1),
+    "wordCount": 892,
+    "timeRequired": "PT5M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/java/collections/map/hashmap_source0/,
+    "datePublished": 2018-08-27T12:01Z,
+    "dateModified": 2018-08-27T12:01Z,
+    
+    "keywords": Java,
+    "description": 基于JDK1.7的HashMap源码阅读,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/java/collections/map/hashmap_source0/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Touch Source of HashMap (1)</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Touch Source of HashMap (1)</h1>
+        <em style="color: blue">基于JDK1.7的HashMap源码阅读</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-08-27T12:01:48&#43;08:00">
+            2018/Aug/27
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h2 id="概述">概述</h2>
+
+<ul>
+<li>横向维护一个Entry数组，用来存放最近一次添加的(key,value)形式的元素</li>
+<li>每个数组元素纵向维护一个Entry链表，当发生哈希冲突时，将原先的Entry往后挪，即链地址法解决哈希冲突</li>
+</ul>
+
+<p><img src="https://javadoop.com/blogimages/map/1.png" alt="img" /></p>
+
+<h2 id="方法签名">方法签名</h2>
+
+<pre><code class="language-java">public class HashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt; implements Map&lt;K,V&gt;, Cloneable, Serializable
+</code></pre>
+
+<p>具有Map的基本方法，可克隆、可序列化（自定义的序列化规则）</p>
+
+<h2 id="基本属性">基本属性</h2>
+
+<pre><code class="language-java">// 默认容量为16
+static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4; 
+// 最大容量
+static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30;
+// 默认加载因子，值为0.75，扩容时用
+static final float DEFAULT_LOAD_FACTOR = 0.75f;
+// 空的入口数组
+static final Entry&lt;?,?&gt;[] EMPTY_TABLE = {};
+/**
+ * 入口数组，用来存储链表的头结点
+ * 一开始将它指向 EMPTY_TABLE，这样的意图直到在第一次添加元素时
+ * 才正式将table指向大小接近threshold的Entry对象
+ */
+transient Entry&lt;K,V&gt;[] table = (Entry&lt;K,V&gt;[]) EMPTY_TABLE;
+// 当前表中的元素个数
+transient int size;
+/**
+ * 阈值，超过后扩容，值为capacity * load factor
+ * 一开始table为 EMPTY_TABLE，即创建HashMap对象但未往其中添加元素，
+ * 当第一次往其中添加元素时，表的大小会膨胀到这个值
+ */
+int threshold;
+// 加载因子
+final float loadFactor;
+// 结构性修改的次数，与fail-fast机制有关
+transient int modCount;
+</code></pre>
+
+<h2 id="构造方法">构造方法</h2>
+
+<h3 id="1-无参构造">1. 无参构造</h3>
+
+<p>实际上相当于<code>new HashMap(16, 0.75)</code></p>
+
+<pre><code class="language-java">public HashMap() {
+    // 用默认的容量和加载因子构建
+    this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
+}
+</code></pre>
+
+<h3 id="2-初始容量和加载因子构造">2. 初始容量和加载因子构造</h3>
+
+<p>核心构造器，其他三个构造都会调用这个构造器，只是传递的参数不一样而已</p>
+
+<pre><code class="language-java">/**
+ * 用初始容量和加载因子构造HashMap
+ * 如果初始容量为负数或者加载因子非正数抛出异常
+ */
+public HashMap(int initialCapacity, float loadFactor) {
+    if (initialCapacity &lt; 0)
+        throw new IllegalArgumentException(&quot;Illegal initial capacity: &quot; +
+                                           initialCapacity);
+    // 限定初始容量的最大值
+    if (initialCapacity &gt; MAXIMUM_CAPACITY)
+        initialCapacity = MAXIMUM_CAPACITY;
+    // 限定加载因子的范围
+    if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
+        throw new IllegalArgumentException(&quot;Illegal load factor: &quot; +
+                                           loadFactor);
+
+    this.loadFactor = loadFactor;
+    /**
+     *	将阈值设定为初始容量
+     *  注：此处不是真正的阈值，是为了扩展哈希表，该阈值后面会重新计算，
+     */
+    threshold = initialCapacity;
+    // 一个空方法用于未来的子对象扩展
+    init();
+}
+
+/**
+ * 给子类造的初始化钩子，在HashMap初始化了但是没有任何entries插入
+ * 前，该方法会在所有的构造方法或者构造前预处理方法（如clone，readObject）
+ * 中被调用，没有方法的话readObject方法需要子类明确的定义
+ */
+void init() {
+}
+</code></pre>
+
+<h3 id="3-用初始容量构造">3. 用初始容量构造</h3>
+
+<p>用给定的容量和默认的加载因子（0.75）构造一个空的 HashMap，相当于<code>new HashMap(initialCapacity, 0.75)</code></p>
+
+<pre><code class="language-java">public HashMap(int initialCapacity) {
+    this(initialCapacity, DEFAULT_LOAD_FACTOR);
+}
+</code></pre>
+
+<h3 id="4-用map实现类构造">4. 用Map实现类构造</h3>
+
+<p>用给定的Map实现类对象的键值对数据构造一个新的HashMap，该HashMap将用默认的加载因子（0.75）和一个足以容纳原来map 中的键值对的容量，如果 map 为空将抛出 NullPointerException</p>
+
+<pre><code class="language-java">public HashMap(Map&lt;? extends K, ? extends V&gt; m) {
+    this(Math.max((int) (m.size() / DEFAULT_LOAD_FACTOR) + 1,
+                  DEFAULT_INITIAL_CAPACITY), DEFAULT_LOAD_FACTOR);
+    // 该方法用于初始化数组和阈值
+    inflateTable(threshold);
+    // 数据填充
+    putAllForCreate(m);
+}
+</code></pre>
+
+<blockquote>
+<p><strong>足以容纳原来map 中的键值对的容量</strong></p>
+
+<p>初始容量为<strong>原来容量的1.3倍加1与默认初始化容量中的较大者（当map大小为0时，最小容量为1）</strong>，阈值为该初始容量，加载因子为0.75，然后用阈值扩大哈希表</p>
+</blockquote>
+
+<h2 id="添加元素">添加元素</h2>
+
+<ul>
+<li>计算键的哈希值，通过<code>&amp;运算</code>得到该键值对应该存放在数组中的下标位置（即确定桶下标）</li>
+<li>遍历桶寻找键相同的结点，若找到则替换原结点的值并返回，否则直接添加结点</li>
+</ul>
+
+<pre><code class="language-java">public V put(K key, V value) {
+    // 空表，扩充 
+    if (table == EMPTY_TABLE) {
+        inflateTable(threshold);
+    }
+    // 对于空键特殊处理
+    if (key == null)
+        return putForNullKey(value);
+    int hash = hash(key);
+    // 定位桶
+    int i = indexFor(hash, table.length);
+    // 遍历桶寻找键相同的结点
+    for (Entry&lt;K,V&gt; e = table[i]; e != null; e = e.next) {
+        Object k;
+        // 若找到，替换原结点的值并返回
+        if (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) {
+            V oldValue = e.value;
+            e.value = value;
+            e.recordAccess(this);
+            return oldValue;
+        }
+    }
+    // 结构性修改次数
+    modCount++;
+    // 没有找到键与k相同的键值对,添加新的Entry
+    addEntry(hash, key, value, i);
+    return null;
+}
+</code></pre>
+
+<h3 id="扩充表">扩充表</h3>
+
+<p>当第一次往HashMap对象中添加元素时调用</p>
+
+<pre><code class="language-java">private void inflateTable(int toSize) {
+	// 计算最接近toSize的符合2的n次幂的容量
+	int capacity = roundUpToPowerOf2(toSize);
+	// 设置阈值，通常为capacity * loadFactor
+	threshold = (int) Math.min(capacity * loadFactor, MAXIMUM_CAPACITY + 1);
+    // 初始化table
+	table = new Entry[capacity];
+	initHashSeedAsNeeded(capacity);
+}
+</code></pre>
+
+<h3 id="添加结点">添加结点</h3>
+
+<pre><code class="language-java">void addEntry(int hash, K key, V value, int bucketIndex) {
+    // 如果当前 HashMap 大小已经达到了阈值，并且新值要插入的数组位置已经有元素了，那么要扩容
+    if ((size &gt;= threshold) &amp;&amp; (null != table[bucketIndex])) {
+        // 将容量扩大为原来的两倍
+        resize(2 * table.length);
+        // 扩容以后，重新计算 hash 值
+        hash = (null != key) ? hash(key) : 0;
+        // 重新计算扩容后的新的下标
+        bucketIndex = indexFor(hash, table.length);
+    }
+    // 添加结点
+    createEntry(hash, key, value, bucketIndex);
+}
+</code></pre>
+
+<h3 id="哈希函数">哈希函数</h3>
+
+<p>进行哈希扰动，使得0和1的值变得均匀，减少哈希冲突</p>
+
+<pre><code class="language-java">final int hash(Object k) {
+    int h = hashSeed;
+    if (0 != h &amp;&amp; k instanceof String) {
+        return sun.misc.Hashing.stringHash32((String) k);
+    }
+
+    h ^= k.hashCode();
+
+    // This function ensures that hashCodes that differ only by
+    // constant multiples at each bit position have a bounded
+    // number of collisions (approximately 8 at default load factor).
+    h ^= (h &gt;&gt;&gt; 20) ^ (h &gt;&gt;&gt; 12);
+    return h ^ (h &gt;&gt;&gt; 7) ^ (h &gt;&gt;&gt; 4);
+}
+</code></pre>
+
+<p>具体分析见文章<code>XXX</code></p>
+
+<h3 id="扩容">扩容</h3>
+
+<p>用一个新的大数组替换原来的小数组，并将原来数组中的值迁移到新的数组中。由于是双倍扩容，迁移过程中，会将原来 table[i] 中的链表的所有节点，分拆到新的数组的 newTable[i] 和 newTable[i + oldLength] 位置上。如原来数组长度是 16，那么扩容后，原来 table[0] 处的链表中的所有元素会被分配到新数组中 newTable[0] 和 newTable[16] 这两个位置，实际上是一个链表结点再散列的过程。</p>
+
+<pre><code class="language-java">void resize(int newCapacity) {
+    Entry[] oldTable = table;
+    int oldCapacity = oldTable.length;
+     // 容量达到规定的最大容量，仅增大阈值
+    if (oldCapacity == MAXIMUM_CAPACITY) {
+        threshold = Integer.MAX_VALUE;
+        return;
+    }
+
+    Entry[] newTable = new Entry[newCapacity];
+    // 将原来数组中的值迁移到新的更大的数组中
+    transfer(newTable, initHashSeedAsNeeded(newCapacity));
+    // 将table指向扩容后得到的新的Entry对象
+    table = newTable;
+    // 计算新的阈值
+    threshold = (int)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + 1);
+}
+</code></pre>
+
+<h3 id="元素迁移">元素迁移</h3>
+
+<p>扩容后将酒标中的数据迁移到新表中，注意到该方法的时间复杂度为O(n²)</p>
+
+<pre><code class="language-java">void transfer(Entry[] newTable, boolean rehash) {
+    int newCapacity = newTable.length;
+    // 遍历旧表
+    for (Entry&lt;K,V&gt; e : table) {
+        while(null != e) {
+            Entry&lt;K,V&gt; next = e.next;
+            // 需要再散列，重新计算旧表元素哈希值
+            if (rehash) {
+                e.hash = null == e.key ? 0 : hash(e.key);
+            }
+            // 通过哈希值和新的容量确定桶下标
+            int i = indexFor(e.hash, newCapacity);
+            /**
+             * 有可能新表的该桶入口已经有元素（即新表中存在哈希冲突）
+             * 这时要先将原来入口位置（表头）的元素先后挪，再将e放到链表入口
+             * 如果没有发生哈希冲突那么newTable[i]即为null，表尾元素的next指针指向null完全合理
+             */
+            e.next = newTable[i];
+            newTable[i] = e;
+            // 处理链表中的下一个元素
+            e = next;
+        }
+    }
+}
+</code></pre>
+
+<blockquote>
+<p><strong>注意</strong></p>
+
+<p>从上面可以看到当HashMap对象的size大于等于阈值（容量 * 加载因子）时，将进行扩容，而所谓的扩容并不是简单的创建一个新的Enrty数组，将原来的所有的链表搬到新的数组中就可以了，这其中涉及到了元素再散列的过程，即遍历每一条链表中每一个元素，通过它们的key和新的容量计算出它们在新表中应该存放的桶下标位置，再将它们添加到相应的桶中，如果不进行再散列过程的话，那么在调用indexFor()方法时由于插入和获取时的入参length值不同，自然获取不到想要的元素。</p>
+
+<p>因而再散列是必须的，但是这将面临的另一个问题是由于再散列涉及了数组和链表的二维遍历，从而带来了O(n²)的时间复杂度，为避免程序性能的下降，建议明确HashMap对象的用途，在初始化时为之选择合适的容量和加载因子，从而人为地避免扩容算法的执行。</p>
+</blockquote>
+
+<h2 id="获取元素">获取元素</h2>
+
+<pre><code class="language-java">public V get(Object key) {
+    if (key == null)
+        return getForNullKey();
+    Entry&lt;K,V&gt; entry = getEntry(key);
+
+    return null == entry ? null : entry.getValue();
+}
+</code></pre>
+
+<h3 id="获取空键键值对的非空值">获取空键键值对的非空值</h3>
+
+<pre><code class="language-java">private V getForNullKey() {
+    if (size == 0) {
+        return null;
+    }
+    // 所有键为null的建辉对都存储在table的0号单元所对应的链表中
+    for (Entry&lt;K,V&gt; e = table[0]; e != null; e = e.next) {
+        if (e.key == null)
+            return e.value;
+    }
+    return null;
+}
+</code></pre>
+
+<h3 id="通过key查找非空键的结点">通过key查找非空键的结点</h3>
+
+<pre><code class="language-java">final Entry&lt;K,V&gt; getEntry(Object key) {
+    if (size == 0) {
+        return null;
+    }
+    // 计算hash值
+    int hash = (key == null) ? 0 : hash(key);
+    // 遍历桶，返回查找的元素
+    for (Entry&lt;K,V&gt; e = table[indexFor(hash, table.length)];
+         e != null;
+         e = e.next) {
+        Object k;
+        if (e.hash == hash &amp;&amp;
+            ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+            return e;
+    }
+    return null;
+}
+</code></pre>
+
+<h2 id="删除元素">删除元素</h2>
+
+<pre><code class="language-java">public V remove(Object key) {
+    Entry&lt;K,V&gt; e = removeEntryForKey(key);
+    return (e == null ? null : e.value);
+}
+</code></pre>
+
+<h3 id="根据key删除结点">根据key删除结点</h3>
+
+<pre><code class="language-java">final Entry&lt;K,V&gt; removeEntryForKey(Object key) {
+    if (size == 0) {
+        return null;
+    }
+    // 计算哈希值，定位桶
+    int hash = (key == null) ? 0 : hash(key);
+    int i = indexFor(hash, table.length);
+    // 获取桶口元素
+    Entry&lt;K,V&gt; prev = table[i];
+    // 复制一份prev指针
+    Entry&lt;K,V&gt; e = prev;
+
+    while (e != null) {
+        Entry&lt;K,V&gt; next = e.next;
+        Object k;
+        if (e.hash == hash &amp;&amp;
+            ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) {
+            modCount++;
+            size--;
+            // 要删除的是桶口元素，将下面的元素往上挪
+            if (prev == e)
+                table[i] = next;
+            // 断开要删除的结点
+            else
+                prev.next = next;
+            // 无动作
+            e.recordRemoval(this);
+            return e;
+        }
+        // prev指向e所指向的结点的前继
+        prev = e;
+        e = next;
+    }
+    return e;
+}
+</code></pre>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/projects/java/word_counter/"><h4>Code File Analyser and Counter</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/java/vm/gc_base/"><h4>The Garbage Collection Mechanism of the JVM</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

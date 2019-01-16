@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:image" content="/images/post-images/tr.jpg"/>
+    
+
+
+
+<meta name="twitter:title" content="Thread Run Method Execution Process"/>
+<meta name="twitter:description" content="Thread类的run()方法执行过程跟踪和思考"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Thread Run Method Execution Process &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/java/concurrency/base/run_exec/" />
+
+    
+       <meta property="og:image" content="/images/post-images/tr.jpg"/>
+    
+
+    
+    <meta property="og:description" content="Thread类的run()方法执行过程跟踪和思考" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-03-25T21:46:51&#43;08:00" />
+
+    
+    <meta property="article:tag" content="Java" />
+    
+    <meta property="article:tag" content="concurrency" />
+    
+    
+
+    <title>Thread Run Method Execution Process &middot; 临风博客</title>
+
+    
+    <meta name="description" content="Thread类的run()方法执行过程跟踪和思考" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/java/concurrency/base/run_exec/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Thread Run Method Execution Process,
+    "name": Thread Run Method Execution Process,
+    "wordCount": 85,
+    "timeRequired": "PT1M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/java/concurrency/base/run_exec/,
+    "datePublished": 2018-03-25T21:46Z,
+    "dateModified": 2018-03-25T21:46Z,
+    
+    "image": {
+        "@type": "ImageObject",
+        "url": https://jordonyang.github.io/images/post-images/tr.jpg,
+        "width": 3000,
+        "height": 1445
+    },
+    
+    "keywords": Java, concurrency,
+    "description": Thread类的run()方法执行过程跟踪和思考,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/java/concurrency/base/run_exec/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  
+  <header class="main-header post-head" style="background-image: url(/images/post-images/tr.jpg)">
+  
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Thread Run Method Execution Process</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Thread Run Method Execution Process</h1>
+        <em style="color: blue">Thread类的run()方法执行过程跟踪和思考</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#Java</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/concurrency/">#concurrency</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-03-25T21:46:51&#43;08:00">
+            2018/Mar/25
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<p><strong>前言</strong> : 之前听到很多说法都是:“单纯地执行Thread子类的run方法并没有多线程的效果，正确的做法是，用Thread子类对象执行Thread的start方法，这样start方法会自动执行子类的run方法。” 我对这种神奇的说法将信将疑，心里总感觉不踏实，于是点进Thread的源码了解了一下。</p>
+
+<h3 id="一-入坑过程">一. 入坑过程</h3>
+
+<p>然而，纵观 <code>start</code> 方法，并没有找到 <code>run</code> 这个词，那<code>run</code>方法又是在哪里被调用的呢？其中最有嫌疑的地方就是<code>native方法start0</code>。</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/run.png" alt="img" /></p>
+
+<!-- more -->
+
+<p>Thread 类有个 <code>registerNatives</code> 本地方法，该方法主要的作用就是注册一些本地方法供 Thread 类使用，如 start0()，stop0() 等等，可以说，所有操作本地线程的本地方法都是由它注册的。这个方法放在一个静态代码块中，当 <code>Thread</code> 类被加载到 <code>JVM</code> 中的时候，它就会被调用，进而注册相应的本地方法。
+而本地方法 <code>registerNatives</code> 是定义在 <code>openjdk\jdk\src\share\native\java\lang\Thread.c文件</code> 中的。<code>Thread.c</code> 是个很小的文件，它定义了各个操作系统平台都要用到的关于线程的公用数据和操作，如下：</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/theadcpp.png" alt="img" /></p>
+
+<p>可以容易的看出 Java 线程调用<code>start-&gt;start0</code>的方法，实际上会调用到 <code>JVM_StartThread</code> 方法，而 <code>JVM_StartThread</code> 方法则是在<code>openjdk\hotspot\src\share\vm\prims\jvm.cpp</code>中定义的</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/jvmcpp1.png" alt="img" /></p>
+
+<p><code>JVM_ENTRY</code> 作为一个宏，用来定义 <code>JVM_StartThread</code> 函数，可以看到函数内创建了真正的平台相关的本地线程，其线程函数是 <code>thread_entry</code>，如下：</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/jvmcpp2.png" alt="img" /></p>
+
+<p>可见其中调用了 <code>vmSymbols::run_method_name</code> 方法，
+而 <code>run_method_name</code> 是在 <code>openjdk\hotspot\src\share\vm\classfile\vmSymbols.hpp</code> 中用宏定义的：</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/vmSymbolshpp.png" alt="img" /></p>
+
+<p>这样不难想象到执行 <code>Thread.start()</code> 后的底层调用过程</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/presson2.png" alt="img" /></p>
+
+<h3 id="二-拓展">二. 拓展</h3>
+
+<p>理解到 <code>statrt0</code> 方法为我们做了哪些事情后就很容易理解Java中线程启动的大致过程。</p>
+
+<h4 id="1-thread子类">1. Thread子类</h4>
+
+<p>任务类继承Thread类，并覆盖它的run方法</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/subthread.png" alt="img" /></p>
+
+<p>当 <code>subThread</code> 调用父类的start方法时，由上面的过程可以知道，在JVM申请CPU线程资源并开启线程后，会执行 <code>Thread类</code> 的 <code>run</code> 方法,而由于<code>JVM</code>多态支持，最终调用的是 <code>SubThread</code> 的 <code>run</code> 方法，从而实现在一个线程中完成任务。</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/presson3.png" alt="img" /></p>
+
+<h4 id="2-实现runnable接口">2. 实现Runnable接口</h4>
+
+<p>任务类实现 <code>Runnable</code> 接口，然后直接用该任务类对象来创建线程</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/runnableImpl.png" alt="img" /></p>
+
+<p>在Thread类中有一个私有的<code>Runnable</code>类型的<code>target</code>属性，该属性在调用<code>Thread(Runnable target)</code>后将指向传入任务类对象</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/threadtarget.png" alt="img" /></p>
+
+<p>同样地，在调用完<code>Thread</code>的<code>start</code>方法后，将执行<code>Thread</code>的<code>run</code>方法，由于<code>RunnableImpl</code>和<code>Thread</code>并没有继承关系，最终还是执行<code>Thread.run()</code>：</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/threadrun.png" alt="img" /></p>
+
+<p>可见通过在Thread中代理Runnable接口，可以处理任何线程任务，只要它们继承了<code>Runnable</code>接口，最终JVM都会通过<code>Thread</code>的<code>run</code>方法找到<code>RunnableImpl</code>的<code>run</code>方法，将其中的任务加入线程中。</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/presson4.png" alt="img" /></p>
+
+<h4 id="3-考虑一次性线程">3. 考虑一次性线程</h4>
+
+<p>有些线程只需执行一次便被回收，这时可以使用匿名内部类的方式创建线程，以上的两者中方式可以换做</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/at1.png" alt="img" /></p>
+
+<p>其执行过程与上面的基本类似，但是如果同时使用这两钟方式创建线程呢？到底谁的<code>run</code>方法会执行？</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/at2.png" alt="iimg" /></p>
+
+<p>虽然<code>Thread</code>的<code>target</code>属性指向了<code>Runnable</code>的匿名实现类对象，但是由于<code>JVM</code>的多态实现，最终并没有执行<code>Thread</code>的<code>run</code>方法，而是执行<code>Thread</code>的匿名子类中的<code>run</code>方法。</p>
+
+<p><img src="https://raw.githubusercontent.com/jordonyang/jordonyang.github.io/master/images/thread/presson5.png" alt="img" /></p>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/java/collections/list/arraylist_source/"><h4>Dive into ArrayList</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/java/syntax/sugar/foreach_decompilation/"><h4>Decompilation for Foreach Syntax Sugar</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

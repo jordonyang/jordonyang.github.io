@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Big Prime Number Generation And Primality Testing"/>
+<meta name="twitter:description" content="理解素性测试及大素数生成过程"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Big Prime Number Generation And Primality Testing &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/security/crypto/asymmetry/prime/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="理解素性测试及大素数生成过程" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-11-05T21:06:29&#43;08:00" />
+
+    
+    <meta property="article:tag" content="security" />
+    
+    
+
+    <title>Big Prime Number Generation And Primality Testing &middot; 临风博客</title>
+
+    
+    <meta name="description" content="理解素性测试及大素数生成过程" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/security/crypto/asymmetry/prime/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Big Prime Number Generation And Primality Testing,
+    "name": Big Prime Number Generation And Primality Testing,
+    "wordCount": 959,
+    "timeRequired": "PT5M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/security/crypto/asymmetry/prime/,
+    "datePublished": 2018-11-05T21:06Z,
+    "dateModified": 2018-11-05T21:06Z,
+    
+    "keywords": security,
+    "description": 理解素性测试及大素数生成过程,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/security/crypto/asymmetry/prime/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Big Prime Number Generation And Primality Testing</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Big Prime Number Generation And Primality Testing</h1>
+        <em style="color: blue">理解素性测试及大素数生成过程</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/security/">#security</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-11-05T21:06:29&#43;08:00">
+            2018/Nov/5
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<p><strong>前言</strong>: RSA算法基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。那么也就是说要使用RSA算法，前提是必须有两个大素数才行，那么大素数是怎么生成的呢？考虑到RSA算法的高效性和安全性，怎样快速生成一个大素数呢？</p>
+
+<h2 id="0x01-素性测试-primality-testing">0x01. 素性测试 (Primality Testing)</h2>
+
+<p>素数又称质数，是在大于1的整数中，只能被1和其自身整除的数（如2、3、5等）。素性测试是检验一个给定的整数是否为素数的测试。</p>
+
+<h3 id="1-试除法-trial-division">1. 试除法 ( Trial Division )</h3>
+
+<p>如果要判定<code>n</code>是否是素数，写一个循环从<code>2</code>到<code>sqrt(n)</code>判断其能否整除<code>n</code>，若都不能则<code>n</code>为素数。这个方法我们一般称之为试除法。</p>
+
+<p>如果<code>n</code>比较小的话，采用试除法当然是非常高效快捷的。但是当<code>n</code>很大的时候，这个算法可就行不通了，以RSA1024为例，当公钥为</p>
+
+<pre><code>0x890e23101a542913da8a4350672c9ef8e7b34c2687ce8cd8db3fb34244a791d60c9dc0a53172a56dcc8a66f553c0ae51e9e2e2ce9486fa6b00a6c556bfed139001133cdfe5921c425eb8823b1bd0a4c00920d24bee2633256328502eadbfac1420f9a5f47139de6f14d8eb7c2b7c0cec42530c0a71dadb80c7214f5cd19a3f2f
+</code></pre>
+
+<p>时，两个质因数分别为</p>
+
+<pre><code>0xe5a111a219c64f841669400f51a54dd4e75184004f0f4d21c6ae182cfb528652a02d6d677a72b564c505b1ed42a0c648dbfe14eb66b04c0d60ba3872826c32e7
+</code></pre>
+
+<p>和</p>
+
+<pre><code>8002511426596424351829267099531651390448054153452321185350746845306277585856673898048740413439442356860630765545600353049345324913056448174487017235828857
+</code></pre>
+
+<p>这是一个<code>155</code>位数和一个<code>154</code>位数，都在<code>2</code>的<code>511</code>次方左右，肯定gg啦😒😒😒</p>
+
+<h3 id="2-概率性检验算法">2. 概率性检验算法</h3>
+
+<p>现在许多流行的质数检验是概率检验。这些测试除了使用被测试的数字n外，还使用从样本空间中随机选择的其他一些数字a。通常的随机素数检验从不将素数检测误判为合数，但合数被误判为素数是可能的。通过重复几个独立选取的a值进行试验，可以降低误差概率。</p>
+
+<p>随机素数检验的基本结构如下:</p>
+
+<ul>
+<li>随机选择一个数字a。</li>
+<li>检查a与给定数n是否相等，如果相等不成立，则n为合数，a为合数的见证（witness），检验停止。</li>
+<li>重复步骤1，直到达到所需的精度。</li>
+</ul>
+
+<p>在一个或多个迭代之后，如果没有发现n是一个合数，那么可以说它可能是素数。</p>
+
+<h4 id="1-费马小定理-fermat-s-little-theorem">( 1 ) 费马小定理  (Fermat&rsquo;s little theorem)</h4>
+
+<p>它是数论中的一个定理：假如a是一个整数，p是一个素数，那么a<sup>p</sup>−a是p的倍数，可以表示为a<sup>p</sup> ≡ a (mod p) ，如果a不是p的倍数，这个定理也可以写成 a<sup>p − 1</sup> ≡ 1 (mod p)</p>
+
+<p>费马小定理的证明过程在这里不再赘述。需要注意的是，<strong>费马小定理是判定一个数是否为素数的必要条件，并非充分条件，因为存在着一些<code>伪素数</code>满足费马小定理却不是素数，</strong>如2<sup>340</sup> ≡ 1 (mod 341)，但是341 = 11×31，不为素数。</p>
+
+<h4 id="2-费马概率性检验-fermat-primality-test">( 2 ) 费马概率性检验  (Fermat primality test)</h4>
+
+<p>更近一步考虑，一个合数可能在a=2时通过了测试，但a=3时的计算结果却排除了素数的可能。于是，人们扩展了伪素数的定义，称满足a<sup>n−1</sup> mod n = 1的合数n叫做以a为底的伪素数(pseudoprime to base a)。前10亿个自然数中同时以2和3为底的伪素数只有1272个，这个数目不到刚才的1/4。这说明如果同时验证a=2和a=3两种情况，算法出错的概率降到了0.000025。容易想到，<strong>选择用来测试的a越多，算法越准确。通常的做法是，随机选择若干个小于待测数的正整数作为底数a进行若干次测试，只要有一次没有通过测试就可以判定这个数为合数。这就是Fermat素性测试。</strong></p>
+
+<p>人们自然会想，如果考虑了所有小于n的底数a，出错的概率是否就可以降到0呢？遗憾的是，居然就有这样的合数，它可以通过所有a(前提是n与a互素)的测试。Carmichael第一个发现这样极端的伪素数，他把它们称作Carmichael数。第一个Carmichael数小得惊人，仅仅是一个三位数，561。前10亿个自然数中Carmichael数也有600个之多。Carmichael数的存在说明，我们还需要继续加强素性判断的算法。</p>
+
+<p>尽管如此，在RSA公钥加密算法的密钥生成阶段，如果需要快速筛选素数，通常使用Fermat测试，</p>
+
+<h4 id="3-米勒-拉宾概率性检验-miller-rabin-primality-test">( 3 ) 米勒-拉宾概率性检验  (Miller–Rabin primality test)</h4>
+
+<p>卡内基梅隆大学的计算机系教授Gary Lee Miller首先提出了基于广义黎曼猜想的确定性算法，由于广义黎曼猜想并没有被证明，其后由以色列耶路撒冷希伯来大学的Michael O. Rabin教授作出修改，提出了不依赖于该假设的随机化算法。</p>
+
+<p><strong style="color:green">要测试NN是否为素数，首先将N−1分解为2<sup>s</sup>d。在每次测试开始时，先随机选一个介于[1,N−1]的整数a，之后如果对所有的r∈[0,s−1]，若a<sup>d</sup> mod N ≠ 1 且 a<sup>2<sup>r</sup>d</sup> mod N ≠ −1，则N是合数。否则，N有3/4的概率为素数。 </strong></p>
+
+<h5 id="a-测试过程">a. 测试过程</h5>
+
+<ul>
+<li>因为待测数N一定是一个奇数，所以N−1是一个偶数，而且一定可以写成2<sup>s</sup>d的形式，</li>
+<li>类似Fermat素性测试，选取一个介于[1, N−1]的整数a作为底</li>
+<li>如果a<sup>d</sup> mod N = 1，或者存在一个r∈[0, s−1]，使得a<sup>2<sup>r</sup>d</sup> mod N = −1 （等价于a<sup>2<sup>r</sup>d</sup> mod N = N−1），则称N通过了以a为底的Miller-Rabin素性测试，即N有3/4的概率是素数。否则N是合数</li>
+</ul>
+
+<h5 id="b-伪代码">b. 伪代码</h5>
+
+<pre><code>Input #1: n &gt; 3, an odd integer to be tested for primality;  // 待测数
+Input #2: k, a parameter that determines the accuracy of the test	// 精确度
+Output: composite if n is composite, otherwise probably prime	
+
+// 把(n-1)用2^r·d表示，d∈
+write n − 1 as 2r·d with d odd by factoring powers of 2 from n − 1
+WitnessLoop: repeat k times:
+    pick a random integer a in the range [2, n − 2]		// 在[2, n − 2]选择随机数a
+    x ← a^d mod n
+    if x = 1 or x = n − 1 then
+        continue WitnessLoop       
+    nextedloop: repeat r − 1 times:
+    x ← x^2 mod n
+    if x = 1 then
+        return composite
+    if x = n − 1 then
+        break nextedloop, continue WitnessLoop
+    return composite
+return probably prime
+</code></pre>
+
+<h5 id="c-实现及扩展">c. 实现及扩展</h5>
+
+<p>基于此可以用Java写出这样一个实现</p>
+
+<pre><code class="language-java">public static boolean isProbablePrime(long n, int rounds) {
+    // 2是素数
+    if (n == 2) return true;
+    // n为偶数
+    if ((n &amp; 1) == 0) return false;
+    // 把n-1写成(2^s)*d的形式
+    long s = 0, d = n - 1, quotient, remainder;
+    for (;;) {
+        quotient = d / 2;
+        remainder = d % 2;
+        if (remainder == 1) break;
+        s++;
+        d = quotient;
+    }
+    Random rnd = ThreadLocalRandom.current();
+    // 进行k次米勒-拉宾测试
+    for (int i = 0; i &lt; rounds; i++) {
+        long a = Math.abs(rnd.nextLong()) % (n - 1) + 1;
+        long b = MathUtil.modExpNonRec(a, d , n);
+        if (b == 1 || b == n - 1) continue;
+        int j = 0;
+        for (; j &lt; s; j++) {
+            b = MathUtil.modExpNonRec(b, 2, n);
+            if (b == 1) return false;
+            if (b == n - 1) break;
+        }
+        if (j == s) return false; // None of the steps mad x equals n-1.
+    }
+    return true;
+}
+</code></pre>
+
+<p>熟悉Java的朋友可能都知道<code>java.math.BigInteger</code>这个类，其中提供了很多与RSA相关的功能函数，包括素数产生、模指运算、模逆运算、雅各比符号和素性测试等等。</p>
+
+<p>下面是其中产生素数和进行素性测试的函数。注意<code>certainty</code>这个参数表示调用者能容忍的不确定性，如果该函数返回<code>True</code>，那么表示这个数是素数的概率是1−1/2<sup>certainty</sup>，<code>certainty</code>参数越大，该数是素数的可能性越大，相应的执行时间越长。作者还定义了一套容忍度与测试轮数的对应规范，待测奇数的位数越大，进行米勒-拉宾测试的次数越多。</p>
+
+<pre><code class="language-java">/**
+ * Returns {@code true} if this BigInteger is probably prime,
+ * {@code false} if it's definitely composite.
+ *
+ * This method assumes bitLength &gt; 2.
+ *
+ * @param  certainty a measure of the uncertainty that the caller is
+ *         willing to tolerate: if the call returns {@code true}
+ *         the probability that this BigInteger is prime exceeds
+ *         {@code (1 - 1/2&lt;sup&gt;certainty&lt;/sup&gt;)}.  The execution time of
+ *         this method is proportional to the value of this parameter.
+ * @return {@code true} if this BigInteger is probably prime,
+ *         {@code false} if it's definitely composite.
+ */
+boolean primeToCertainty(int certainty, Random random) {
+    int rounds = 0;
+    int n = (Math.min(certainty, Integer.MAX_VALUE-1)+1)/2;
+
+    // The relationship between the certainty and the number of rounds
+    // we perform is given in the draft standard ANSI X9.80, &quot;PRIME
+    // NUMBER GENERATION, PRIMALITY TESTING, AND PRIMALITY CERTIFICATES&quot;.
+    int sizeInBits = this.bitLength();
+    if (sizeInBits &lt; 100) {
+        rounds = 50;
+        rounds = n &lt; rounds ? n : rounds;
+        return passesMillerRabin(rounds, random);
+    }
+
+    if (sizeInBits &lt; 256) {
+        rounds = 27;
+    } else if (sizeInBits &lt; 512) {
+        rounds = 15;
+    } else if (sizeInBits &lt; 768) {
+        rounds = 8;
+    } else if (sizeInBits &lt; 1024) {
+        rounds = 4;
+    } else {
+        rounds = 2;
+    }
+    rounds = n &lt; rounds ? n : rounds;
+
+    return passesMillerRabin(rounds, random) &amp;&amp; passesLucasLehmer();
+}
+</code></pre>
+
+<p>可以看到，当待测试奇数的位数较少时，作者选择使用较多的测试次数和单一的米勒-拉宾素性测试 ；当待测试奇数的位数较多时则减少测试次数并使用米勒-拉宾素性测试和<code>LucasLehmer素性测试</code>混合的测试方式。米勒-拉宾素性测试 :</p>
+
+<pre><code class="language-java">/**
+ * Returns true if this BigInteger passes the specified number of
+ * Miller-Rabin tests. This test is taken from the DSA spec (NIST FIPS
+ * 186-2).
+ *
+ * The following assumptions are made:
+ * This BigInteger is a positive, odd number greater than 2.
+ * iterations&lt;=50.
+ */
+private boolean passesMillerRabin(int iterations, Random rnd) {
+    // Find a and m such that m is odd and this == 1 + 2**a * m
+    BigInteger thisMinusOne = this.subtract(ONE);
+    BigInteger m = thisMinusOne;
+    int a = m.getLowestSetBit();
+    m = m.shiftRight(a);
+
+    // Do the tests
+    if (rnd == null) {
+        rnd = ThreadLocalRandom.current();
+    }
+    for (int i=0; i &lt; iterations; i++) {
+        // Generate a uniform random on (1, this)
+        BigInteger b;
+        do {
+            b = new BigInteger(this.bitLength(), rnd);
+        } while (b.compareTo(ONE) &lt;= 0 || b.compareTo(this) &gt;= 0);
+
+        int j = 0;
+        BigInteger z = b.modPow(m, this);	// z = b^m mod n
+        while (!((j == 0 &amp;&amp; z.equals(ONE)) || z.equals(thisMinusOne))) {
+            if (j &gt; 0 &amp;&amp; z.equals(ONE) || ++j == a)
+                return false;
+            z = z.modPow(TWO, this);	// z = z^2 mod n
+        }
+    }
+    return true;
+}
+</code></pre>
+
+<h2 id="0x02-大素数的生成">0x02. 大素数的生成</h2>
+
+<p>了解了Miller-Rabin素性测试的原理，下面就可以探讨如何生成大素数了。其实生成一个大素数非常简单，最直观的方法就是随机搜索，例如要生成一个100位的大素数，我们先随机生成一个数字序列，然后用Miller-Rabin素性测试对其进行测试即可，如果不是素数的话再随机生成一个，如此循环下去。
+当然我们可以采用随机搜索法（每次生成一个完全不一样的随机数），也可以采用随机递增搜索法（例如生成一个随机数之后，每次对其加2）</p>
+
+<p>生成一个<code>n</code>位十进制大素数的步骤如下：</p>
+
+<ul>
+<li>产生一个<code>n</code>位的随机数<code>p</code>，且最高位不能为<code>0</code></li>
+<li>若最低位为偶数，则将它加<code>1</code>，保证该数为奇数以节省时间</li>
+<li>测试该数能否被<code>10000</code>以下的素数（共<code>1228</code>个）整除，这样可以快速排除许多合数，节省时间</li>
+<li>在<code>2</code>到<code>p-1</code>这间随机生成一个数<code>a</code>，以<code>a</code>为底对<code>p</code>进行Miller-Rabin素性测试，若不通过说明<code>p</code>为合数。若通过则再选取一个<code>a</code>对<code>p</code>进行测试。选取<code>a</code>时应该选取尽可能小的素数，以提高运算速度。大概进行<code>5</code>次Miller-Rabin素性测试后，精确性就比较高了</li>
+<li>若<code>p</code>每次测试都通过，则认为<code>p</code>是素数。否则<code>p←p+2</code>，再次对<code>p</code>进行测试</li>
+</ul>
+
+<p>下面我们来看看网上的一个开源 <a style="color:blue;text-decoration:none" href="http://www-cs-students.stanford.edu/~tjw/jsbn/">Javascript加密函数库</a>（新浪微博和网易微博都在使用这个库）是如何实现的</p>
+
+<pre><code class="language-javascript">// 生成长度为B bits的随机私钥，E就是RSA公钥(n,e)中的那个e，通常取3或者65537
+function RSAGenerate(B,E) {
+  var rng = new SecureRandom();
+  //私钥的长度为B bits，相应的p和q的长度大概为B/2
+  var qs = B&gt;&gt;1;
+  this.e = parseInt(E,16);
+  var ee = new BigInteger(E,16);
+  for(;;) {
+    //生成质数p
+    for(;;) {
+      this.p = new BigInteger(B-qs,1,rng);
+      //这里利用了e与p-1互质的特性
+      if(this.p.subtract(BigInteger.ONE).gcd(ee).compareTo(BigInteger.ONE) == 0 &amp;&amp; this.p.isProbablePrime(10)) break;
+    }
+    //生成质数q
+    for(;;) {
+      this.q = new BigInteger(qs,1,rng);
+      //这里利用了e与q-1互质的特性
+      if(this.q.subtract(BigInteger.ONE).gcd(ee).compareTo(BigInteger.ONE) == 0 &amp;&amp; this.q.isProbablePrime(10)) break;
+    }
+    if(this.p.compareTo(this.q) &lt;= 0) {
+      var t = this.p;
+      this.p = this.q;
+      this.q = t;
+    }
+    var p1 = this.p.subtract(BigInteger.ONE);
+    var q1 = this.q.subtract(BigInteger.ONE);
+    var phi = p1.multiply(q1);
+    if(phi.gcd(ee).compareTo(BigInteger.ONE) == 0) {
+      this.n = this.p.multiply(this.q);
+      this.d = ee.modInverse(phi);
+      this.dmp1 = this.d.mod(p1);
+      this.dmq1 = this.d.mod(q1);
+      this.coeff = this.q.modInverse(this.p);
+      break;
+    }
+  }
+</code></pre>
+
+<h2 id="0x03-真随机数产生">0x03. 真随机数产生</h2>
+
+<p>大部分程序和语言中的随机数（比如C和MATLAB中的），确实都只是伪随机。是由可确定的函数（比如线性同余），通过一个种子（比如时钟），产生的伪随机数。通常的做法是通过人机交互的方式（如键盘敲击，鼠标位置等等）增加随机性来获取随机数。不过UNIX内核中的随机数发生器（/dev/random），它在理论上能产生真随机。即这个随机数的生成，独立于生成函数，或者说这个产生器是非确定的。所以，计算机理论上可以产生统计意义上的真随机数。</p>
+
+<h2 id="0x04-总结">0x04. 总结</h2>
+
+<p>总而言之，大素数生成过程有两个关键点，一个是素性测试，另一个是随机数的生成。前者要保证正确性和高效性，后者则一定要保证安全性，即生成一个真随机数，</p>
+
+<h2 id="0x04-参考">0x04. 参考</h2>
+
+<ul>
+<li>Wikipedia: <a style="color:blue;text-decoration:none" href="https://zh.wikipedia.org/wiki/%E7%B1%B3%E5%8B%92-%E6%8B%89%E5%AE%BE%E6%A3%80%E9%AA%8C">米勒-拉宾检验</a></li>
+<li>Wikipedia: <a style="color:blue;text-decoration:none" href="https://en.wikipedia.org/wiki/Primality_test">Primality_test</a></li>
+<li>Wikipedia: <a style="color:blue;text-decoration:none" href="https://en.wikipedia.org/wiki/Trial_division">Trial_division</a></li>
+<li>Wikipedia: <a style="color:blue;text-decoration:none" href="https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Primality_Testing#Java">Primality_Testing</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/security/crypto/symmetry/rc4/"><h4>Understand Stream Cipher and Implement RC4</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/security/crypto/symmetry/aes/"><h4>Implementation of AES Algorithm</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+
