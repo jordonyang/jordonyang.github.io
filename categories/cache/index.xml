@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cache on 临风博客</title>
+    <link>https://jordonyang.github.io/categories/cache/</link>
+    <description>Recent content in Cache on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Tue, 20 Nov 2018 10:46:53 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/categories/cache/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Dive into MESI Protocol</title>
+      <link>https://jordonyang.github.io/post/cache/mesi/</link>
+      <pubDate>Tue, 20 Nov 2018 10:46:53 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/cache/mesi/</guid>
+      <description>0x01. 概述 1. 缓存一致性 (Cache Coherence) 硬件层面的问题，指的是由于多核计算机中有多套缓存，各个缓存之间的数据不一致性问题。缓存一致性协议，如MESI解决是多个缓存副本之间的数据的一致性问题，这些协议可能十分复杂，可能有数十种状态。
+2. MESI MESI协议是一个基于失效的缓存一致性协议，是支持回写（write-back）缓存的最常用协议。因为是在伊利诺伊大学厄巴纳-香槟分校被发明的，所以也被称作伊利诺伊协议 (Illinois protocol）。与写通过（write through）缓存相比，回写缓冲能节约大量带宽。总是有“脏”（dirty）状态表示缓存中的数据与主存中不同。MESI协议要求在缓存不命中（miss）且数据块在另一个缓存时，允许缓存到缓存的数据复制。
+0x02. 状态 MESI 存在modified、exclusive、shared和invalid四种状态，协议可以在一个指定的缓存中应用这四种状态。因此，协议在每一个缓存行中维护一个两位的状态tag， 附着在缓存行的物理地址或者数据后。
+ modified：处于该状态的缓存行中的数据被当前CPU独占，不在其他CPU缓存中，且为最新的与主存不同的数据，因为数据已经更新，所以脏位为1，缓存最终有责任将数据写回到内存，并且也应当为其他缓存提供数据，必须在当前缓存缓存其他数据之前完成这些事情。该缓存行写回主存后，状态变为shared。 exclusive：非常类似于modified状态，唯一的区别是缓存行的数据还没有被相应的 CPU 修改，这表示缓存行中的数据及内存中的数据都是最新的，所以缓存行的脏位是0。但是，由于 CPU 独占该缓存行，所以能够在任何时刻将数据保存到该行，而不考虑其他 CPU。也就是说，由于内存中的值是最新的，该行可以被直接丢弃而不用回写到内存，也可以为其他缓存提供数据。 shared：处于该状态的缓存行可能被复制到至少一个其他 CPU 缓存中，这样在没有得到其他 CPU 的许可时，不能向缓存行存储数据。由于exclusive状态下，内存中的值是最新的，因此可以不用向内存回写值而直接丢弃缓存中的值，或者向其他 CPU 提供值。 invalid：处于该状态的行是空的，换句话说，它没有保存任何有效数据。当新数据进入缓存时，它替换一个处于invalid状态的缓存行。这个方法是比较好的，因为替换其他状态的缓存行将引起大量的缓存缺失。  对于任意给定的缓存对，给定缓存行的允许状态如下:
+如当一个缓存中的某个块被标记为M（modified）时，其他缓存中的块副本只能被标记为I（Invalid）。
+0x03. 协议消息  Read：该消息包含缓存行需读的物理地址。 Read Response：该消息包含较早前的read消息的数据。这个read response消息可能由内存或者其他缓存提供。例如，如果一个缓存请求一个处于modified状态的数据，则缓存必须提供read response消息。 Invalidate：包含要使无效的缓存行的物理地址。其他的缓存必须从它们的缓存中移除相应的数据并且响应此消息。 Invalidate Acknowledge：一个接收到invalidate消息的 CPU 必须在移除指定数据后响应一个invalidate acknowledge消息。 Read Invalidate：该消息包含要缓存行读取的物理地址。同时指示其他缓存移除数据。因此，它包含一个read和一个invalidate。read invalidate也需要read response以及invalidate acknowledge消息集。英文亦称read with intend to modify，可理解为读其他缓存的数据，并试图修改当前缓存数据，然后指示其他缓存的数据无效化。 Writeback：该消息包含要回写到内存的地址和数据。(并且也许会通过窥探器请求检查其他 CPUs 的缓存)。这个消息允许缓存在必要时换出modified状态的数据以腾出空间。  0x04. 状态转换 一个指定缓存行的状态变化及协议消息发送及接收如下图所示，四个状态共12条转移路径：
+本缓存行起始态为modified：缓存行内容为当前缓存所独有的，而且已被修改。
+   标号 最终状态 描述     a exclusive 缓存行被写回内存，但是CPU将它保留在缓存中，并进一步保留修改它的权利。此转换需要writeback消息。   c invalid CPU 接收到一条read invalidate消息，表示相应的缓存行数据已经在其他CPU缓存中被修改。CPU必须使其本地副本无效，然后响应read response和invalidate acknowledge消息，两者都将发送数据给请求方，表示本 CPU 不再具有本地副本。   f shared 其他一些 CPU 读取缓存行，数据由本 CPU 缓存提供，本 CPU 缓存保留只读副本，也可能将其写入内存。此转换由接收read消息开始，本 CPU 使用包含所请求数据的read response消息进行响应。    本缓存行起始态为exclusive：缓存内容不存在于其他缓存中，被当前缓存独占，可在不咨询其他缓存的情况下覆盖它。</description>
+    </item>
+    
+    <item>
+      <title>Base of CPU Cache</title>
+      <link>https://jordonyang.github.io/post/cache/cpu_cache_base/</link>
+      <pubDate>Mon, 07 May 2018 16:00:29 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/cache/cpu_cache_base/</guid>
+      <description>0x01. 简介 CPU缓存（Cache Memory）是位于CPU与内存之间的临时存储器，它的容量比内存小的多但交换速度却比内存要快得多。其出现主要是为了解决CPU运算速度与内存读写速度不匹配的矛盾，因为CPU运算速度要比内存读写速度快很多，这样会使CPU花费很长时间等待数据到来或把数据写入内存。在缓存中的数据是内存中的一小部分，但由于程序局部性原理，这一小部分是短时间内CPU即将访问的，当CPU调用大量数据时，就可先缓存中调用，从而加快读取速度。
+0x02. 工作原理 高速缓存的工作基于程序的局部性原理：程序的执行仅局限于某个部分，相应地，它所访问的存储空间也局限于某个区域。程序的局部性有两个方面的含义：
+ 时间局部性：如果一个存储单元被访问，则可能该单元会很快被再次访问。产生时间局部性的典型原因是在程序中存在着大量的循环操作。 空间局部性：如果一个存储单元被访问，则该单元邻近的单元也可能很快被访问。这是因为程序中大部分指令是顺序存储、顺序执行的，数据一般也是以向童、数组、树、表等形式蔟聚地存储在一起的。  CPU缓冲技术就是利用程序的局部性原理，把程序中正在使用的部分存放在一个高速的容童较小的Cache中，使CPU的访存操作大多数针对Cache进行，从而使程序的执行速度大大提高。
+0x03. 存储结构 设一个计算机系统的存储器地址有m位，则可以形成 M = 2m 个不同地址，该机器的高速缓存会被组织成一个含有 S = 2s 个高速缓存组（cache set）的数组，每个组含有E个高速缓存行（cache line）。每行是由一个 B = 2 b 字节的数据块、一个标识缓存行是否有效的有效位(valid bit)及 t = m - (b + s) 个标记位(tag bigs)组成，标记位是当前块的内存地址的位的一部分，用于唯一标识一个存储在缓存行的块。缓存行的具体结构如下图(a)所示：
+此外，每个缓存块还可对应若干标志位，包括有效位（valid bit）、脏位（dirty bit）、使用位（use bit）等。这些位在保证正确性、排除冲突、优化性能等方面起着重要作用，如拥有一个脏位的缓存行表示它在从主存读取之后已经被更改，这意味着处理器已经将数据写入该行，并且新值没有一直传播到主存。
+0x04. 运行流程 当一条加载指令指示CPU从主存地址A中读取一个字时，CPU将A发送给高速缓存，如果高速缓存中保存有地址A中的那个字的副本，它会立即返回该字给 CPU，高速缓存查找数据副本的流程大概如下：
+ 高速缓存中的参数S和B将m个地址位分为三段，如上图(b)所示。 主存地址A中的s个被解释为一个无符号整数，作为缓存组的索引，用于标记待获取的字存储在哪一个缓存组中。 在有效位为1及缓存组确定的情况下，主存地址A中t个标记位标记待获取的字存储在该缓存组的哪一个缓存行中。 主存地址A中的b个块偏移位标记待获取的数据字从缓存行数据块的哪一个索引开始。   为什么使用中间位而不是高位作索引？
+若使用高位作索引，则一些连续的内存块会映射到相同的缓存行，如图中前四行映射到第一个缓存组，第二个四个块映射到第二个组，依次类推，若一个程序具有良好的空间局部性，顺序扫描数组的元素，则在任何时刻，高速缓存中只存有一个块大小的数组内容，这样大大降低了对高速缓存的利用效率。相对而言，用中间位作索引，相邻的块总是映射到不同的高速缓存行。
+ 0x05. 地址映射 根据高速缓存组中包含的缓存行数目E，高速缓存被划分为不同的类型，包括直接映射缓存、组相联缓存等。
+1. 直接映射高速缓存 假设系统中CPU、寄存器文件、L1高速缓存和主存个数都为1，当CPU执行一条读内存字w的指令，它向L1高速缓存请求该字，若L1高速缓存有w的副本，则缓存命中(Cache Hit)，L1高速缓存返回w的副本数据给CPU；否则缓存缺失(Cache Miss)，拼接w中的标记位和索引位，得到w在主存中的块号，结合块内偏移得到该数据字，将之写入高速缓存并返回给CPU。高速缓存分别使用组索引，行标记、块偏移通过进行组选择、行匹配、字抽取三个步骤确定一个请求是否命中，然后取出被请求字。
+1.1 组选择 高速缓存从w的地址中抽取出s个组索引位，将之解释为一个表示缓存组数组索引的无符号整数，如下图中的w的s位二进制组索引位为0001，被解释为缓存组1的索引。</description>
+    </item>
+    
+  </channel>
+</rss>

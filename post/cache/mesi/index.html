@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Dive into MESI Protocol"/>
+<meta name="twitter:description" content="深入理解MESI缓存一致性协议"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Dive into MESI Protocol &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/cache/mesi/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="深入理解MESI缓存一致性协议" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-11-20T10:46:53&#43;08:00" />
+
+    
+    <meta property="article:tag" content="cache" />
+    
+    
+
+    <title>Dive into MESI Protocol &middot; 临风博客</title>
+
+    
+    <meta name="description" content="深入理解MESI缓存一致性协议" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+ 
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/cache/mesi/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Dive into MESI Protocol,
+    "name": Dive into MESI Protocol,
+    "wordCount": 271,
+    "timeRequired": "PT2M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/cache/mesi/,
+    "datePublished": 2018-11-20T10:46Z,
+    "dateModified": 2018-11-20T10:46Z,
+    
+    "keywords": cache,
+    "description": 深入理解MESI缓存一致性协议,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/cache/mesi/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Dive into MESI Protocol</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Dive into MESI Protocol</h1>
+        <em style="color: blue">深入理解MESI缓存一致性协议</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/cache/">#cache</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-11-20T10:46:53&#43;08:00">
+            2018/Nov/20
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="0x01-概述">0x01. 概述</h3>
+
+<h4 id="1-缓存一致性-cache-coherence">1. 缓存一致性 (Cache Coherence)</h4>
+
+<p>硬件层面的问题，指的是由于多核计算机中有多套缓存，各个缓存之间的数据不一致性问题。缓存一致性协议，如MESI解决是多个缓存副本之间的数据的一致性问题，这些协议可能十分复杂，可能有数十种状态。</p>
+
+<h4 id="2-mesi">2. MESI</h4>
+
+<p>MESI协议是一个<code>基于失效</code>的缓存一致性协议，是<code>支持回写（write-back）</code>缓存的最常用协议。因为是在伊利诺伊大学厄巴纳-香槟分校被发明的，所以也被称作<code>伊利诺伊协议 (Illinois protocol）</code>。与写通过（write through）缓存相比，回写缓冲能节约大量带宽。总是有“脏”（dirty）状态表示缓存中的数据与主存中不同。MESI协议要求在缓存不命中（miss）且数据块在另一个缓存时，允许缓存到缓存的数据复制。</p>
+
+<h3 id="0x02-状态">0x02. 状态</h3>
+
+<p>MESI 存在<code>modified</code>、<code>exclusive</code>、<code>shared</code>和<code>invalid</code>四种状态，协议可以在一个指定的缓存中应用这四种状态。因此，协议在<code>每一个缓存行</code>中维护一个两位的状态<code>tag</code>， 附着在缓存行的物理地址或者数据后。</p>
+
+<ul>
+<li><strong>modified</strong>：处于该状态的缓存行中的数据被当前CPU独占，不在其他CPU缓存中，且为最新的与主存不同的数据，因为数据已经更新，所以<code>脏位为1</code>，缓存最终有责任将数据写回到内存，并且也应当为其他缓存提供数据，必须在当前缓存缓存其他数据之前完成这些事情。该缓存行写回主存后，状态变为<code>shared</code>。</li>
+<li><strong>exclusive</strong>：非常类似于<code>modified</code>状态，唯一的区别是缓存行的数据还没有被相应的 CPU 修改，这表示缓存行中的数据及内存中的数据都是最新的，所以缓存行的<code>脏位是0</code>。但是，由于 CPU 独占该缓存行，所以能够在任何时刻将数据保存到该行，而不考虑其他 CPU。也就是说，由于内存中的值是最新的，该行可以被直接丢弃而不用回写到内存，也可以为其他缓存提供数据。</li>
+<li><strong>shared</strong>：处于该状态的缓存行可能被复制到至少一个其他 CPU 缓存中，这样在没有得到其他 CPU 的许可时，不能向缓存行存储数据。由于<code>exclusive</code>状态下，内存中的值是最新的，因此可以不用向内存回写值而直接丢弃缓存中的值，或者向其他 CPU 提供值。</li>
+<li><strong>invalid</strong>：处于该状态的行是空的，换句话说，它没有保存任何有效数据。当新数据进入缓存时，它替换一个处于<code>invalid</code>状态的缓存行。这个方法是比较好的，因为替换其他状态的缓存行将引起大量的缓存缺失。</li>
+</ul>
+
+<p>对于任意给定的缓存对，给定缓存行的允许状态如下:</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/mesi/states.png" alt="img" /></p>
+
+<p>如当一个缓存中的某个块被标记为M（modified）时，其他缓存中的块副本只能被标记为I（Invalid）。</p>
+
+<h3 id="0x03-协议消息">0x03. 协议消息</h3>
+
+<ul>
+<li><strong>Read</strong>：该消息包含缓存行需读的物理地址。</li>
+<li><strong>Read Response</strong>：该消息包含较早前的<code>read</code>消息的数据。这个<code>read response</code>消息可能由内存或者其他缓存提供。例如，如果一个缓存请求一个处于<code>modified</code>状态的数据，则缓存必须提供<code>read response</code>消息。</li>
+<li><strong>Invalidate</strong>：包含要使无效的缓存行的物理地址。其他的缓存必须从它们的缓存中移除相应的数据并且响应此消息。</li>
+<li><strong>Invalidate Acknowledge</strong>：一个接收到<code>invalidate</code>消息的 CPU 必须在移除指定数据后响应一个<code>invalidate acknowledge</code>消息。</li>
+<li><strong>Read Invalidate</strong>：该消息包含要缓存行读取的物理地址。同时指示其他缓存移除数据。因此，它包含一个<code>read</code>和一个<code>invalidate</code>。<code>read invalidate</code>也需要<code>read response</code>以及<code>invalidate acknowledge</code>消息集。英文亦称<code>read with intend to modify</code>，可理解为<code>读其他缓存的数据，并试图修改当前缓存数据，然后指示其他缓存的数据无效化</code>。</li>
+<li><strong>Writeback</strong>：该消息包含要回写到内存的地址和数据。(并且也许会通过窥探器请求检查其他 CPUs 的缓存)。这个消息允许缓存在必要时换出<code>modified</code>状态的数据以腾出空间。</li>
+</ul>
+
+<h3 id="0x04-状态转换">0x04. 状态转换</h3>
+
+<p>一个指定缓存行的状态变化及协议消息发送及接收如下图所示，四个状态共12条转移路径：</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/mesi/state_transition.png" alt="state_transition" /></p>
+
+<p><strong>本缓存行起始态为<code>modified</code></strong>：缓存行内容为当前缓存所独有的，而且已被修改。</p>
+
+<table>
+<thead>
+<tr>
+<th>标号</th>
+<th>最终状态</th>
+<th>描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>a</td>
+<td>exclusive</td>
+<td>缓存行被写回内存，但是CPU将它保留在缓存中，并进一步保留修改它的权利。此转换需要<code>writeback</code>消息。</td>
+</tr>
+
+<tr>
+<td>c</td>
+<td>invalid</td>
+<td>CPU 接收到一条<code>read invalidate</code>消息，表示相应的缓存行数据已经在其他CPU缓存中被修改。CPU必须使其本地副本无效，然后响应<code>read response</code>和<code>invalidate acknowledge</code>消息，两者都将发送数据给请求方，表示本 CPU 不再具有本地副本。</td>
+</tr>
+
+<tr>
+<td>f</td>
+<td>shared</td>
+<td>其他一些 CPU 读取缓存行，数据由本 CPU 缓存提供，本 CPU 缓存保留只读副本，也可能将其写入内存。此转换由接收<code>read</code>消息开始，本 CPU 使用包含所请求数据的<code>read response</code>消息进行响应。</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>本缓存行起始态为<code>exclusive</code></strong>：缓存内容不存在于其他缓存中，被当前缓存独占，可在不咨询其他缓存的情况下覆盖它。</p>
+
+<table>
+<thead>
+<tr>
+<th>标号</th>
+<th>最终状态</th>
+<th>描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>b</td>
+<td>modified</td>
+<td>本 CPU 将数据写入它已经具有独占访问权的缓存行。此转换不需要发送或接收任何消息。</td>
+</tr>
+
+<tr>
+<td>g</td>
+<td>shared</td>
+<td>其他一些 CPU 读取本缓存行中的数据，并且数据是从本 CPU 的缓存或者内存中提供的。在这两种情况下，本 CPU 都保留只读副本。此转换开始于接收到一个<code>read</code>消息，并且本 CPU 响应了一个<code>read response</code>消息。</td>
+</tr>
+
+<tr>
+<td>i</td>
+<td>invalid</td>
+<td>其他的 CPU 进行了一个原子读写操作，相应的缓存行被本 CPU 独有。本 CPU 将缓存行变成无效状态。此转换开始于接收到<code>read invalidate</code>消息，并且本 CPU 响应一个<code>read response</code>消息以及一个<code>invalidate acknowledge</code>消息。</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>本缓存行起始态为<code>shared</code></strong>：当前缓存行中的内容在至少一个其他 CPU 缓存中存在副本，即内容被共享。</p>
+
+<table>
+<thead>
+<tr>
+<th>标号</th>
+<th>最终状态</th>
+<th>描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>e</td>
+<td>modified</td>
+<td>本 CPU 进行一个原子读写操作，相应的数据在缓存中是只读的。它必须发送一个<code>invalidate</code>消息，并等待其他 CPU 响应<code>invalidate acknowledge</code>消息集以完成此转换。</td>
+</tr>
+
+<tr>
+<td>h</td>
+<td>exclusive</td>
+<td>当前 CPU 将要写入一些数据到缓存行，于是发送一个<code>invalidate</code>消息。直到它接收到所有<code>invalidate acknowledge</code>消息后，CPU 才完成转换。或者其他 CPUs 通过<code>writeback</code>消息将缓存行的数据换出。这样，当前 CPU 就是最后一个缓存该数据的 CPU，自然顺理成章地独占数据。</td>
+</tr>
+
+<tr>
+<td>l</td>
+<td>invalid</td>
+<td>其他 CPU 存储一个数据到缓存行，但是由于该缓存行数据也被保存在其他 CPU 缓存中（比如当前CPU的高速缓存），所以它处于只读状态。此转换开始于接收到一个<code>invalidate</code>消息，当前 CPU 响应一个<code>invalidate acknowledge</code>消息。</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>本缓存行起始态为<code>invalid</code></strong>：缓存行的内容无效，或者说缓存行数据块为空，<code>valid</code>状态为0。</p>
+
+<table>
+<thead>
+<tr>
+<th>标号</th>
+<th>最终状态</th>
+<th>描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>d</td>
+<td>modified</td>
+<td>CPU 进行一个原子读写操作，相应的数据没有在它的缓存中。它发送一个<code>read invalidate</code>消息，通过<code>read response</code>接收数据。一旦它接收到一个完整的<code>invalidate acknowledge</code>响应集合，CPU 就完成此转换。</td>
+</tr>
+
+<tr>
+<td>j</td>
+<td>exclusive</td>
+<td>本 CPU 保存一个数据到缓存行，但是数据还没有在它的缓存行中。因此发送一个<code>read invalidate</code>消息。直到它接收到<code>read response</code>消息以及所有<code>invalidate acknowledge</code>消息后，它才完成转换。</td>
+</tr>
+
+<tr>
+<td>k</td>
+<td>shared</td>
+<td>本 CPU 装载一个数据，但是数据还没有在缓存行中。CPU 发送一个<code>read</code>消息，当它接收到相应相应的<code>read response</code>消息后完成转换。</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="0x05-例子">0x05. 例子</h3>
+
+<p>最初，数据储存在内存的<code>地址 0</code>中。它在一个 4CPU 的系统中的几个直接映射的单行缓存中移动。下表展示了数据流，第一列是操作顺序，第二行表示执行操作的 CPU，第三行表示执行的操作，接下来是四个 CPU 的缓存行状态（MESI 状态在内存地址后面）。最后两列表示相应的内存内容是否是最新的（V为最新， I不是最新）。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/mesi/example.png" alt="example" /></p>
+
+<ul>
+<li>最初，CPU 缓存行处于<code>invalid</code>状态，数据在内存中。</li>
+<li>当<code>CPU 0</code>从<code>地址 0</code>装载数据，<code>CPU 0</code>中相应的的缓存行进入<code>shared</code>状态，并且内存中的数据是有效的。</li>
+<li><code>CPU 3</code>也从<code>地址 0</code>装载数据，这样其中相应的的缓存行也处于<code>shared</code>状态，并且内存中的数据仍然有效。</li>
+<li>接下来<code>CPU 0</code>装载其他缓存行 (<code>地址 8</code>)，通过使无效操作强制将<code>地址 0</code>的数据换出缓存，原缓存行中的数据被换成<code>地址 8</code>的数据。</li>
+<li><code>CPU 2</code>装载<code>地址 0</code>的数据，但是该 CPU 发现它将很快就会存储数据，因此它使用一个<code>read invalidate</code>消息以获得一个独享副本。<code>CPU 3</code>缓存中的数据变成无效（但是内存中的数据仍然是有效的）。</li>
+<li>按下来<code>CPU 2</code>开始预期的存储操作，并将状态改变为<code>modified</code>。内存中的数据将不再是最新的。</li>
+<li><code>CPU 1</code>开始一个原子自增操作，使用一个<code>read invalidate</code>操作从<code>CPU 2</code>的缓存中窥探数据并使之无效，这样<code>CPU 1</code>的缓存变成 <code>modified</code>状态（内存中的数据仍然是过期的）。</li>
+<li>最后，<code>CPU 1</code>从<code>地址 8</code>读取数据，使用一个<code>writeback</code>消息将<code>地址 0</code>数据回写到内存。</li>
+</ul>
+
+<h3 id="0x0-参考">0x0. 参考</h3>
+
+<ul>
+<li>维基百科: <a href="https://zh.wikipedia.org/wiki/MESI%E5%8D%8F%E8%AE%AE">MESI协议</a></li>
+<li>维基百科: <a href="https://en.wikipedia.org/wiki/Cache_coherence">Cache coherence</a></li>
+<li>Paul E. McKenney: <a href="https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook-1c.2017.11.22a.pdf">Is Parallel Programming Hard, And, If So, What Can You Do About It? </a></li>
+<li>《深入理解并行编程》（第1版，Paul E Mckenney著，谢宝友、鲁阳译，电子工业出版社）</li>
+<li><a href="http://meseec.ce.rit.edu/551-projects/fall2010/1-3.pdf">Computer Architecture - Cache Coherence Protocols (Sundararaman Nakshatra)</a></li>
+</ul>
+
+<h3 id="0x0-相关文章">0x0. 相关文章</h3>
+
+<ul>
+<li><a href="../cpu_cache_base">深入理解CPU高速缓存</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/java/concurrency/cas/"><h4>Simply Understanding Compare-And-Swap</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/security/ssl/handshake/"><h4>SSL - Dive into Handshake protocol</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

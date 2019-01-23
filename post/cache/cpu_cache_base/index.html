@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Base of CPU Cache"/>
+<meta name="twitter:description" content="深入理解CPU高速缓存"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Base of CPU Cache &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/cache/cpu_cache_base/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="深入理解CPU高速缓存" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2018-05-07T16:00:29&#43;08:00" />
+
+    
+    <meta property="article:tag" content="cache" />
+    
+    
+
+    <title>Base of CPU Cache &middot; 临风博客</title>
+
+    
+    <meta name="description" content="深入理解CPU高速缓存" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+ 
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/cache/cpu_cache_base/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Base of CPU Cache,
+    "name": Base of CPU Cache,
+    "wordCount": 181,
+    "timeRequired": "PT1M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/cache/cpu_cache_base/,
+    "datePublished": 2018-05-07T16:00Z,
+    "dateModified": 2018-05-07T16:00Z,
+    
+    "keywords": cache,
+    "description": 深入理解CPU高速缓存,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/cache/cpu_cache_base/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Base of CPU Cache</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Base of CPU Cache</h1>
+        <em style="color: blue">深入理解CPU高速缓存</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/cache/">#cache</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2018-05-07T16:00:29&#43;08:00">
+            2018/May/7
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="0x01-简介">0x01. 简介</h3>
+
+<p>CPU缓存（Cache Memory）是位于CPU与内存之间的临时存储器，它的容量比内存小的多但交换速度却比内存要快得多。其出现主要是<strong>为了解决CPU运算速度与内存读写速度不匹配的矛盾，因为CPU运算速度要比内存读写速度快很多，这样会使CPU花费很长时间等待数据到来或把数据写入内存</strong>。在缓存中的数据是内存中的一小部分，但由于<code>程序局部性原理</code>，这一小部分是短时间内CPU即将访问的，当CPU调用大量数据时，就可先缓存中调用，从而加快读取速度。</p>
+
+<h3 id="0x02-工作原理">0x02. 工作原理</h3>
+
+<p>高速缓存的工作基于<strong>程序的局部性原理</strong>：程序的执行仅局限于某个部分，相应地，它所访问的存储空间也局限于某个区域。程序的局部性有两个方面的含义：</p>
+
+<ul>
+<li><strong>时间局部性</strong>：如果一个存储单元被访问，则可能该单元会很快被再次访问。产生时间局部性的典型原因是在程序中存在着大量的循环操作。</li>
+<li><strong>空间局部性</strong>：如果一个存储单元被访问，则该单元邻近的单元也可能很快被访问。这是因为程序中大部分指令是顺序存储、顺序执行的，数据一般也是以向童、数组、树、表等形式蔟聚地存储在一起的。</li>
+</ul>
+
+<p>CPU缓冲技术就是利用程序的局部性原理，把程序中正在使用的部分存放在一个高速的容童较小的Cache中，使CPU的访存操作大多数针对Cache进行，从而使程序的执行速度大大提高。</p>
+
+<h3 id="0x03-存储结构">0x03. 存储结构</h3>
+
+<p>设一个计算机系统的存储器地址有<code>m</code>位，则可以形成 <strong>M = 2<sup>m</sup></strong> 个不同地址，该机器的高速缓存会被组织成一个含有 <strong>S = 2<sup>s</sup></strong> 个高速缓存组（cache set）的数组，每个组含有<code>E</code>个高速缓存行（cache line）。每行是由一个 <strong>B = 2 <sup>b</sup></strong> 字节的数据块、一个标识缓存行是否有效的<code>有效位(valid bit)</code>及 <strong>t = m - (b + s)</strong> 个<code>标记位(tag bigs)</code>组成，标记位是当前块的内存地址的位的一部分，用于唯一标识一个存储在缓存行的块。缓存行的具体结构如下图(a)所示：</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/cache_structure.png" alt="img" /></p>
+
+<p>此外，每个缓存块还可对应若干标志位，包括有效位（valid bit）、脏位（dirty bit）、使用位（use bit）等。这些位在保证正确性、排除冲突、优化性能等方面起着重要作用，如拥有一个脏位的缓存行表示它在从主存读取之后已经<code>被更改</code>，这意味着处理器已经将数据写入该行，并且新值没有一直传播到主存。</p>
+
+<h3 id="0x04-运行流程">0x04. 运行流程</h3>
+
+<p>当一条加载指令指示CPU从主存地址<code>A</code>中读取一个字时，CPU将<code>A</code>发送给高速缓存，如果高速缓存中保存有地址<code>A</code>中的那个字的副本，它会立即返回该字给 CPU，高速缓存查找数据副本的流程大概如下：</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/cache_line_structure.png" alt="img" /></p>
+
+<ul>
+<li>高速缓存中的参数<code>S</code>和<code>B</code>将<code>m</code>个地址位分为三段，如上图(b)所示。</li>
+<li>主存地址<code>A</code>中的<code>s</code>个被解释为一个无符号整数，作为缓存组的索引，用于标记待获取的字存储在哪一个缓存组中。</li>
+<li>在<code>有效位为1</code>及缓存组确定的情况下，主存地址<code>A</code>中<code>t</code>个标记位标记待获取的字存储在该缓存组的哪一个缓存行中。</li>
+<li>主存地址<code>A</code>中的<code>b</code>个块偏移位标记待获取的数据字从缓存行数据块的哪一个索引开始。</li>
+</ul>
+
+<blockquote>
+<p><strong>为什么使用中间位而不是高位作索引？</strong></p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/why.png" alt="img" /></p>
+
+<p>若使用高位作索引，则一些连续的内存块会映射到相同的缓存行，如图中前四行映射到第一个缓存组，第二个四个块映射到第二个组，依次类推，若一个程序具有良好的空间局部性，顺序扫描数组的元素，则在任何时刻，高速缓存中只存有一个块大小的数组内容，这样大大降低了对高速缓存的利用效率。相对而言，用中间位作索引，相邻的块总是映射到不同的高速缓存行。</p>
+</blockquote>
+
+<h3 id="0x05-地址映射">0x05. 地址映射</h3>
+
+<p>根据高速缓存组中包含的缓存行数目<code>E</code>，高速缓存被划分为不同的类型，包括<code>直接映射缓存</code>、<code>组相联缓存</code>等。</p>
+
+<h4 id="1-直接映射高速缓存">1. 直接映射高速缓存</h4>
+
+<p>假设系统中CPU、寄存器文件、L1高速缓存和主存个数都为1，当CPU执行一条读内存字<code>w</code>的指令，它向<code>L1高速缓存</code>请求该字，若<code>L1高速缓存</code>有<code>w</code>的副本，则<code>缓存命中(Cache Hit)</code>，<code>L1高速缓存</code>返回<code>w</code>的副本数据给CPU；否则<code>缓存缺失(Cache Miss)</code>，拼接<code>w</code>中的标记位和索引位，得到<code>w</code>在主存中的块号，结合块内偏移得到该数据字，将之写入高速缓存并返回给CPU。高速缓存分别使用<code>组索引</code>，<code>行标记</code>、<code>块偏移</code>通过进行<code>组选择</code>、<code>行匹配</code>、<code>字抽取</code>三个步骤确定一个请求是否命中，然后取出被请求字。</p>
+
+<h5 id="1-1-组选择">1.1 组选择</h5>
+
+<p>高速缓存从<code>w</code>的地址中抽取出<code>s</code>个组索引位，将之解释为一个表示缓存组数组索引的无符号整数，如下图中的<code>w</code>的<code>s</code>位二进制组索引位为<code>0001</code>，被解释为<code>缓存组1</code>的索引。</p>
+
+<h5 id="1-2-行匹配">1.2 行匹配</h5>
+
+<p>在组选择完成后，假如已经确定选择了某个组<code>i</code>，接下来需要确定是否有字<code>w</code>的一个数据副本存储在组<code>i</code>的一个缓存行中，由于直接映射缓存的缓存组中只有一行，所以只要找到<code>有效位为1</code>且标记与地址<code>A</code>中的标记一致的缓存行。如下图中地址<code>A</code>中的二进制标记位为<code>0110</code>，对应地找到了标记也为<code>0110</code>且有效位为1的缓存行。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/direct_mapping.png" alt="mapping" /></p>
+
+<h5 id="1-3-字抽取">1.3 字抽取</h5>
+
+<p>在确定缓存行后，需要知道字<code>w</code>在其中的开始位置，如上图所示，块偏移位提供了所需的字的第一个字节的偏移，其中地址<code>A</code>给出的块偏移的二进制位是<code>100</code>，即字<code>w</code>在数据块中的开始字节索引是4。</p>
+
+<h5 id="1-4-不命中时的行替换">1.4 不命中时的行替换</h5>
+
+<p>若发生缓存缺失，则需要从存储层次结构的下一层抽取被请求的块，然后将新的块存储在组索引指示的组中的一个缓存行中。一般而言，若组中的缓存行均有效，则需要驱逐一个现存的行，而对于直接映射高速缓存，由于组中只有一行，所以直接替换掉该行即可。</p>
+
+<h4 id="2-组相联高速缓存">2. 组相联高速缓存</h4>
+
+<p>直接映射缓存中的冲突不命中问题源于每个缓存组只有一个行的限制，为了放松该限制，<code>组相联高速缓存</code>的每个缓存组中保存多于1个的缓存行，即1 &lt; E &lt; C/B 的高速缓存通常称为<code>E路组相联高速缓存</code>。其结构大致如下所示</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/group.png" alt="img" /></p>
+
+<h5 id="2-1-组选择-行匹配及字抽取">2.1. 组选择、行匹配及字抽取</h5>
+
+<p>与直接映射的组选择过程一样。行匹配过程比直接映射缓存中的复杂，因为必须检查多个行的标记位和有效位，以确定请求的字是否在该缓存组中。下图展示了行匹配的的基本思想，重要的一点是<strong>组中的每一行都可以包含任何映射到这一个组的内存块，即两个缓存行，它们的数据块中可能都存有待获取的数据，但是这两行的标记不同</strong>，所以高速缓存必须搜索组中的每一个有效地行，比较其标记与地址<code>A</code>中的标记，判断是否命中，若命中则进行块偏移抽取数据字并返回，与前面一样。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/group_rules.png" alt="img" /></p>
+
+<h5 id="2-2-不命中时的行替换">2.2. 不命中时的行替换</h5>
+
+<p>若CPU请求的字不在组中的任何一行中，则为缓存缺失，高速缓存必须从内存中取出包含该字的块，这时由于组中含有的行不止一个，不能直接替换，需要考虑到的是，若此时组中含有一个空行，那么它是一个很好地存储选择，但若无空行，则需选择一个<strong>非空的同时CPU也不会很快引用到的行</strong>进行替换，替换算法与操作系统中虚拟存储器管理用到的页面置换算法类似，例如<code>LFU</code>、<code>LRU</code>、<code>FIFO</code>等。</p>
+
+<h4 id="3-全相联高速缓存">3. 全相联高速缓存</h4>
+
+<p>全相联高速缓存中只有一个缓存组，其中包含了所有高速缓存行（即E = C/B），下面通过目标块的定位了解其结构及运作的相关过程。</p>
+
+<h5 id="3-1-组选择">3.1. 组选择</h5>
+
+<p>使用全相联高速缓存结构的CPU请求的地址格式与前面的缓存的结构有所不同，由于只有一个组，地址<code>A</code>中没有设置组索引位，地址只被划分为一个标记和块偏移，所以实际上并没有组选择可言。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/full_asso_1.png" alt="img" /></p>
+
+<h5 id="3-2-行匹配和字抽取">3.2. 行匹配和字抽取</h5>
+
+<p>全相联高速缓存的行匹配和字抽取与组相联高速缓存中的是一样的，区别在于规模大小。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/full_asso_2.png" alt="img" /></p>
+
+<p>因为高速缓存电路必须并行地搜索很多相匹配的标记，构造一个容量大速度快的高速缓存困难且昂贵。因此全相联高速缓存只适合很小的高速缓存，如虚拟内存系统中的翻译备用缓冲器(TLB)，用于缓存页表项。</p>
+
+<h3 id="0x06-读写问题">0x06. 读写问题</h3>
+
+<h4 id="1-读操作">1. 读操作</h4>
+
+<p>如前面所述，进行读操作时，先在高速缓存中查找所需字<code>w</code>的副本，若命中，立即返回<code>w</code>给CPU，否则从存储器层次结构较低层中取出包含字<code>w</code>的块，将该块存储到某个高速缓存行中（可能需驱逐一个有效行），然后返回<code>w</code>给CPU。</p>
+
+<h4 id="2-写操作">2. 写操作</h4>
+
+<ul>
+<li>若写一个已缓存的字<code>w</code>（即<code>写命中，write hit)</code>
+
+<ul>
+<li>在高速缓存中更新<code>w</code>的副本。</li>
+<li>更新<code>w</code>到最近的低层次缓存，方法有:
+
+<ul>
+<li><strong>直写(write-through)</strong>：立即更新紧接层次缓存的数据，但每次写都会增加总线流量。</li>
+<li><strong>写回(write back)</strong>；尽量推迟更新，只有当替换算法要驱逐该更新过的块时，才把它写到        紧接的低一层缓存中，由于局部性，可显著减少总线流量，但增加了复杂性，同时需维护一    个修改位标记是否更新过。</li>
+</ul></li>
+</ul></li>
+<li>若写一个未缓存的字<code>w</code>（即<code>缺失，write miss)</code>，此时<code>w</code>可能在低一层的缓存中保存有副本，采用的更新方法有：
+
+<ul>
+<li><strong>写分配</strong>：试图利用<code>空间局部性</code>，加载相应低一层中的块到高速缓存中，更新该块。缺点是每次不命中都会导致一个块从低一层传送到高一层的高速缓存。</li>
+<li><strong>非写分配</strong>：避开高速缓存，直接将<code>w</code>写到低一层中。</li>
+</ul></li>
+</ul>
+
+<p>通常地，直写高速缓存是非写分配的，写回高速缓存是写分配的。而实际上，为写操作优化高速缓存是一个细致而困难的问题，不同的系统的具体实现也各有差别。CSAPP 作者建议使用<strong>写回和写分配</strong>的高速缓存模型，</p>
+
+<h3 id="0x07-多级缓存">0x07. 多级缓存</h3>
+
+<p>介于处理器和内存二者之间的缓存有两个天然冲突的性能指标：速度和容积。如果只向处理器看齐而追求速度，则必然要靠减少容积来换取访问时间；如果只向内存看齐而追求容积，则必然以增加处理器的访问时间为牺牲。这种矛盾促使人们考虑使用多级缓存。</p>
+
+<p>在一个两级缓存体系中，一级缓存靠近处理器一侧，二级缓存靠近内存一侧。当一级缓存发生失效时，它向二级缓存发出请求。如果请求在二级缓存上命中，则数据交还给一级缓存；如失效，二级缓存进一步向内存发出请求。对于三级缓存可依此类推。</p>
+
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>大小</th>
+<th>相联度</th>
+<th>命中时间</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>L1</td>
+<td>64KB</td>
+<td>双路</td>
+<td>3周期</td>
+</tr>
+
+<tr>
+<td>L2</td>
+<td>512KB</td>
+<td>16路</td>
+<td>+9周期</td>
+</tr>
+
+<tr>
+<td>L3</td>
+<td>2MB</td>
+<td>32路</td>
+<td>～+38周期</td>
+</tr>
+</tbody>
+</table>
+
+<p>通常，更接近内存的缓存有着更大容积，但是速度也更慢。以<code>AMD Opteron X4</code>处理器为例，见上表比较。值得注意的是，无论如何，<strong>低级缓存的局部命中率总是低于高级缓存。这是因为数据的时空局部性在一级缓存上基本上已经利用殆尽。</strong></p>
+
+<p>另外，高速缓存不仅可像上面所述的那样存储数据，它也可以用来存储指令，只存储数据的高速缓存称为<code>i-cache</code>，只存储指令的高速缓存称为<code>d-cache</code>，既保存数据也保存指令的高速缓存称为<code>统一的高速缓存(unified cache)</code>。为了实现同时读指令字和数据字，现代的处理器大多设置独立的<code>i-cache</code>和<code>d-cache</code>。</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/multilevel_cache.png" alt="multi-level" /></p>
+
+<p>上面给出了<code>Intel Core i7</code>处理器的高速缓存层次结构，每个CPU芯片有四个核，每个核有自己私有的<code>L1 i-cache</code>、<code>L1 d-cache</code>和<code>L2 unified cache</code>。所有的核共享芯片上的<code>L3 unified cache</code>，注意到在这个层次结构中所有<code>SRAM</code>高速缓存存储器都在CPU芯片上。下表总结了<code>Core i7</code>高速高速缓存的基本特性：</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/cache/i7_cache.png" alt="img" /></p>
+
+<h3 id="0x08-参考">0x08. 参考</h3>
+
+<ul>
+<li>《计算机组成原理》（第3版，蒋本珊著，清华大学出版社）</li>
+<li>《深入理解并行编程》（第1版，Paul E Mckenney著，谢宝友、鲁阳译，电子工业出版社）</li>
+<li>《深入理解计算机系统》（Randal E Bryant、David R.O&rsquo;Hallaron著，龚奕利、贺莲译，机械工业出版社）：第六章</li>
+<li>维基百科: <a href="https://en.wikipedia.org/wiki/CPU_cache">CPU cache</a></li>
+<li>YouTube: <a href="https://www.youtube.com/watch?v=E1_dIZR2XdE">Cache direct mapping example - Computer Architecture</a></li>
+</ul>
+
+<h3 id="0x09-相关文章">0x09. 相关文章</h3>
+
+<ul>
+<li><a href="../mesi">深入理解 MESI 缓存一致性协议</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/java/collections/list/arraylist_source/"><h4>Dive into ArrayList</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/java/concurrency/base/run_exec/"><h4>Thread Run Method Execution Process</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+
