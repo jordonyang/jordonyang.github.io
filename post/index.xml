@@ -505,17 +505,5 @@ private int[] heap; private int heapSize; public MyHeap(int[] array) { this.heap
 private int left(int i) { return 2 * i + 1; } private int right(int i) { return 2 * i + 2; } private int parent(int i) { return (i - 1) / 2; }  3. 堆的一些性质  最大堆性质：A[PARENT[i] &amp;gt;= A[i]] 最小堆性质：A[PARENT[i] &amp;lt;= A[i]] 含有n个元素的堆的高为：小于等于lgn的最大整数 当用数组表示存储了n个元素的堆时，叶节点下标分别为 (n/2) + 1, (n / 2) + 2, &amp;hellip;, n（下标从１开始）  0x01.</description>
     </item>
     
-    <item>
-      <title></title>
-      <link>https://jordonyang.github.io/post/args/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://jordonyang.github.io/post/args/</guid>
-      <description> +表示添加参数，-表示去除参数
-日志类  -XX:+PrintGCDetails 打印日志详情
- 锁相关  -XX:+
- </description>
-    </item>
-    
   </channel>
 </rss>
