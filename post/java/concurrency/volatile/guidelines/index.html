@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Guidelines for Using Volatile Variables"/>
+<meta name="twitter:description" content="如何正确使用 volatile 变量"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Guidelines for Using Volatile Variables &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/java/concurrency/volatile/guidelines/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="如何正确使用 volatile 变量" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2019-01-14T09:22:44&#43;08:00" />
+
+    
+    <meta property="article:tag" content="java" />
+    
+    <meta property="article:tag" content="concurrency" />
+    
+    <meta property="article:tag" content="volatile" />
+    
+    
+
+    <title>Guidelines for Using Volatile Variables &middot; 临风博客</title>
+
+    
+    <meta name="description" content="如何正确使用 volatile 变量" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/java/concurrency/volatile/guidelines/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Guidelines for Using Volatile Variables,
+    "name": Guidelines for Using Volatile Variables,
+    "wordCount": 391,
+    "timeRequired": "PT2M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/java/concurrency/volatile/guidelines/,
+    "datePublished": 2019-01-14T09:22Z,
+    "dateModified": 2019-01-14T09:22Z,
+    
+    "keywords": java, concurrency, volatile,
+    "description": 如何正确使用 volatile 变量,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/java/concurrency/volatile/guidelines/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Guidelines for Using Volatile Variables</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Guidelines for Using Volatile Variables</h1>
+        <em style="color: blue">如何正确使用 volatile 变量</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/java/">#java</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/concurrency/">#concurrency</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/volatile/">#volatile</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2019-01-14T09:22:44&#43;08:00">
+            2019/Jan/14
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="0x01-简介">0x01. 简介</h3>
+
+<p><code>synchronized锁</code>提供了两个主要特性：<code>互斥</code>和<code>可见性</code>。互斥意味着一次只能有一个线程持有给定的锁，该属性可用于实现协调对共享数据的访问的协议，以便一次只能有一个线程使用共享数据。可见性更为微妙，它与确保在释放锁之前对共享数据所做的更改对随后获取该锁的另一个线程可见有关，遵循<code>happens-before</code>规则，如果没有同步提供的可见性保证，线程可能会看到过时或不一致的值。</p>
+
+<p>Java 语言中的<code>volatile</code>变量可以看作是<code>synchronized lite</code>，即<code>synchronized</code>的简化版，与<code>synchronized块</code>相比，它们需要更少的编码，运行时开销也更少，但是它们只能用于<code>synchronized</code>所能做的事情的一个子集。下面介绍一些有效使用volatile变量的模式，以及关于何时不使用它们的一些警告。</p>
+
+<h3 id="0x02-volatile-变量">0x02. volatile 变量</h3>
+
+<p><code>volatile</code>变量共享<code>synchronized</code>的可见性特性，但没有原子性特性。这意味着线程将自动看到volatile变量的最新值。它们可以用于提供线程安全，但仅在一组非常受限的情况下使用：<strong>不在多个变量之间或变量的当前值与其未来值之间施加约束的情况</strong>。因此，<code>volatile</code>本身不足以实现计数器、互斥锁或任何具有与多个变量相关的不变量的类(如<code>start &lt;= end</code>)。</p>
+
+<p>出于两个主要原因之一，你可能更喜欢使用<code>volatile</code>变量而不是锁：<code>简单性或可伸缩性</code>。当使用<code>volatile</code>变量而不是锁时，一些习惯用法更容易编码和阅读。此外，<code>volatile</code>变量与锁不同，它们不会导致线程阻塞，因此它们不太可能导致可伸缩性问题。<strong>在读操作远远多于写操作的情况下，volatile变量还可能比锁提供性能优势</strong>。</p>
+
+<h4 id="1-正确使用-volatile-的条件">1. 正确使用 volatile 的条件</h4>
+
+<p>只有在一组受限的情况下，才能使用<code>volatile</code>变量而不是锁。<code>volatile</code>变量必须满足以下两个条件才能提供所需的线程安全性:</p>
+
+<ul>
+<li>对变量的写操作不依赖于它的当前值</li>
+<li>变量不参与其他变量的不变条件，如<code>start &lt;= end</code>,若start为<code>volatile</code>的，则该条件语句为原子操作，先取值，再比较，有可能取完值后，在比较前发生变化。</li>
+</ul>
+
+<p>基本上，这些条件表明可以写入<code>volatile</code>变量的有效值集独立于任何其他程序状态，包括该变量的当前状态。第一个条件使<code>volatile</code>变量不能用作线程安全的计数器。虽然<code>x++的自增操作</code>看起来像一个单独的操作，但它实际上是一个复合的<code>读-修改-写操作</code>序列，必须以原子方式执行，而<code>volatile</code>不提供必要的原子性。正确的操作要求<code>x</code>的值在操作期间保持不变，这是使用<code>volatile</code>变量无法实现的。但是，如果该值只从单线程写入，那么可以忽略第一个条件。</p>
+
+<p>大多数编程情况都会与第一个或第二个条件发生冲突，这使得<code>volatile</code>变量在实现线程安全方面不如<code>synchronized</code>那么常用。下面代码清单显示了一个非线程安全的数字范围类。它包含的一个不变条件是<code>下界lower总是小于或等于上界upper</code>。</p>
+
+<pre><code class="language-java">@NotThreadSafe 
+public class NumberRange {
+    private int lower, upper;
+    public int getLower() { return lower; }
+    public int getUpper() { return upper; }
+ 
+    // 下溢出，设为最小
+    public void setLower(int value) { 
+        if (value &gt; upper) 
+            throw new IllegalArgumentException(...);
+        lower = value;
+    }
+ 
+    // 上溢出，设为最大
+    public void setUpper(int value) { 
+        if (value &lt; lower) 
+            throw new IllegalArgumentException(...);
+        upper = value;
+    }
+}
+</code></pre>
+
+<p>由于范围的状态变量<code>uooer</code>和<code>lower</code>参与另一个变量<code>value</code>的条件判断，因而受到约束，所以即使用<code>volatile</code>修饰它们仍不足以使该类成为线程安全的，仍需要同步。否则，如果时间不凑合，两个执行<code>setLower</code>和<code>setUpper</code>的线程的值不一致，可能会使<code>范围(lower, upper)</code>处于不一致的状态。例如，如果<code>初始状态为(0,5)</code>，<code>线程A</code>在<code>线程B</code>调用<code>setUpper(3)</code>的同时调用<code>setLower(4)</code>，并且操作交错错了，那么这两个线程都可以通过<code>if</code>条件，最后将范围设为无效的<code>(4,3)</code>，所以我们需要使<code>setLower()</code>和<code>setUpper()</code>操作相对于范围上的其他操作具有原子性，而用<code>volatile</code>修饰范围字段不能做到这一点。</p>
+
+<h4 id="2-性能考虑">2. 性能考虑</h4>
+
+<p>使用<code>volatile</code>变量的主要动机是简单性：在某些情况下，使用<code>volatile</code>变量比使用相应的锁要简单。使用<code>volatile</code>变量的第二个动机是性能：在某些情况下，<code>volatile</code>变量可能是比锁定性能更好的同步机制。</p>
+
+<p>要做出“X总是比Y快”这种形式的准确、一般的声明是极其困难的，特别是在涉及到JVM内部操作时，例如，VM可能能够在某些情况下完全删除锁操作，这使得在抽象中很难讨论<code>volatile</code>与<code>synchronized</code>的相对成本，也就是说，在当前的大多数处理器架构中，<code>volatile读</code>操作的成本很低，几乎和<code>非volatile读</code>操作的成本一样低。<code>volatile写</code>操作比<code>非volatile写</code>操作的开销要大得多，因为需要内存配置来保证可见性，但通常仍然比获取锁操作消耗低。</p>
+
+<p>与锁不同，<strong>volatile操作永远不会阻塞</strong>，因此在可以安全使用<code>volatile</code>的情况下，<code>volatile</code>比锁提供了一些可伸缩性优势。<strong>在读操作远远多于写操作的情况下，与锁相比，volatile变量通常可以降低同步的性能成本</strong>。</p>
+
+<h3 id="0x03-正确使用-volatile-的模式">0x03. 正确使用 volatile 的模式</h3>
+
+<p>许多并发专家倾向于指导用户完全不要使用<code>volatile</code>变量，因为它们比锁更难正确使用。但是，存在一些定义良好的模式，如果你仔细地遵循它们，就可以在各种情况下安全地使用它们。需要牢记的一个使用<code>volatile</code>的规则是<strong>只对真正独立于程序中其他所有内容的状态使用volatile</strong>，最直接的理解是当一个变量独立于其他变量及自己原先的值时，才将其设置为<code>volatile</code>。</p>
+
+<h4 id="1-状态标记">1. 状态标记</h4>
+
+<p><code>volatile</code>变量的典型用法可能是用作简单的布尔型状态标志，用于指示发生了一个重要的一次性生命周期事件，例如初始化已经完成或请求关闭。很多应用程序包含表单的控制结构，“当我们还没有准备好关闭时，执行更多的工作”，如下面代码清单所示</p>
+
+<pre><code class="language-java">volatile boolean shutdownRequested;
+...
+public void shutdown() { shutdownRequested = true; }
+public void doWork() { 
+    while (!shutdownRequested) { 
+        // do stuff
+    }
+}
+</code></pre>
+
+<p>很可能会从循环之外的某个地方（在另一个线程中，如JMX侦听器、GUI事件线程中的操作监听器、通过RMI、通过Web服务等）调用<code>shutdown()</code>方法，因此需要某种形式的同步来确保<code>shutdownrequired</code>变量的适当可见性。然而，使用同步块对循环进行编码要比使用<code>volatile</code>状态标志编码麻烦得多，如上面的代码清单所示。因为<code>volatile</code>简化了编码，并且状态标志不依赖于任何其他标记，这是很好地使用<code>volatile</code>变量的一个情况。</p>
+
+<p>这类状态标志的一个常见特征是<strong>通常只有一个状态转换</strong>，如关闭请求标志从false变为true，然后程序关闭。可以将此模式扩展到可以来回更改的状态标志，但只有在类似<code>ABA问题</code>的<code>false -&gt; true -&gt; false转换周期</code>未被检测到是可接受的情况下。否则，需要某种原子状态转换机制，例如原子变量。</p>
+
+<h4 id="2-一次性安全发布">2. 一次性安全发布</h4>
+
+<p>当写入对象引用而不是原始值时，在没有同步的情况下会更难判断可能出现的可见性故障。在没有同步的情况下，可以看到由另一个线程编写的对象引用的最新值，但仍然可以看到该对象状态的陈旧值。这种危险是臭名昭著的<code>双签锁</code>习惯用法问题的根源，在该用法中，不同步地读取对象引用，而风险是你可以看到最新的引用，但仍然可以通过该引用观察部分构造的对象。</p>
+
+<p>安全地发布对象的一种技术是用<code>volatile</code>修饰对象引用。下面的代码清单显示了一个示例，其中在启动过程中，后台线程从数据库加载一些数据。对于其他代码，当它们可能使用这些数据时，在尝试使用它之前检查它是否已经发布。</p>
+
+<pre><code class="language-java">public class BackgroundFloobleLoader {
+    public volatile Flooble theFlooble;
+ 	// 初始化数据
+    public void initInBackground() {
+        // do lots of stuff
+        theFlooble = new Flooble();  // this is the only write to theFlooble
+    }
+}
+ 
+public class SomeOtherClass {
+    public void doWork() {
+        while (true) { 
+            // do some stuff...
+            // use the Flooble, but only if it is ready
+            if (floobleLoader.theFlooble != null) 
+                doSomething(floobleLoader.theFlooble);
+        }
+    }
+}
+</code></pre>
+
+<p>如果<code>theFlooble</code>引用不是用·<code>volatile</code>修饰的，<code>doWork()</code>中的代码在使用<code>theFlooble</code>引用时，就有可能看到部分构造的<code>Flooble</code>对象。</p>
+
+<p>此模式的一个关键要求是，要发布的对象必须是<code>线程安全</code>的或<code>有效不可变</code>的。有效不可变意味着在发布之后永远不会修改其状态。<code>volatile</code>引用可以保证对象在发布时的可见性，但是<strong>如果对象的状态在发布后要改变，则需要额外的同步</strong>。</p>
+
+<h4 id="3-独立观测">3. 独立观测</h4>
+
+<p>安全地使用<code>volatile</code>的另一个简单模式是，定期<code>发布</code>观察结果以便在程序中使用。例如，有一个环境传感器可以感知当前的温度。后台线程可能每隔几秒钟读取此传感器，并更新包含当前温度的<code>volatile</code>变量。然后，其他线程可以读取这个变量，因为它们知道它们将始终看到最新的值。</p>
+
+<p>此模式的另一个应用程序是收集有关程序的统计信息。下面代码清单显示了身份验证机制如何记住最后登录的用户的名称。<code>lastUser</code>引用将被反复用于发布一个供程序其余部分使用的值。</p>
+
+<pre><code class="language-java">public class UserManager {
+    public volatile String lastUser;
+ 
+    public boolean authenticate(String user, String password) {
+        boolean valid = passwordIsValid(user, password);
+        if (valid) {
+            User u = new User();
+            activeUsers.add(u);
+            lastUser = user;
+        }
+        return valid;
+    }
+}
+</code></pre>
+
+<p>这个模式是上一个模式的扩展：一个值被发布以便在程序的其他地方使用，但发布不是一次性事件，而是一系列独立事件。此模式要求所发布的值实际上是不可变的，即其状态在发布后不会更改。使用该值的代码应该知道它可能在任何时候发生变化。</p>
+
+<h4 id="4-volatile-bean">4. volatile bean</h4>
+
+<p>该模式适用于使用<code>javabean</code>作为<code>美化结构</code>的框架。在<code>volatile bean</code>模式中，<code>JavaBean</code>被用作一组具有<code>getter</code>和/或<code>setter</code>的独立属性的容器。<code>volatile bean</code>模式的基本原理是，许多框架为可变数据持有者(例如HttpSession)提供容器，但是放置在这些容器中的对象必须是线程安全的。</p>
+
+<p>在<code>volatile bean</code>模式中，<code>JavaBean</code>的所有数据成员都是<code>volatile</code>修饰的，<code>getter</code>和<code>setter</code>必须很简单，它们必须不包含任何逻辑，只能获取或设置适当的属性。此外，对于对象引用的数据成员，引用到的对象必须是有效不可变的，这禁止拥有数组值属性，因为当数组引用声明为<code>volatile</code>时，只有引用而不是元素本身具有<code>volatile语义</code>。与任何<code>volatile</code>变量一样，这里可能没有涉及<code>JavaBean</code>属性的不变量条件或约束。下面代码清单显示了一个遵循<code>volatile bean</code>模式的<code>JavaBean</code>示例:</p>
+
+<pre><code class="language-java">@ThreadSafe
+public class Person {
+    private volatile String firstName;
+    private volatile String lastName;
+    private volatile int age;
+ 
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
+    public int getAge() { return age; }
+ 
+    public void setFirstName(String firstName) { 
+        this.firstName = firstName;
+    }
+ 
+    public void setLastName(String lastName) { 
+        this.lastName = lastName;
+    }
+ 
+    public void setAge(int age) { 
+        this.age = age;
+    }
+}
+</code></pre>
+
+<h3 id="0x04-高级模式">0x04. 高级模式</h3>
+
+<p>使用<code>volatile</code>的更高级的模式可能非常脆弱。仔细记录你的假设并对这些模式进行严格封装是非常重要的，因为很小的更改就可能破坏你的代码。此外，考虑到更高级的<code>volatile</code>用例的主要动机是<code>性能</code>，在开始应用它们之前，请确保你实际已经证明了对所谓的性能增益的需求。这些模式是牺牲可读性或可维护性以换取可能的性能提升的权衡。如果不需要性能提升或者无法通过严格的度量程序证明需要它，那么这可能是一笔糟糕的交易，因为你放弃了一些有价值的东西，而获得了一些没有价值的东西。</p>
+
+<h4 id="廉价读写锁技巧">廉价读写锁技巧</h4>
+
+<p>到目前为止，应该已经知道<code>volatile</code>的强度不足以实现计数器。因为<code>++x</code>实际上是三个操作（读取、添加、存储）的简写，如果多个线程试图同时增加一个<code>volatile计数器</code>，那么很可能会在某个不走运的时间点丢失更新。</p>
+
+<p>但是，如果读操作远远多于修改操作，则可以将固有的锁和<code>volatile</code>变量结合使用，以降低公共代码路径上的成本。下面代码清单显示了一个线程安全的计数器，<strong>它使用synchronized来确保增量操作是原子的，并使用volatile来保证当前结果的可见性</strong>。如果更新不频繁，这种方法的性能可能会更好，因为读取路径上的开销只是一个<code>volatile读</code>操作的开销，这通常比非争用锁获取更廉价。</p>
+
+<pre><code class="language-java">@ThreadSafe
+public class CheesyCounter {
+    // Employs the cheap read-write lock trick
+    // All mutative operations MUST be done with the 'this' lock held
+    @GuardedBy(&quot;this&quot;) private volatile int value;
+ 
+    public int getValue() { return value; }
+ 
+    public synchronized int increment() {
+        return value++;
+    }
+}
+</code></pre>
+
+<p>该技术被称为<code>廉价读写锁</code>的原因是，你正在使用不同的同步机制进行读写。因为这种情况下的写操作违反了使用<code>volatile</code>的第一个条件，所以不能使用<code>volatile</code>安全地实现计数器而必须用锁。但是，你可以用<code>volatile</code>来确保在读取时当前值的可见性，因此<strong>对所有可变操作使用锁，对只读操作使用volatile</strong>，如其中的自增操作为可变操作，使用<code>synchronized</code>确保原子性，而值的读取操作<code>getValue</code>，并没有用<code>synchronized</code>修饰，所以它对<code>value</code>的读取并不遵循锁获取即及释放的<code>happens-before规则</code>，这里则是通过将变量设置为<code>volatile</code>保障其他线程对该变量的修改及时的刷新，从而为当前线程可见。</p>
+
+<p>锁只允许一个线程访问一个值，<code>volatile·</code>读允许不止一个，因此，当你使用<code>volatile</code>来保护读取变量的代码路径（此处为<code>getValue</code>方法）时，与对所有代码路径使用锁定相比，你可以获得更高程度的共享，其他想要读取<code>value·</code>值的线程并不需获取锁就能看到任何线程对变量修改后的最新值，这就像是一个读写锁。但是，需要注意此模式的脆弱性是对于两个相互竞争的同步机制，如果你超出此模式的最基本应用程序的范围，这可能会变得非常棘手。</p>
+
+<h3 id="0x05-总结">0x05. 总结</h3>
+
+<p><code>volatile</code>变量是一种比锁更简单但更弱的同步形式，在某些情况下，比固有锁提供更好的性能或可伸缩性。如果你遵循安全地使用<code>volatile</code>的条件，即<strong>该变量确实独立于其他变量和它自己的先前值</strong>，那么有时可以通过使用<code>volatile</code>而不是<code>synchronized</code>来简化代码。</p>
+
+<p>然而，使用<code>volatile</code>的代码通常比使用锁的代码更脆弱。这里提供的模式涵盖了最常见的情况，在这些情况下<code>volatile</code>是同步的一种合理的替代方案。遵循这些模式，注意不要超出它们的极限，这样应该可以帮助你安全地覆盖大多数情况，在这些情况下，<code>volatile</code>变量是毋容置疑的更佳选择。</p>
+
+<h3 id="0x06-参考">0x06.  参考</h3>
+
+<ul>
+<li>Brian Goetz : <a href="https://www.ibm.com/developerworks/java/library/j-jtp06197/">Guidelines for using volatile variables</a></li>
+<li>《Java编程思想》（第四版，Bruce Eckel 著，陈昊鹏译，机械工业出版社）</li>
+</ul>
+
+<h3 id="0x07-相关文章">0x07. 相关文章</h3>
+
+<ul>
+<li><a href="../assembling_dive">深入理解volatile的内存语义及其实现</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/java/concurrency/volatile/assembling_dive/"><h4>Memory Semantics and Implementation of Volatile</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/java/vm/custom_secure_classloader/"><h4>Custom Secure Class Loader</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

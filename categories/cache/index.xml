@@ -18,18 +18,16 @@
       <pubDate>Tue, 20 Nov 2018 10:46:53 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/cache/mesi/</guid>
-      <description>0x01. 概述 1. 缓存一致性 (Cache Coherence) 硬件层面的问题，指的是由于多核计算机中有多套缓存，各个缓存之间的数据不一致性问题。缓存一致性协议，如MESI解决是多个缓存副本之间的数据的一致性问题，这些协议可能十分复杂，可能有数十种状态。
+      <description>0x01. 概述 1. 缓存一致性 (Cache Coherence) 硬件层面的问题，指的是由于多核计算机中有多套缓存，各个缓存之间的数据不一致性问题。一致性如何理解，我觉得 CMU 的一位老师说得不错：All processors see the same view of memory at the same time。缓存一致性协议，如MESI解决是多个缓存副本之间的数据的一致性问题，这些协议可能十分复杂，可能有数十种状态。
 2. MESI MESI协议是一个基于失效的缓存一致性协议，是支持回写（write-back）缓存的最常用协议。因为是在伊利诺伊大学厄巴纳-香槟分校被发明的，所以也被称作伊利诺伊协议 (Illinois protocol）。与写通过（write through）缓存相比，回写缓冲能节约大量带宽。总是有“脏”（dirty）状态表示缓存中的数据与主存中不同。MESI协议要求在缓存不命中（miss）且数据块在另一个缓存时，允许缓存到缓存的数据复制。
 0x02. 状态 MESI 存在modified、exclusive、shared和invalid四种状态，协议可以在一个指定的缓存中应用这四种状态。因此，协议在每一个缓存行中维护一个两位的状态tag， 附着在缓存行的物理地址或者数据后。
  modified：处于该状态的缓存行中的数据被当前CPU独占，不在其他CPU缓存中，且为最新的与主存不同的数据，因为数据已经更新，所以脏位为1，缓存最终有责任将数据写回到内存，并且也应当为其他缓存提供数据，必须在当前缓存缓存其他数据之前完成这些事情。该缓存行写回主存后，状态变为shared。 exclusive：非常类似于modified状态，唯一的区别是缓存行的数据还没有被相应的 CPU 修改，这表示缓存行中的数据及内存中的数据都是最新的，所以缓存行的脏位是0。但是，由于 CPU 独占该缓存行，所以能够在任何时刻将数据保存到该行，而不考虑其他 CPU。也就是说，由于内存中的值是最新的，该行可以被直接丢弃而不用回写到内存，也可以为其他缓存提供数据。 shared：处于该状态的缓存行可能被复制到至少一个其他 CPU 缓存中，这样在没有得到其他 CPU 的许可时，不能向缓存行存储数据。由于exclusive状态下，内存中的值是最新的，因此可以不用向内存回写值而直接丢弃缓存中的值，或者向其他 CPU 提供值。 invalid：处于该状态的行是空的，换句话说，它没有保存任何有效数据。当新数据进入缓存时，它替换一个处于invalid状态的缓存行。这个方法是比较好的，因为替换其他状态的缓存行将引起大量的缓存缺失。  对于任意给定的缓存对，给定缓存行的允许状态如下:
 如当一个缓存中的某个块被标记为M（modified）时，其他缓存中的块副本只能被标记为I（Invalid）。
-0x03. 协议消息  Read：该消息包含缓存行需读的物理地址。 Read Response：该消息包含较早前的read消息的数据。这个read response消息可能由内存或者其他缓存提供。例如，如果一个缓存请求一个处于modified状态的数据，则缓存必须提供read response消息。 Invalidate：包含要使无效的缓存行的物理地址。其他的缓存必须从它们的缓存中移除相应的数据并且响应此消息。 Invalidate Acknowledge：一个接收到invalidate消息的 CPU 必须在移除指定数据后响应一个invalidate acknowledge消息。 Read Invalidate：该消息包含要缓存行读取的物理地址。同时指示其他缓存移除数据。因此，它包含一个read和一个invalidate。read invalidate也需要read response以及invalidate acknowledge消息集。英文亦称read with intend to modify，可理解为读其他缓存的数据，并试图修改当前缓存数据，然后指示其他缓存的数据无效化。 Writeback：该消息包含要回写到内存的地址和数据。(并且也许会通过窥探器请求检查其他 CPUs 的缓存)。这个消息允许缓存在必要时换出modified状态的数据以腾出空间。  0x04. 状态转换 一个指定缓存行的状态变化及协议消息发送及接收如下图所示，四个状态共12条转移路径：
-本缓存行起始态为modified：缓存行内容为当前缓存所独有的，而且已被修改。
-   标号 最终状态 描述     a exclusive 缓存行被写回内存，但是CPU将它保留在缓存中，并进一步保留修改它的权利。此转换需要writeback消息。   c invalid CPU 接收到一条read invalidate消息，表示相应的缓存行数据已经在其他CPU缓存中被修改。CPU必须使其本地副本无效，然后响应read response和invalidate acknowledge消息，两者都将发送数据给请求方，表示本 CPU 不再具有本地副本。   f shared 其他一些 CPU 读取缓存行，数据由本 CPU 缓存提供，本 CPU 缓存保留只读副本，也可能将其写入内存。此转换由接收read消息开始，本 CPU 使用包含所请求数据的read response消息进行响应。    本缓存行起始态为exclusive：缓存内容不存在于其他缓存中，被当前缓存独占，可在不咨询其他缓存的情况下覆盖它。</description>
+0x03. 协议消息  Read：该消息包含缓存行需读的物理地址。 Read Response：该消息包含较早前的read消息的数据。这个read response消息可能由内存或者其他缓存提供。例如，如果一个缓存请求一个处于modified状态的数据，则缓存必须提供read response消息。 Invalidate：包含要使无效的缓存行的物理地址。其他的缓存必须从它们的缓存中移除相应的数据并且响应此消息。 Invalidate Acknowledge：一个接收到invalidate消息的 CPU 必须在移除指定数据后响应一个invalidate acknowledge消息。 Read Invalidate：该消息包含要缓存行读取的物理地址。同时指示其他缓存移除数据。因此，它包含一个read和一个invalidate。read invalidate也需要read response以及invalidate acknowledge消息集。英文亦称read with intend to modify，可理解为读其他缓存的数据，并试图修改当前缓存数据，然后指示其他缓存的数据无效化。 Writeback：该消息包含要回写到内存的地址和数据。(并且也许会通过窥探器请求检查其他 CPUs 的缓存)。这个消息允许缓存在必要时换出modified状态的数据以腾出空间。  0x04.</description>
     </item>
     
     <item>
-      <title>Base of CPU Cache</title>
+      <title>Head First CPU Cache</title>
       <link>https://jordonyang.github.io/post/cache/cpu_cache_base/</link>
       <pubDate>Mon, 07 May 2018 16:00:29 +0800</pubDate>
       

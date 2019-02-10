@@ -7,10 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Tue, 15 Jan 2019 10:36:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 02 Feb 2019 22:54:44 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Summary of Sorting Algorithms</title>
+      <link>https://jordonyang.github.io/post/alg/sorting/summary/</link>
+      <pubDate>Sat, 02 Feb 2019 22:54:44 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/sorting/summary/</guid>
+      <description>0x00. TOC  选择排序 冒泡排序 鸡尾酒排序 插入排序 希尔排序 归并排序 快速排序 堆排序 排序算法的复杂度 Happy Sorting 参考  选择排序 首先，找到数组中最小的那个元素，其次，将它和数组的第一个元素交换位置（如果第一个元素就是最小元素那么它就和自己交换）。再次，在剩下的元素中找到最小的元素，将它与数组的第二个元素交换位置。如此往复，直到将整个数组排序。因为它在不断地选择剩余元素之中的最小者，所以这种方法叫做选择排序。TOC
+  
+代码实现如下所示，选择排序的内循环只是在比较当前元素与目前已知的最小元素（以及将当前索引加 1 和检查是否代码越界），这已经简单到了极点。交换元素的代码写在内循环之外，每次交换都能排定一个元素，因此交换的总次数是 N。所以算法的时间效率取决于比较的次数。对于长度为 N 的数组，选择排序需要大约 N2/2 次比较和 N 次交换。
+public static void sort(Comparable[] a) { int n = a.length; for (int i = 0; i &amp;lt; n; i++) { int min = i; for (int j = i+1; j &amp;lt; n; j++) { if (less(a[j], a[min])) min = j; } exchange(a, i, min); assert isSorted(a, 0, i); } assert isSorted(a); }  选择排序是一种很容易理解和实现的简单排序算法，它有两个很鲜明的特点。</description>
+    </item>
     
     <item>
       <title>Timeline</title>
@@ -18,7 +30,49 @@
       <pubDate>Tue, 15 Jan 2019 10:36:00 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/timeline/</guid>
-      <description>2019  01.15 深入理解Synchronized 01.11 Java虚拟机类加载过程 01.10 编程实现及理解SSL协议交互过程  2018  12.28 MySQL存储引擎基础 12.23 操作系统期末考试考点整理 12.10 使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证 12.06 理解模板方法设计模式 11.25 理解比较并交换算法 11.20 从MESI理解缓存一致性协议 11.12 SSL - 握手协议详细过程 11.12 SSL - 协议架构和基本协议介绍 11.10 RSA公钥密码算法原理及实现过程 11.07 流密码原理及RC4算法的实现 11.05 理解素性测试及大素数生成过程 10.18 基于原理逐步实现AES加密算法 10.11 分组密码的工作模式 10.09 DES加密算法原理及实现 10.01 Java字节码结构及解析过程 09.18 基于二叉树数据结构的算术表达式生成器 09.14 基于责任链设计模式的代码文件分析统计器 08.27 基于JDK1.7的HashMap源码阅读 08.04 理解Java虚拟机垃圾收集机制 06.25 LinkedList源码阅读与分析 06.23 ArrayList源码阅读与分析 05.07 CPU缓存基础 04.17 理解HTTP协议 03.25 Thread类的run()方法执行过程跟踪和思考 02.25 通过反编译理解Java foreach语法糖  2017  11.</description>
+      <description>2019  01.15 深入理解volatile的内存语义及其实现 01.14 如何正确使用 volatile 变量 01.11 Java虚拟机类加载过程 01.10 编程实现及理解SSL协议交互过程  2018  12.28 MySQL存储引擎基础 12.23 操作系统期末考试考点整理 12.10 使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证 12.06 理解模板方法设计模式 11.25 理解比较并交换算法 11.20 从MESI理解缓存一致性协议 11.12 SSL - 握手协议详细过程 11.12 SSL - 协议架构和基本协议介绍 11.10 RSA公钥密码算法原理及实现过程 11.07 流密码原理及RC4算法的实现 11.05 理解素性测试及大素数生成过程 10.18 基于原理逐步实现AES加密算法 10.11 分组密码的工作模式 10.09 DES加密算法原理及实现 10.01 Java字节码结构及解析过程 09.18 基于二叉树数据结构的算术表达式生成器 09.14 基于责任链设计模式的代码文件分析统计器 08.27 基于JDK1.7的HashMap源码阅读 08.04 理解Java虚拟机垃圾收集机制 06.25 LinkedList源码阅读与分析 06.23 ArrayList源码阅读与分析 05.07 深入理解CPU高速缓存 04.17 理解HTTP协议 03.25 Thread类的run()方法执行过程跟踪和思考 02.25 通过反编译理解Java foreach语法糖  2017  11.</description>
+    </item>
+    
+    <item>
+      <title>Memory Semantics and Implementation of Volatile</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/volatile/assembling_dive/</link>
+      <pubDate>Tue, 15 Jan 2019 09:18:23 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/volatile/assembling_dive/</guid>
+      <description>0x01. volatile 特性 理解volatile特性的一个好方法是把对volatile变量的单个读/写，看成是使用同一个锁对这些单个读/写操作做了同步。假设有多个线程分别调用下图左边程序的3个方法，这个程序在语义上和下图右边程序等价。
+可见一个volatile变量的单个读/写操作，与一个普通变量的读/写操作都是使用同一个锁来同步，它们之间的执行效果相同。锁的happens-before规则保证释放锁和获取锁的两个线程之间的内存可见性，这意味着对一个volatile变量的读，总是能看到任意线程对这个 volatile 变量最后的写入。
+锁的语义决定了临界区代码的执行具有原子性。这意味着，即使是64位的 long 型和 double 型变量，只要它是volatile变量，对该变量的读/写就具有原子性。如果是多个volatile操作或类似于volatile++这种复合操作，这些操作整体上不具有原子性。简而言之，volatile变量自身具有下列特性：
+ 可见性。对一个 volatile 变量的读，总是能看到任意线程对这个 volatile 变量最后的写入。 原子性：对任意单个 volatile 变量的读/写具有原子性，但类似于 volatile++ 这种复合操作不具有原子性。  0x02. volatile 写-读内存语义  volatile写的内存语义：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。 volatile读的内存语义：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效。线程接下来将从主内存中读取共享变量。  以下面示例程序VolatileExample为例，假设线程A首先执行writer()方法，随后线程B执行reader()方法，初始时两个线程的本地内存中的flag和a都是初始状态。下图左边是线程A执行volatile写后，共享变量的状态示意图。
+class VolatileExample { int a = 0; volatile boolean flag = false; public void writer() { a = 1;	// 1 flag = true; // 2 }	public void reader() { if (flag) { // 3 int i = a; // 4 …… } } }  下面右边为线程B读同一个volatile变量后，共享变量的状态示意图。如图所示，在读flag变量后，本地内存B包含的值已经被置为无效。此时，线程B必须从主内存中读取共享变量。线程B的读取操作将导致本地内存B与主内存中的共享变量的值变成一致。如果我们把volatile写和volatile读两个步骤综合起来看的话，在读线程B读一个volatile变量后，写线程A在写这个volatile变量之前所有可见的共享变量的值都将立即变得对读线程B可见。</description>
+    </item>
+    
+    <item>
+      <title>Guidelines for Using Volatile Variables</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/volatile/guidelines/</link>
+      <pubDate>Mon, 14 Jan 2019 09:22:44 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/volatile/guidelines/</guid>
+      <description>0x01. 简介 synchronized锁提供了两个主要特性：互斥和可见性。互斥意味着一次只能有一个线程持有给定的锁，该属性可用于实现协调对共享数据的访问的协议，以便一次只能有一个线程使用共享数据。可见性更为微妙，它与确保在释放锁之前对共享数据所做的更改对随后获取该锁的另一个线程可见有关，遵循happens-before规则，如果没有同步提供的可见性保证，线程可能会看到过时或不一致的值。
+Java 语言中的volatile变量可以看作是synchronized lite，即synchronized的简化版，与synchronized块相比，它们需要更少的编码，运行时开销也更少，但是它们只能用于synchronized所能做的事情的一个子集。下面介绍一些有效使用volatile变量的模式，以及关于何时不使用它们的一些警告。
+0x02. volatile 变量 volatile变量共享synchronized的可见性特性，但没有原子性特性。这意味着线程将自动看到volatile变量的最新值。它们可以用于提供线程安全，但仅在一组非常受限的情况下使用：不在多个变量之间或变量的当前值与其未来值之间施加约束的情况。因此，volatile本身不足以实现计数器、互斥锁或任何具有与多个变量相关的不变量的类(如start &amp;lt;= end)。
+出于两个主要原因之一，你可能更喜欢使用volatile变量而不是锁：简单性或可伸缩性。当使用volatile变量而不是锁时，一些习惯用法更容易编码和阅读。此外，volatile变量与锁不同，它们不会导致线程阻塞，因此它们不太可能导致可伸缩性问题。在读操作远远多于写操作的情况下，volatile变量还可能比锁提供性能优势。
+1. 正确使用 volatile 的条件 只有在一组受限的情况下，才能使用volatile变量而不是锁。volatile变量必须满足以下两个条件才能提供所需的线程安全性:
+ 对变量的写操作不依赖于它的当前值 变量不参与其他变量的不变条件，如start &amp;lt;= end,若start为volatile的，则该条件语句为原子操作，先取值，再比较，有可能取完值后，在比较前发生变化。  基本上，这些条件表明可以写入volatile变量的有效值集独立于任何其他程序状态，包括该变量的当前状态。第一个条件使volatile变量不能用作线程安全的计数器。虽然x++的自增操作看起来像一个单独的操作，但它实际上是一个复合的读-修改-写操作序列，必须以原子方式执行，而volatile不提供必要的原子性。正确的操作要求x的值在操作期间保持不变，这是使用volatile变量无法实现的。但是，如果该值只从单线程写入，那么可以忽略第一个条件。
+大多数编程情况都会与第一个或第二个条件发生冲突，这使得volatile变量在实现线程安全方面不如synchronized那么常用。下面代码清单显示了一个非线程安全的数字范围类。它包含的一个不变条件是下界lower总是小于或等于上界upper。
+@NotThreadSafe public class NumberRange { private int lower, upper; public int getLower() { return lower; } public int getUpper() { return upper; } // 下溢出，设为最小 public void setLower(int value) { if (value &amp;gt; upper) throw new IllegalArgumentException(...); lower = value; } // 上溢出，设为最大 public void setUpper(int value) { if (value &amp;lt; lower) throw new IllegalArgumentException(.</description>
+    </item>
+    
+    <item>
+      <title>Custom Secure Class Loader</title>
+      <link>https://jordonyang.github.io/post/java/vm/custom_secure_classloader/</link>
+      <pubDate>Sat, 12 Jan 2019 10:42:11 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/vm/custom_secure_classloader/</guid>
+      <description>0x00. 简介 近年来，初创企业和企业都在使用云服务。然而，它带来了安全问题。在这一点上，开发的代码与数据是不同的。关键数据应加密存储。另一方面，开发的代码大多是脆弱地安装在服务器上。大多数Java项目都是直接在服务器上运行后缀为jar或war的扩展文件。这些文件的层次结构中包含字节码文件。然而，有些反编译器可从字节码文件中提取原始Java代码，这对于专利性较强或者企业私有的代码而言是极为不利的。
+对于这种情况，我们应该像加密关键数据一样加密重要的代码，将它们存储在云数据库中，并在运行时解密，以保护知识产权。这样，即使云系统被入侵，私密代码仍然是安全的，因为加密密钥不会存储在云系统中。
+0x01. 编译方 假设存在非常重要的代码如下，使用IntelliJ IDEA或者javac.exe对其进行编译得到字节码文件，使用IntelliJ IDEA Decompiler或者其他反编译工具很容易就可以得到源码，下面将其放置到E:\\crypto中。
+package org.jordon.vm; public class CoreClass { public static void main(String[] args) { System.out.println(&amp;quot;hello world&amp;quot;); } }  使用javax.crypto.Cipher工具包中的AES-128对编译后的CoreClass类的字节码文件进行加密，此处使用固定密钥进行测试，实际工程中应使用随机密钥。加密后的字节码文件放置到E:\crypto\org\jordon\vm中.
+public class ClassEncryption { public static void main(String[] args) throws Exception{ String path = &amp;quot;E:\\crypto&amp;quot;; String classname = &amp;quot;CoreClass&amp;quot;; String algorithm = &amp;quot;AES&amp;quot;; // 16 x 8 = 128 位密钥 byte[] key = {75, 110, -45, -61, 101, -103, -26, -25, 55, -70, 19, 51, 66, -91, -35, 19}; System.</description>
     </item>
     
     <item>
@@ -123,14 +177,12 @@ int cas(long *addr, long old, long new) { /* Executes atomically. */ ATOMIC(); i
       <pubDate>Tue, 20 Nov 2018 10:46:53 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/cache/mesi/</guid>
-      <description>0x01. 概述 1. 缓存一致性 (Cache Coherence) 硬件层面的问题，指的是由于多核计算机中有多套缓存，各个缓存之间的数据不一致性问题。缓存一致性协议，如MESI解决是多个缓存副本之间的数据的一致性问题，这些协议可能十分复杂，可能有数十种状态。
+      <description>0x01. 概述 1. 缓存一致性 (Cache Coherence) 硬件层面的问题，指的是由于多核计算机中有多套缓存，各个缓存之间的数据不一致性问题。一致性如何理解，我觉得 CMU 的一位老师说得不错：All processors see the same view of memory at the same time。缓存一致性协议，如MESI解决是多个缓存副本之间的数据的一致性问题，这些协议可能十分复杂，可能有数十种状态。
 2. MESI MESI协议是一个基于失效的缓存一致性协议，是支持回写（write-back）缓存的最常用协议。因为是在伊利诺伊大学厄巴纳-香槟分校被发明的，所以也被称作伊利诺伊协议 (Illinois protocol）。与写通过（write through）缓存相比，回写缓冲能节约大量带宽。总是有“脏”（dirty）状态表示缓存中的数据与主存中不同。MESI协议要求在缓存不命中（miss）且数据块在另一个缓存时，允许缓存到缓存的数据复制。
 0x02. 状态 MESI 存在modified、exclusive、shared和invalid四种状态，协议可以在一个指定的缓存中应用这四种状态。因此，协议在每一个缓存行中维护一个两位的状态tag， 附着在缓存行的物理地址或者数据后。
  modified：处于该状态的缓存行中的数据被当前CPU独占，不在其他CPU缓存中，且为最新的与主存不同的数据，因为数据已经更新，所以脏位为1，缓存最终有责任将数据写回到内存，并且也应当为其他缓存提供数据，必须在当前缓存缓存其他数据之前完成这些事情。该缓存行写回主存后，状态变为shared。 exclusive：非常类似于modified状态，唯一的区别是缓存行的数据还没有被相应的 CPU 修改，这表示缓存行中的数据及内存中的数据都是最新的，所以缓存行的脏位是0。但是，由于 CPU 独占该缓存行，所以能够在任何时刻将数据保存到该行，而不考虑其他 CPU。也就是说，由于内存中的值是最新的，该行可以被直接丢弃而不用回写到内存，也可以为其他缓存提供数据。 shared：处于该状态的缓存行可能被复制到至少一个其他 CPU 缓存中，这样在没有得到其他 CPU 的许可时，不能向缓存行存储数据。由于exclusive状态下，内存中的值是最新的，因此可以不用向内存回写值而直接丢弃缓存中的值，或者向其他 CPU 提供值。 invalid：处于该状态的行是空的，换句话说，它没有保存任何有效数据。当新数据进入缓存时，它替换一个处于invalid状态的缓存行。这个方法是比较好的，因为替换其他状态的缓存行将引起大量的缓存缺失。  对于任意给定的缓存对，给定缓存行的允许状态如下:
 如当一个缓存中的某个块被标记为M（modified）时，其他缓存中的块副本只能被标记为I（Invalid）。
-0x03. 协议消息  Read：该消息包含缓存行需读的物理地址。 Read Response：该消息包含较早前的read消息的数据。这个read response消息可能由内存或者其他缓存提供。例如，如果一个缓存请求一个处于modified状态的数据，则缓存必须提供read response消息。 Invalidate：包含要使无效的缓存行的物理地址。其他的缓存必须从它们的缓存中移除相应的数据并且响应此消息。 Invalidate Acknowledge：一个接收到invalidate消息的 CPU 必须在移除指定数据后响应一个invalidate acknowledge消息。 Read Invalidate：该消息包含要缓存行读取的物理地址。同时指示其他缓存移除数据。因此，它包含一个read和一个invalidate。read invalidate也需要read response以及invalidate acknowledge消息集。英文亦称read with intend to modify，可理解为读其他缓存的数据，并试图修改当前缓存数据，然后指示其他缓存的数据无效化。 Writeback：该消息包含要回写到内存的地址和数据。(并且也许会通过窥探器请求检查其他 CPUs 的缓存)。这个消息允许缓存在必要时换出modified状态的数据以腾出空间。  0x04. 状态转换 一个指定缓存行的状态变化及协议消息发送及接收如下图所示，四个状态共12条转移路径：
-本缓存行起始态为modified：缓存行内容为当前缓存所独有的，而且已被修改。
-   标号 最终状态 描述     a exclusive 缓存行被写回内存，但是CPU将它保留在缓存中，并进一步保留修改它的权利。此转换需要writeback消息。   c invalid CPU 接收到一条read invalidate消息，表示相应的缓存行数据已经在其他CPU缓存中被修改。CPU必须使其本地副本无效，然后响应read response和invalidate acknowledge消息，两者都将发送数据给请求方，表示本 CPU 不再具有本地副本。   f shared 其他一些 CPU 读取缓存行，数据由本 CPU 缓存提供，本 CPU 缓存保留只读副本，也可能将其写入内存。此转换由接收read消息开始，本 CPU 使用包含所请求数据的read response消息进行响应。    本缓存行起始态为exclusive：缓存内容不存在于其他缓存中，被当前缓存独占，可在不咨询其他缓存的情况下覆盖它。</description>
+0x03. 协议消息  Read：该消息包含缓存行需读的物理地址。 Read Response：该消息包含较早前的read消息的数据。这个read response消息可能由内存或者其他缓存提供。例如，如果一个缓存请求一个处于modified状态的数据，则缓存必须提供read response消息。 Invalidate：包含要使无效的缓存行的物理地址。其他的缓存必须从它们的缓存中移除相应的数据并且响应此消息。 Invalidate Acknowledge：一个接收到invalidate消息的 CPU 必须在移除指定数据后响应一个invalidate acknowledge消息。 Read Invalidate：该消息包含要缓存行读取的物理地址。同时指示其他缓存移除数据。因此，它包含一个read和一个invalidate。read invalidate也需要read response以及invalidate acknowledge消息集。英文亦称read with intend to modify，可理解为读其他缓存的数据，并试图修改当前缓存数据，然后指示其他缓存的数据无效化。 Writeback：该消息包含要回写到内存的地址和数据。(并且也许会通过窥探器请求检查其他 CPUs 的缓存)。这个消息允许缓存在必要时换出modified状态的数据以腾出空间。  0x04.</description>
     </item>
     
     <item>
@@ -163,7 +215,7 @@ SSL记录协议为SSL连接提供如下两种服务。
     </item>
     
     <item>
-      <title>Principle and Implementation of RSA Algorithm</title>
+      <title>Rationale and Implementation of RSA Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/</link>
       <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
       
@@ -216,7 +268,7 @@ SSL记录协议为SSL连接提供如下两种服务。
     </item>
     
     <item>
-      <title>Implementation of AES Algorithm</title>
+      <title>Theory-based Implementation of AES Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/aes/</link>
       <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
       
@@ -256,7 +308,7 @@ $$P_1[i]&amp;rsquo;\ =\ IV[i]&amp;rsquo;\ ㊉\ D(K,\ C_1)[i]$$
     </item>
     
     <item>
-      <title>Implementation of DES Algorithm</title>
+      <title>Raw Implementation of DES Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/des/</link>
       <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
       
@@ -372,7 +424,7 @@ private static class Node&amp;lt;E&amp;gt; { // 结点数据 E item; // 前一�
     </item>
     
     <item>
-      <title>Base of CPU Cache</title>
+      <title>Head First CPU Cache</title>
       <link>https://jordonyang.github.io/post/cache/cpu_cache_base/</link>
       <pubDate>Mon, 07 May 2018 16:00:29 +0800</pubDate>
       
@@ -472,14 +524,26 @@ exec gnome-terminal exec-arg -x  保存退出之后，就可以使用快捷键Ct
     
     <item>
       <title>Construct Binary Heap with Java</title>
-      <link>https://jordonyang.github.io/post/algorithm/heap/heap_construction/</link>
+      <link>https://jordonyang.github.io/post/alg/heap/heap_construction/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/algorithm/heap/heap_construction/</guid>
+      <guid>https://jordonyang.github.io/post/alg/heap/heap_construction/</guid>
       <description>前言 : 最近在看《算法导论》，从中感受到了算法世界的神奇，看完二叉堆后觉得实现起来应该不难，所以试着根据书中的伪代码用Java实现一遍。
 0x00. 概念 1. 基本定义 二叉堆是一个数组，可近似看成完全二叉树，表示堆的数组A通常包含两个属性：A.length（数组长度）和A.heap-size（堆的有效元素）
 private int[] heap; private int heapSize; public MyHeap(int[] array) { this.heap = array; this.heapSize = array.length; }  2. 通过下标定位亲属节点 由于堆可看做完全二叉树，所以可以通过某节点的下标获取其左右子节点和父节点
 private int left(int i) { return 2 * i + 1; } private int right(int i) { return 2 * i + 2; } private int parent(int i) { return (i - 1) / 2; }  3. 堆的一些性质  最大堆性质：A[PARENT[i] &amp;gt;= A[i]] 最小堆性质：A[PARENT[i] &amp;lt;= A[i]] 含有n个元素的堆的高为：小于等于lgn的最大整数 当用数组表示存储了n个元素的堆时，叶节点下标分别为 (n/2) + 1, (n / 2) + 2, &amp;hellip;, n（下标从１开始）  0x01.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://jordonyang.github.io/post/args/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/args/</guid>
+      <description> +表示添加参数，-表示去除参数
+日志类  -XX:+PrintGCDetails 打印日志详情
+ 锁相关  -XX:+
+ </description>
     </item>
     
   </channel>

@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Mon, 10 Dec 2018 23:42:48 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 12 Jan 2019 10:42:11 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/categories/security/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Custom Secure Class Loader</title>
+      <link>https://jordonyang.github.io/post/java/vm/custom_secure_classloader/</link>
+      <pubDate>Sat, 12 Jan 2019 10:42:11 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/vm/custom_secure_classloader/</guid>
+      <description>0x00. 简介 近年来，初创企业和企业都在使用云服务。然而，它带来了安全问题。在这一点上，开发的代码与数据是不同的。关键数据应加密存储。另一方面，开发的代码大多是脆弱地安装在服务器上。大多数Java项目都是直接在服务器上运行后缀为jar或war的扩展文件。这些文件的层次结构中包含字节码文件。然而，有些反编译器可从字节码文件中提取原始Java代码，这对于专利性较强或者企业私有的代码而言是极为不利的。
+对于这种情况，我们应该像加密关键数据一样加密重要的代码，将它们存储在云数据库中，并在运行时解密，以保护知识产权。这样，即使云系统被入侵，私密代码仍然是安全的，因为加密密钥不会存储在云系统中。
+0x01. 编译方 假设存在非常重要的代码如下，使用IntelliJ IDEA或者javac.exe对其进行编译得到字节码文件，使用IntelliJ IDEA Decompiler或者其他反编译工具很容易就可以得到源码，下面将其放置到E:\\crypto中。
+package org.jordon.vm; public class CoreClass { public static void main(String[] args) { System.out.println(&amp;quot;hello world&amp;quot;); } }  使用javax.crypto.Cipher工具包中的AES-128对编译后的CoreClass类的字节码文件进行加密，此处使用固定密钥进行测试，实际工程中应使用随机密钥。加密后的字节码文件放置到E:\crypto\org\jordon\vm中.
+public class ClassEncryption { public static void main(String[] args) throws Exception{ String path = &amp;quot;E:\\crypto&amp;quot;; String classname = &amp;quot;CoreClass&amp;quot;; String algorithm = &amp;quot;AES&amp;quot;; // 16 x 8 = 128 位密钥 byte[] key = {75, 110, -45, -61, 101, -103, -26, -25, 55, -70, 19, 51, 66, -91, -35, 19}; System.</description>
+    </item>
     
     <item>
       <title>Homemade Certificate and Unidirectional Authentication</title>
@@ -55,7 +68,7 @@ SSL记录协议为SSL连接提供如下两种服务。
     </item>
     
     <item>
-      <title>Principle and Implementation of RSA Algorithm</title>
+      <title>Rationale and Implementation of RSA Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/</link>
       <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
       
@@ -108,7 +121,7 @@ SSL记录协议为SSL连接提供如下两种服务。
     </item>
     
     <item>
-      <title>Implementation of AES Algorithm</title>
+      <title>Theory-based Implementation of AES Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/aes/</link>
       <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
       
@@ -148,7 +161,7 @@ $$P_1[i]&amp;rsquo;\ =\ IV[i]&amp;rsquo;\ ㊉\ D(K,\ C_1)[i]$$
     </item>
     
     <item>
-      <title>Implementation of DES Algorithm</title>
+      <title>Raw Implementation of DES Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/des/</link>
       <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
       

@@ -445,7 +445,7 @@ blockquote p {
 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic);
 blockquote{
-  font-size: 1.0em;
+  font-size: 0.8em;
   width:88%
   margin:50px auto;
   font-family:Open Sans;

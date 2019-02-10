@@ -7,10 +7,39 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Fri, 11 Jan 2019 21:28:33 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jan 2019 09:18:23 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Memory Semantics and Implementation of Volatile</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/volatile/assembling_dive/</link>
+      <pubDate>Tue, 15 Jan 2019 09:18:23 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/volatile/assembling_dive/</guid>
+      <description>0x01. volatile 特性 理解volatile特性的一个好方法是把对volatile变量的单个读/写，看成是使用同一个锁对这些单个读/写操作做了同步。假设有多个线程分别调用下图左边程序的3个方法，这个程序在语义上和下图右边程序等价。
+可见一个volatile变量的单个读/写操作，与一个普通变量的读/写操作都是使用同一个锁来同步，它们之间的执行效果相同。锁的happens-before规则保证释放锁和获取锁的两个线程之间的内存可见性，这意味着对一个volatile变量的读，总是能看到任意线程对这个 volatile 变量最后的写入。
+锁的语义决定了临界区代码的执行具有原子性。这意味着，即使是64位的 long 型和 double 型变量，只要它是volatile变量，对该变量的读/写就具有原子性。如果是多个volatile操作或类似于volatile++这种复合操作，这些操作整体上不具有原子性。简而言之，volatile变量自身具有下列特性：
+ 可见性。对一个 volatile 变量的读，总是能看到任意线程对这个 volatile 变量最后的写入。 原子性：对任意单个 volatile 变量的读/写具有原子性，但类似于 volatile++ 这种复合操作不具有原子性。  0x02. volatile 写-读内存语义  volatile写的内存语义：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。 volatile读的内存语义：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效。线程接下来将从主内存中读取共享变量。  以下面示例程序VolatileExample为例，假设线程A首先执行writer()方法，随后线程B执行reader()方法，初始时两个线程的本地内存中的flag和a都是初始状态。下图左边是线程A执行volatile写后，共享变量的状态示意图。
+class VolatileExample { int a = 0; volatile boolean flag = false; public void writer() { a = 1;	// 1 flag = true; // 2 }	public void reader() { if (flag) { // 3 int i = a; // 4 …… } } }  下面右边为线程B读同一个volatile变量后，共享变量的状态示意图。如图所示，在读flag变量后，本地内存B包含的值已经被置为无效。此时，线程B必须从主内存中读取共享变量。线程B的读取操作将导致本地内存B与主内存中的共享变量的值变成一致。如果我们把volatile写和volatile读两个步骤综合起来看的话，在读线程B读一个volatile变量后，写线程A在写这个volatile变量之前所有可见的共享变量的值都将立即变得对读线程B可见。</description>
+    </item>
+    
+    <item>
+      <title>Guidelines for Using Volatile Variables</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/volatile/guidelines/</link>
+      <pubDate>Mon, 14 Jan 2019 09:22:44 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/volatile/guidelines/</guid>
+      <description>0x01. 简介 synchronized锁提供了两个主要特性：互斥和可见性。互斥意味着一次只能有一个线程持有给定的锁，该属性可用于实现协调对共享数据的访问的协议，以便一次只能有一个线程使用共享数据。可见性更为微妙，它与确保在释放锁之前对共享数据所做的更改对随后获取该锁的另一个线程可见有关，遵循happens-before规则，如果没有同步提供的可见性保证，线程可能会看到过时或不一致的值。
+Java 语言中的volatile变量可以看作是synchronized lite，即synchronized的简化版，与synchronized块相比，它们需要更少的编码，运行时开销也更少，但是它们只能用于synchronized所能做的事情的一个子集。下面介绍一些有效使用volatile变量的模式，以及关于何时不使用它们的一些警告。
+0x02. volatile 变量 volatile变量共享synchronized的可见性特性，但没有原子性特性。这意味着线程将自动看到volatile变量的最新值。它们可以用于提供线程安全，但仅在一组非常受限的情况下使用：不在多个变量之间或变量的当前值与其未来值之间施加约束的情况。因此，volatile本身不足以实现计数器、互斥锁或任何具有与多个变量相关的不变量的类(如start &amp;lt;= end)。
+出于两个主要原因之一，你可能更喜欢使用volatile变量而不是锁：简单性或可伸缩性。当使用volatile变量而不是锁时，一些习惯用法更容易编码和阅读。此外，volatile变量与锁不同，它们不会导致线程阻塞，因此它们不太可能导致可伸缩性问题。在读操作远远多于写操作的情况下，volatile变量还可能比锁提供性能优势。
+1. 正确使用 volatile 的条件 只有在一组受限的情况下，才能使用volatile变量而不是锁。volatile变量必须满足以下两个条件才能提供所需的线程安全性:
+ 对变量的写操作不依赖于它的当前值 变量不参与其他变量的不变条件，如start &amp;lt;= end,若start为volatile的，则该条件语句为原子操作，先取值，再比较，有可能取完值后，在比较前发生变化。  基本上，这些条件表明可以写入volatile变量的有效值集独立于任何其他程序状态，包括该变量的当前状态。第一个条件使volatile变量不能用作线程安全的计数器。虽然x++的自增操作看起来像一个单独的操作，但它实际上是一个复合的读-修改-写操作序列，必须以原子方式执行，而volatile不提供必要的原子性。正确的操作要求x的值在操作期间保持不变，这是使用volatile变量无法实现的。但是，如果该值只从单线程写入，那么可以忽略第一个条件。
+大多数编程情况都会与第一个或第二个条件发生冲突，这使得volatile变量在实现线程安全方面不如synchronized那么常用。下面代码清单显示了一个非线程安全的数字范围类。它包含的一个不变条件是下界lower总是小于或等于上界upper。
+@NotThreadSafe public class NumberRange { private int lower, upper; public int getLower() { return lower; } public int getUpper() { return upper; } // 下溢出，设为最小 public void setLower(int value) { if (value &amp;gt; upper) throw new IllegalArgumentException(...); lower = value; } // 上溢出，设为最大 public void setUpper(int value) { if (value &amp;lt; lower) throw new IllegalArgumentException(.</description>
+    </item>
     
     <item>
       <title>JVM - Class Loading Process</title>
@@ -26,7 +55,22 @@
     </item>
     
     <item>
-      <title>Principle and Implementation of RSA Algorithm</title>
+      <title>Simply Understanding Compare-And-Swap</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/cas/</link>
+      <pubDate>Sun, 25 Nov 2018 20:48:32 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/cas/</guid>
+      <description>0x00. TOC  0x01.简介 0x02.应用 0x03.ABA问题 0x04.实现 0x05.Java中的CAS 0x06.参考  0x01. 简介 比较并交换(compare and swap, CAS)，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。该操作通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值。
+无锁（lock-free）的非阻塞算法 CAS是项乐观锁技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。CAS无锁算法的C语言实现如下：
+int cas(long *addr, long old, long new) { /* Executes atomically. */ ATOMIC(); if(*addr != old) return 0; *addr = new; END_ATOMIC(); return 1; }  在使用上，通常会记录下某块内存中的旧值，通过对旧值进行一系列的操作后得到新值，然后通过CAS操作将新值与旧值进行交换。如果这块内存的值在这期间内没被修改过，则旧值会与内存中的数据相同，这时CAS操作将会成功执行使内存中的数据变为新值。如果内存中的值在这期间内被修改过，则一般来说旧值会与内存中的数据不同，这时CAS操作将会失败，新值将不会被写入内存。
+0x02. 应用 在应用中CAS可以用于实现无锁数据结构，常见的有
+ 无锁队列(先入先出) 无锁堆(先入后出) 对于可在任意位置插入数据的链表以及双向链表，实现无锁操作的难度较大。  0x03. ABA问题 ABA问题是无锁结构实现中常见的一种问题，可基本表述为：
+ 进程P1读取了一个数值A P1被挂起(时间片耗尽、中断等)，进程P2开始执行 P2修改数值A为数值B，然后又修改回A P1被唤醒，比较后发现数值A没有变化，程序继续执行。  对于P1来说，数值A未发生过改变，但实际上A已经被变化过了，继续使用可能会出现问题。在CAS操作中，由于比较的多是指针，这个问题将会变得更加严重。试想如下情况：
+ 有一个堆(先入后出)中有top和节点A，节点A目前位于堆顶top指针指向A，这时堆结构图1所示。现在有一个进程P1想要pop一个节点，因此按照如下无锁操作进行  pop() { do{ ptr = top; // ptr = top = NodeA next_prt = top-&amp;gt;next; // next_ptr = NodeX } while(CAS(top, ptr, next_ptr) !</description>
+    </item>
+    
+    <item>
+      <title>Rationale and Implementation of RSA Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/</link>
       <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
       
@@ -58,7 +102,7 @@
     </item>
     
     <item>
-      <title>Implementation of AES Algorithm</title>
+      <title>Theory-based Implementation of AES Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/aes/</link>
       <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
       
@@ -73,7 +117,7 @@ Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的
     </item>
     
     <item>
-      <title>Implementation of DES Algorithm</title>
+      <title>Raw Implementation of DES Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/des/</link>
       <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
       
@@ -210,10 +254,10 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     
     <item>
       <title>Construct Binary Heap with Java</title>
-      <link>https://jordonyang.github.io/post/algorithm/heap/heap_construction/</link>
+      <link>https://jordonyang.github.io/post/alg/heap/heap_construction/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/algorithm/heap/heap_construction/</guid>
+      <guid>https://jordonyang.github.io/post/alg/heap/heap_construction/</guid>
       <description>前言 : 最近在看《算法导论》，从中感受到了算法世界的神奇，看完二叉堆后觉得实现起来应该不难，所以试着根据书中的伪代码用Java实现一遍。
 0x00. 概念 1. 基本定义 二叉堆是一个数组，可近似看成完全二叉树，表示堆的数组A通常包含两个属性：A.length（数组长度）和A.heap-size（堆的有效元素）
 private int[] heap; private int heapSize; public MyHeap(int[] array) { this.heap = array; this.heapSize = array.length; }  2. 通过下标定位亲属节点 由于堆可看做完全二叉树，所以可以通过某节点的下标获取其左右子节点和父节点

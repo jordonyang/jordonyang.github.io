@@ -12,13 +12,13 @@
 
 
 
-<meta name="twitter:title" content="Base of CPU Cache"/>
+<meta name="twitter:title" content="Head First CPU Cache"/>
 <meta name="twitter:description" content="深入理解CPU高速缓存"/>
 <meta name="twitter:site" content="@"/>
 
 
 
-  	<meta property="og:title" content="Base of CPU Cache &middot; 临风博客" />
+  	<meta property="og:title" content="Head First CPU Cache &middot; 临风博客" />
   	<meta property="og:site_name" content="临风博客" />
   	<meta property="og:url" content="https://jordonyang.github.io/post/cache/cpu_cache_base/" />
 
@@ -38,7 +38,7 @@
     
     
 
-    <title>Base of CPU Cache &middot; 临风博客</title>
+    <title>Head First CPU Cache &middot; 临风博客</title>
 
     
     <meta name="description" content="深入理解CPU高速缓存" />
@@ -54,7 +54,15 @@
     <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
     
     
- 
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
 
 
     
@@ -111,9 +119,9 @@
             
         ]
     },
-    "headline": Base of CPU Cache,
-    "name": Base of CPU Cache,
-    "wordCount": 181,
+    "headline": Head First CPU Cache,
+    "name": Head First CPU Cache,
+    "wordCount": 188,
     "timeRequired": "PT1M",
     "inLanguage": {
       "@type": "Language",
@@ -252,7 +260,7 @@
   
   <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">Base of CPU Cache</h1>
+            <h1 class="page-title">Head First CPU Cache</h1>
             <br>
             
 
@@ -294,7 +302,7 @@
   <article class="post post">
     
     <header class="post-header">
-        <h1 class="post-title">Base of CPU Cache</h1>
+        <h1 class="post-title">Head First CPU Cache</h1>
         <em style="color: blue">深入理解CPU高速缓存</em>
 
         <section class="post-meta">
@@ -435,8 +443,8 @@
 <li>更新<code>w</code>到最近的低层次缓存，方法有:
 
 <ul>
-<li><strong>直写(write-through)</strong>：立即更新紧接层次缓存的数据，但每次写都会增加总线流量。</li>
-<li><strong>写回(write back)</strong>；尽量推迟更新，只有当替换算法要驱逐该更新过的块时，才把它写到        紧接的低一层缓存中，由于局部性，可显著减少总线流量，但增加了复杂性，同时需维护一    个修改位标记是否更新过。</li>
+<li><strong>直写(write-through)</strong>：立即更新紧接层次缓存的数据，但每次写都会增加总线流量。若数据更新链延伸到主存，使用该写回策略的缓存可能不会设置脏位。</li>
+<li><strong>写回(write back)</strong>；尽量推迟更新，只有当替换算法要驱逐该更新过的块时，才把它写到紧接的低一层缓存中，由于局部性，可显著减少总线流量，但增加了复杂性，同时需维护一个修改位标记是否更新过。</li>
 </ul></li>
 </ul></li>
 <li>若写一个未缓存的字<code>w</code>（即<code>缺失，write miss)</code>，此时<code>w</code>可能在低一层的缓存中保存有副本，采用的更新方法有：
@@ -507,6 +515,7 @@
 <li>《深入理解计算机系统》（Randal E Bryant、David R.O&rsquo;Hallaron著，龚奕利、贺莲译，机械工业出版社）：第六章</li>
 <li>维基百科: <a href="https://en.wikipedia.org/wiki/CPU_cache">CPU cache</a></li>
 <li>YouTube: <a href="https://www.youtube.com/watch?v=E1_dIZR2XdE">Cache direct mapping example - Computer Architecture</a></li>
+<li>YouTube: <a href="https://www.youtube.com/watch?v=03MsXD7bxas">CMU - Lecture 10 Snooping Based Cache Coherence</a></li>
 </ul>
 
 <h3 id="0x09-相关文章">0x09. 相关文章</h3>

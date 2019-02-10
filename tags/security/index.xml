@@ -42,7 +42,7 @@ SSL记录协议为SSL连接提供如下两种服务。
     </item>
     
     <item>
-      <title>Principle and Implementation of RSA Algorithm</title>
+      <title>Rationale and Implementation of RSA Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/</link>
       <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
       
@@ -95,7 +95,7 @@ SSL记录协议为SSL连接提供如下两种服务。
     </item>
     
     <item>
-      <title>Implementation of AES Algorithm</title>
+      <title>Theory-based Implementation of AES Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/aes/</link>
       <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
       
@@ -135,7 +135,7 @@ $$P_1[i]&amp;rsquo;\ =\ IV[i]&amp;rsquo;\ ㊉\ D(K,\ C_1)[i]$$
     </item>
     
     <item>
-      <title>Implementation of DES Algorithm</title>
+      <title>Raw Implementation of DES Algorithm</title>
       <link>https://jordonyang.github.io/post/security/crypto/symmetry/des/</link>
       <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
       

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sorting on 临风博客</title>
+    <link>https://jordonyang.github.io/categories/sorting/</link>
+    <description>Recent content in Sorting on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Sat, 02 Feb 2019 22:54:44 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/categories/sorting/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Summary of Sorting Algorithms</title>
+      <link>https://jordonyang.github.io/post/alg/sorting/summary/</link>
+      <pubDate>Sat, 02 Feb 2019 22:54:44 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/sorting/summary/</guid>
+      <description>0x00. TOC  选择排序 冒泡排序 鸡尾酒排序 插入排序 希尔排序 归并排序 快速排序 堆排序 排序算法的复杂度 Happy Sorting 参考  选择排序 首先，找到数组中最小的那个元素，其次，将它和数组的第一个元素交换位置（如果第一个元素就是最小元素那么它就和自己交换）。再次，在剩下的元素中找到最小的元素，将它与数组的第二个元素交换位置。如此往复，直到将整个数组排序。因为它在不断地选择剩余元素之中的最小者，所以这种方法叫做选择排序。TOC
+  
+代码实现如下所示，选择排序的内循环只是在比较当前元素与目前已知的最小元素（以及将当前索引加 1 和检查是否代码越界），这已经简单到了极点。交换元素的代码写在内循环之外，每次交换都能排定一个元素，因此交换的总次数是 N。所以算法的时间效率取决于比较的次数。对于长度为 N 的数组，选择排序需要大约 N2/2 次比较和 N 次交换。
+public static void sort(Comparable[] a) { int n = a.length; for (int i = 0; i &amp;lt; n; i++) { int min = i; for (int j = i+1; j &amp;lt; n; j++) { if (less(a[j], a[min])) min = j; } exchange(a, i, min); assert isSorted(a, 0, i); } assert isSorted(a); }  选择排序是一种很容易理解和实现的简单排序算法，它有两个很鲜明的特点。</description>
+    </item>
+    
+  </channel>
+</rss>

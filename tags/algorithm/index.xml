@@ -14,10 +14,10 @@
     
     <item>
       <title>Construct Binary Heap with Java</title>
-      <link>https://jordonyang.github.io/post/algorithm/heap/heap_construction/</link>
+      <link>https://jordonyang.github.io/post/alg/heap/heap_construction/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       
-      <guid>https://jordonyang.github.io/post/algorithm/heap/heap_construction/</guid>
+      <guid>https://jordonyang.github.io/post/alg/heap/heap_construction/</guid>
       <description>前言 : 最近在看《算法导论》，从中感受到了算法世界的神奇，看完二叉堆后觉得实现起来应该不难，所以试着根据书中的伪代码用Java实现一遍。
 0x00. 概念 1. 基本定义 二叉堆是一个数组，可近似看成完全二叉树，表示堆的数组A通常包含两个属性：A.length（数组长度）和A.heap-size（堆的有效元素）
 private int[] heap; private int heapSize; public MyHeap(int[] array) { this.heap = array; this.heapSize = array.length; }  2. 通过下标定位亲属节点 由于堆可看做完全二叉树，所以可以通过某节点的下标获取其左右子节点和父节点
