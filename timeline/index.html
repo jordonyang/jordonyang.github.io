@@ -39,7 +39,7 @@
     <title>Timeline &middot; 临风博客</title>
 
     
-    <meta name="description" content="2019  01.15 深入理解volatile的内存语义及其实现 01.14 如何正确使用 volatile 变量 01.11 Java虚拟机类加载过程 01.10 编程实现及理解SSL协议交互过程  2018  12.28 MySQL存储引擎基础 12.23 操作系统期末考试考点整理 12.10 使用Tomcat和" />
+    <meta name="description" content="2019  【02.10】 使用QuickSelect结合BDPRT算法解决Top-K问题 【01.20】 深入理解synchronized内存语义及锁优化 【02.02】 基本排序算法总结 【01.15】 深入理解volatile的内存语义及其实现 【01.14】 如何正确使用volatile变量 【01.12】 自" />
     
 
     <meta name="HandheldFriendly" content="True" />
@@ -119,7 +119,7 @@
     },
     "headline": Timeline,
     "name": Timeline,
-    "wordCount": 79,
+    "wordCount": 93,
     "timeRequired": "PT1M",
     "inLanguage": {
       "@type": "Language",
@@ -358,51 +358,58 @@
 
 <h3 id="2019">2019</h3>
 
-<ul>
-<li>01.15 <a href="../post/java/concurrency/volatile/assembling_dive">深入理解volatile的内存语义及其实现</a></li>
-<li>01.14 <a href="../post/java/concurrency/volatile/guidelines">如何正确使用 volatile 变量</a></li>
-<li>01.11 <a href="../post/java/vm/class_loading/">Java虚拟机类加载过程</a></li>
-<li>01.10 <a href="../post/security/ssl/socket_program/">编程实现及理解SSL协议交互过程</a></li>
-</ul>
+<ol>
+<li>【02.10】 <a href="../post/alg/selecting/quickselect_bfprt">使用QuickSelect结合BDPRT算法解决Top-K问题</a></li>
+<li>【01.20】 <a href="../post/java/concurrency/sync/memory_semantic_optimizing/">深入理解synchronized内存语义及锁优化</a></li>
+<li>【02.02】 <a href="../post/alg/sorting/summary">基本排序算法总结</a></li>
+<li>【01.15】 <a href="../post/java/concurrency/volatile/assembling_dive">深入理解volatile的内存语义及其实现</a></li>
+<li>【01.14】 <a href="../post/java/concurrency/volatile/guidelines">如何正确使用volatile变量</a></li>
+<li>【01.12】 <a href="../post/java/vm/custom_secure_classloader">自定义安全类加载器</a></li>
+<li>【01.11】 <a href="../post/java/vm/class_loading/">Java虚拟机类加载过程</a></li>
+<li>【01.10】 <a href="../post/security/ssl/socket_program/">编程实现及理解SSL协议交互过程</a></li>
+</ol>
 
 <h3 id="2018">2018</h3>
 
-<ul>
-<li>12.28   <a href="../post/mysql/engine/base/">MySQL存储引擎基础</a></li>
-<li>12.23   <a href="../post/os/sc/">操作系统期末考试考点整理</a></li>
-<li>12.10   <a href="../post/security/app/ssl-config/">使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证</a></li>
-<li>12.06   <a href="../post/architecture/pattern/template-method-pattern/">理解模板方法设计模式</a></li>
-<li>11.25  <a href="../post/java/concurrency/cas/">理解比较并交换算法</a></li>
-<li>11.20 <a href="../post/cache/mesi">从MESI理解缓存一致性协议</a></li>
-<li>11.12  <a href="../post/security/ssl/handshake/">SSL - 握手协议详细过程</a></li>
-<li>11.12  <a href="../post/security/ssl/base/">SSL - 协议架构和基本协议介绍</a></li>
-<li>11.10   <a href="../post/security/crypto/asymmetry/rsa/">RSA公钥密码算法原理及实现过程</a></li>
-<li>11.07   <a href="../post/security/crypto/symmetry/rc4/">流密码原理及RC4算法的实现</a></li>
-<li>11.05   <a href="../post/security/crypto/asymmetry/prime/">理解素性测试及大素数生成过程</a></li>
-<li>10.18  <a href="../post/security/crypto/symmetry/aes/">基于原理逐步实现AES加密算法</a></li>
-<li>10.11  <a href="../post/security/crypto/symmetry/working-mode/">分组密码的工作模式</a></li>
-<li>10.09  <a href="../post/security/crypto/symmetry/des/">DES加密算法原理及实现</a></li>
-<li>10.01 <a href="../post/java/vm/bytecode_base/">Java字节码结构及解析过程</a></li>
-<li>09.18  <a href="../post/projects/java/expression_generator/">基于二叉树数据结构的算术表达式生成器</a></li>
-<li>09.14  <a href="../post/projects/java/word_counter/">基于责任链设计模式的代码文件分析统计器</a></li>
-<li>08.27  <a href="../post/java/collections/map/hashmap_source0/">基于JDK1.7的HashMap源码阅读</a></li>
-<li>08.04  <a href="../post/java/vm/gc_base/">理解Java虚拟机垃圾收集机制</a></li>
-<li>06.25  <a href="../post/java/collections/list/linkedlist_source/">LinkedList源码阅读与分析</a></li>
-<li>06.23  <a href="../post/java/collections/list/arraylist_source/">ArrayList源码阅读与分析</a></li>
-<li>05.07 <a href="../post/cache/cpu_cache_base">深入理解CPU高速缓存</a></li>
-<li>04.17 <a href="../post/network/">理解HTTP协议</a></li>
-<li>03.25  <a href="../post/java/concurrency/base/run_exec/">Thread类的run()方法执行过程跟踪和思考</a></li>
-<li>02.25  <a href="../post/java/syntax/sugar/foreach_decompilation/">通过反编译理解Java foreach语法糖</a></li>
-</ul>
+<ol>
+<li>【12.28】  <a href="../post/mysql/engine/base/">MySQL存储引擎基础</a></li>
+<li>【12.23】  <a href="../post/os/sc/">操作系统期末考试考点整理</a></li>
+<li>【12.10】  <a href="../post/security/app/ssl-config/">使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证</a></li>
+<li>【12.06】  <a href="../post/architecture/pattern/template-method-pattern/">理解模板方法设计模式</a></li>
+<li>【11.25】  <a href="../post/java/concurrency/cas/">理解比较并交换算法</a></li>
+<li>【11.20】 <a href="../post/cache/mesi">从MESI理解缓存一致性协议</a></li>
+<li>【11.12】  <a href="../post/security/ssl/handshake/">SSL - 握手协议详细过程</a></li>
+<li>【11.12】  <a href="../post/security/ssl/base/">SSL - 协议架构和基本协议介绍</a></li>
+<li>【11.10】  <a href="../post/security/crypto/asymmetry/rsa/">RSA公钥密码算法原理及实现过程</a></li>
+<li>【11.07】  <a href="../post/security/crypto/symmetry/rc4/">流密码原理及RC4算法的实现</a></li>
+<li>【11.05】  <a href="../post/security/crypto/asymmetry/prime/">理解素性测试及大素数生成过程</a></li>
+<li>【10.18】 <a href="../post/security/crypto/symmetry/aes/">基于原理逐步实现AES加密算法</a></li>
+<li>【10.11】  <a href="../post/security/crypto/symmetry/working-mode/">分组密码的工作模式</a></li>
+<li>【10.09】  <a href="../post/security/crypto/symmetry/des/">DES加密算法原理及实现</a></li>
+<li>【10.01】 <a href="../post/java/vm/bytecode_base/">Java字节码结构及解析过程</a></li>
+<li>【09.18】  <a href="../post/projects/java/expression_generator/">基于二叉树数据结构的算术表达式生成器</a></li>
+<li>【09.14】  <a href="../post/projects/java/word_counter/">基于责任链设计模式的代码文件分析统计器</a></li>
+<li>【08.27】  <a href="../post/java/collections/map/hashmap_source0/">基于JDK1.7的HashMap源码阅读</a></li>
+<li>【08.04】  <a href="../post/java/vm/gc_base/">理解Java虚拟机垃圾收集机制</a></li>
+<li>【06.25】  <a href="../post/java/collections/list/linkedlist_source/">LinkedList源码阅读与分析</a></li>
+<li>【06.23】  <a href="../post/java/collections/list/arraylist_source/">ArrayList源码阅读与分析</a></li>
+<li>【05.07】 <a href="../post/cache/cpu_cache_base">深入理解CPU高速缓存</a></li>
+<li>【04.17】 <a href="../post/network/">理解HTTP协议</a></li>
+<li>【03.25】  <a href="../post/java/concurrency/base/run_exec/">Thread类的run()方法执行过程跟踪和思考</a></li>
+<li>【03.16】 <a href="../post/network/osi/transport/tcp/base">TCP - 协议信息及可靠传输的工作原理</a></li>
+<li>【02.25】  <a href="../post/java/syntax/sugar/foreach_decompilation/">通过反编译理解Java foreach语法糖</a></li>
+</ol>
 
 <h3 id="2017">2017</h3>
 
-<ul>
-<li>11.20 <a href="../post/db/nosql/redis/redis_api/">Redis api使用学习笔记</a></li>
-<li>11.15 <a href="../post/network/nginx/nginx-rtmp/">使用Nginx+rtmp+FFmpeg+video.js实现视频直播</a></li>
-<li>10.01 <a href="../post/linux/tools/terminator/">terminator - Linux下超棒的终端工具</a></li>
-<li>09.25 <a href="../post/algorithm/heap/heap_construction/">二叉堆的Java实现</a></li>
-</ul>
+<ol>
+<li>【11.20】 <a href="../post/db/nosql/redis/redis_api/">Redis api使用学习笔记</a></li>
+<li>【11.15】 <a href="../post/network/nginx/nginx-rtmp/">使用Nginx+rtmp+FFmpeg+video.js实现视频直播</a></li>
+<li>【11.10】 <a href="../post/alg/tree/bst/avl-bst_construction_operation/">平衡二叉查找树数据结构及基本操作</a></li>
+<li>【10.21】 <a href="../post/alg/tree/bst/construction_common_operaton">二叉搜索树数据结构及基本操作</a></li>
+<li>【10.01】 <a href="../post/linux/tools/terminator/">terminator - Linux下超棒的终端工具</a></li>
+<li>【09.25】 <a href="../post/alg/heap/heap_construction/">二叉堆的Java实现与堆排序</a></li>
+</ol>
 
 
 

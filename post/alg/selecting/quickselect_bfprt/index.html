@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="QuickSelect with BFPRT to Conquer Top-K Problem"/>
+<meta name="twitter:description" content="使用QuickSelect结合BDPRT算法解决Top-K问题"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="QuickSelect with BFPRT to Conquer Top-K Problem &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="使用QuickSelect结合BDPRT算法解决Top-K问题" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2019-02-10T19:32:16&#43;08:00" />
+
+    
+    <meta property="article:tag" content="selecting" />
+    
+    
+
+    <title>QuickSelect with BFPRT to Conquer Top-K Problem &middot; 临风博客</title>
+
+    
+    <meta name="description" content="使用QuickSelect结合BDPRT算法解决Top-K问题" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": QuickSelect with BFPRT to Conquer Top-K Problem,
+    "name": QuickSelect with BFPRT to Conquer Top-K Problem,
+    "wordCount": 762,
+    "timeRequired": "PT4M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/,
+    "datePublished": 2019-02-10T19:32Z,
+    "dateModified": 2019-02-10T19:32Z,
+    
+    "keywords": selecting,
+    "description": 使用QuickSelect结合BDPRT算法解决Top-K问题,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">QuickSelect with BFPRT to Conquer Top-K Problem</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">QuickSelect with BFPRT to Conquer Top-K Problem</h1>
+        <em style="color: blue">使用QuickSelect结合BDPRT算法解决Top-K问题</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/selecting/">#selecting</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2019-02-10T19:32:16&#43;08:00">
+            2019/Feb/10
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="0x01-简介">0x01. 简介</h3>
+
+<p><strong>top-K问题</strong>：在一堆数中求其前 k 大或前 k 小的问题，简称 TOP-K 问题，例如在<code>LeetCode</code>上就有这么一道题：<a href="https://leetcode.com/problems/kth-largest-element-in-an-array/">215. Kth Largest Element in an Array</a>。在首次接触 TOP-K 问题时，第一反应估计是用快速排序对所有数据进行一次排序，然后取其前 k 即可，但是这么做有两个问题：</p>
+
+<ol>
+<li>快速排序的平均复杂度为 O(nlgn)，但最坏时间复杂度为 O(n<sup>2</sup>)，不能始终保证较好的复杂度；</li>
+<li>我们只需要前 k 大的，而对其余不需要的数也进行了排序，浪费了大量排序时间。</li>
+</ol>
+
+<p>除此之外，也可以选择堆排序，维护一个大小为 k 的堆，时间复杂度为 O(nlogk)。那是否还存在更有效的方法呢？目前用于解决<code>TOP-K</code>问题较为普遍的算法是带有<code>BFPRT 算法</code>的<code>QuickSelect算法</code>。</p>
+
+<p><strong>QuickSelect算法</strong>：用于在一个乱序的集合中找到第k小的元素，即用于解决<code>top-K问题</code>。与快速排序算法一样，作者也是<code>Tony Hoare</code>，同时它在实际应用中也十分高效，有着良好的平均性能，不过也有着较差的最坏性能。</p>
+
+<p>大体上，<code>quickselect算法</code>使用了与快排一样的过程，选择一个集合元素作为中轴点，基于中轴点把数据分成相应地大于或小于中轴点的两块，然而不同于快排在两个分块中递归排序，<code>quickselect算法</code>在确定要查找的元素在哪一块后，会只在那一块中递归选择，这样就将平均复杂度从 O(log n) 降到了 O(n)，尽管最坏复杂度还是 O(n<sup>2</sup>)。</p>
+
+<p>与快排一样，<code>quickselect算法</code>通常也是被实现为原地算法，除了用于解决<code>top-K</code>问题，它还可以用于局部排序，本文不作讨论。</p>
+
+<p><strong>BFPRT 算法</strong>：又称为<code>中位数的中位数算法（Median of medians）</code>，该算法由 Blum、Floyd、Pratt、Rivest、Tarjan 提出，最坏时间复杂度为<code>O(n)</code>，是一种非精确的选择算法，主要用于为<code>quickselect算法</code>其他选择算法提供一个良好的中轴点，从而解决<code>top-k问题</code>。<code>BFPRT 算法</code>能在有限的线性级的时间内找到一个大致合适的中位数，当该中位数在<code>quickselect算法</code>中用作一个优化过的中轴点，<code>quickselect算法</code>在最坏情况下的复杂度将从平方级降到线性级。</p>
+
+<h3 id="0x02-实现与解决">0x02. 实现与解决</h3>
+
+<p>为了保证算法的线性运行时间，我们需要设计另一种方法，使所选的主元保证“接近”给定数字的中值。通过选择一个接近中值的主元，我们可以保证，在每次迭代中，我们将元素的搜索数量减少(几乎)一半。</p>
+
+<ol>
+<li>将<code>n</code>个元素划为<code>⌊n / 5⌋</code>组，每组5个，至多只有一组由<code>n mod 5</code>个元素组成。</li>
+<li>寻找这<code>⌈n / 5⌉</code>个组中每一个组的中位数，这个过程可以用插入排序。</li>
+<li>对步骤2中的<code>⌈n / 5⌉</code>个中位数，重复步骤1和步骤2，递归下去，直到剩下一个数字。</li>
+<li>最终剩下的数字即为<code>pivot</code>，把大于它的数全放左边，小于等于它的数全放右边。</li>
+<li>判断<code>pivot</code>的位置与<code>k</code>的大小，有选择的对左边或右边递归。</li>
+</ol>
+
+<p>上面的步骤中1~3步为<code>BFPRT 算法</code>的过程，用于为<code>quickselect算法</code>选择一个好的中轴点，而4~5步则是<code>quickselect算法</code>的内容，其实<code>BFPRT 算法</code>就相当于是<code>quickselect算法</code>的一个辅助插件一般。下面先介绍<code>QuickSelect算法</code>的分区与选择过程。</p>
+
+<h4 id="1-分区">1. 分区</h4>
+
+<p>在快排中有一个子过程叫<code>partition</code>，它可以在线性时间内将数据分成大于和小于中轴点的两块，下面这个算法实现自维基百科中<code>Quickselect</code>词条中的<code>partition</code>函数，它会根据中轴点的最初下标将数据分界，确定中轴点最终排定位置。</p>
+
+<pre><code class="language-java">/**
+ * 利用主元下标 pivotIndex 进行对数组 arr[left, right] 划分，并返回
+ * 划分后的分界线下标。
+ * 类似快速排序的逻辑，都是将数组的元素与中轴点进行比较，但是并没有进行交换操作，
+ * 只是分界后确定中轴点在数组中排定的位置
+ */
+private static int partition(int[] arr, int left, int right, int pivotIndex) {
+    swap(arr, pivotIndex, right); // 把主元放置于末尾
+    int partitionIndex = left; // 跟踪划分的分界线
+    for (int i = left; i &lt; right; i++) {
+        if (arr[i] &gt; arr[right]) {  // 如果求第k小元素，将&gt;改为&lt;
+            swap(arr, partitionIndex++, i); // 比主元大的都放在左侧
+        }
+    }
+    swap(arr, partitionIndex, right); // 最后把主元换回来
+    return partitionIndex;
+}
+</code></pre>
+
+<p>这就是<a href="https://en.wikipedia.org/wiki/Quicksort#Lomuto_partition_scheme">Lomuto分区策略</a>，它比<a href="https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme">Hoare的原始分区策略</a>简单而高效。</p>
+
+<h4 id="2-选择">2. 选择</h4>
+
+<p>在快排中，我们需要对左右两个分区进行递归排序，这带来了 O(n log n) 的最好时间复杂度，然而，当使用类似的方法进行选择时，由于中轴点已经排定，尽管其前后的元素都是乱序的，我们可以据此知道需要查找的元素位于哪一块，所以只需要在待查找元素所在的分区这种进行递归查找即可，由此可以写出下面的实现。</p>
+
+<pre><code class="language-java">/**
+ * 返回数组 arr[left, right] 的第 k 小数的下标
+ * @param arr 待处理的数组
+ * @param left 待处理的数列在数组中的起始索引
+ * @param right 待处理的数列在数组中的终止索引
+ * @param k 第k小
+ * @return 第k小的数在数组中的索引
+ */
+public static int select(int[] arr, int left, int right, int k) {
+    // 得到中位数的中位数下标（即主元下标）
+    int pivotIndex = getPivotIndex(arr, left, right);
+    // 进行划分，返回划分边界，即枢轴点的位置
+    int partitionIndex = partition(arr, left, right, pivotIndex);
+    // 由于枢轴点已经排定，如果其位置与待选择的k位置一样，即返回，否则继续递归查找
+    int num = partitionIndex - left + 1;
+    if (num == k)
+        return partitionIndex;
+    else if (num &gt; k)  // 往左边继续找
+        return select(arr, left, partitionIndex - 1, k);
+    else    // 往右边继续找
+        return select(arr, partitionIndex + 1, right, k - num);
+}
+</code></pre>
+
+<p>注意与快速排序的相似之处，正如基于最小值的选择算法是部分选择排序一样，这也是部分快速排序，只生成和划分<code>O(log n) / O(n)</code>个分区。这个简单的过程具有预期的线性性能，并且像快速排序一样，在实践中具有相当好的性能。同时它也是一种原地算法，如果能够优化函数尾部递归调用，或者使用循环消除尾部递归，则只需要常量级内存开销:</p>
+
+<pre><code class="language-java">/**
+ * 返回数组 arr[left, right] 的第 k 小数的下标
+ * @param arr 待处理的数组
+ * @param left 待处理的数列在数组中的起始索引
+ * @param right 待处理的数列在数组中的终止索引
+ * @param k 第k小
+ * @return 第k小的数在数组中的索引
+ */
+public int select(int[] arr, int left, int right, int k) {
+    int pivotIndex, partitionIndex, num;
+    for (;;) {
+        if (left == right) return left;
+        // 得到中位数的中位数下标（即主元下标）
+        pivotIndex = getPivotIndex(arr, left, right);
+        // 进行划分，返回划分边界，即枢轴点的位置
+        partitionIndex = partition(arr, left, right, pivotIndex);
+        // 由于枢轴点已经排定，如果其位置与待选择的k位置一样，即返回，否则继续递归查找
+        num = partitionIndex - left + 1;
+
+        if (num == k) return partitionIndex;
+        else if (num &gt; k)  // 往左边继续找
+            right = partitionIndex - 1;
+        else  { // 往右边继续找
+            k -= num;
+            left = partitionIndex + 1;
+        }
+    }
+}
+</code></pre>
+
+<p>与快速排序类似，快速选择算法在平均状况下有着不错的表现，但是对于中轴点的选择十分敏感。如果中轴点选择上佳，搜索范围每次能够指数级减少，这样一来所耗时间是线性的（即O(n)）。但如果中轴点选择非常不好，使得每次只能将搜索范围减少一个元素，则最糟的总体时间复杂度是平方级的（O(<em>n</em><sup>2</sup>)）：例如对一个升序排列的数组搜索其最大值，而每次都选择第一个元素作为中轴点。</p>
+
+<p>根据中轴点的选择算法的差异，快速排序衍变出很多变体，其中最简单的快速排序变体是每次随机选择中轴点，这样可以达到近乎线性的复杂度。更为确定的做法是采用<code>取三者中位数</code>的中轴点选择策略，这样对已部分排序的数据依然能够达到线性复杂度。但是，特定人为设置的数组在此方法下仍然会导致最差时间复杂度，如大卫·穆塞尔所描述的<code>取三者中位数杀手</code>数列，这成为他发表反省式选择算法的动机。</p>
+
+<p>利用<code>中位数的中位数算法</code>，可以在最坏情形下依然保证线性时间复杂度。但是这一方法中的基准值计算十分复杂，实际应用中并不常见。改进方法是在快速选择算法的基础上，使用<code>中位数的中位数</code>算法处理极端特例，这样可以保证平均状态与最差情形下的时间复杂度都是线性的，这也是反省式选择算法的做法。下面我们先来看<code>中位数的中位数算法</code>如何实现。</p>
+
+<h4 id="3-bfprt-算法">3. BFPRT 算法</h4>
+
+<p>下面的子过程是实际的<code>BFPRT 算法</code>，即<code>中位数的中位数算法</code>，由于它用于确定一个好的中轴点的位置，所以此处命名为<code>getPivotIndex</code>。可以看到，它将输入数组（长度为n）分组，每组最多有5个元素，用子过程<code>subroutine</code>计算每组的中位数，然后在这<code>n/5</code>个中位数中递归计算它们的中位数，即计算中位数的中位数。</p>
+
+<pre><code class="language-java">/**
+ * 中位数的中位数算法
+ * 数组 arr[left, right] 每五个元素作为一组，并计算每组的中位数，\
+ * 最后返回这些中位数的中位数下标（即主元下标）。
+ *
+ * 末尾返回语句最后一个参数多加一个 1 的作用其实就是向上取整的意思，
+ * 这样可以始终保持 k 大于 0。
+ * @param arr 待处理的数组
+ * @param left 待处理的数列在数组中的起始索引
+ * @param right 待处理的数列在数组中的终止索引
+ * @return 中位数的中位数下标
+ */
+private static int getPivotIndex(int[] arr, int left, int right) {
+    if (right - left &lt; 5)
+        return insertionSort(arr, left, right);
+    int subRight = left - 1;
+    // 每五个作为一组，求出中位数，并把这些中位数全部依次移动到数组左边
+    for (int i = left; i + 4 &lt;= right; i += 5) {
+        int index = insertionSort(arr, i, i + 4);
+        swap(arr, ++subRight, index);
+    }
+    // 利用 select 得到这些中位数的中位数下标（即主元下标）
+    return select(arr, left, subRight, ((subRight - left + 1) &gt;&gt; 1) + 1);
+}
+</code></pre>
+
+<p>可以看到在<code>medianOfMedians</code>的函数的最后调用了<code>quickselect</code>，而在<code>quickselect</code>中又调用了<code>medianOfMedians</code>，这就是所谓的 <a href="https://en.wikipedia.org/wiki/Mutual_recursion">Mutual recursion</a>。其中用于计算每组中位数的子过程<code>subroutine</code>可以使用插入排序，即先对每组的元素进行排序，然后返回排好序的子集中的中位数，下面的实现只返回子集的中位数索引。</p>
+
+<pre><code class="language-java">/**
+ * 对数组 array[left, right] 进行插入排序（从大到小）
+ * @param arr 待处理的数组
+ * @param left 待处理的数列在数组中的起始索引
+ * @param right 待处理的数列在数组中的终止索引
+ * @return [left, right] 的中位数。
+ */
+private static int insertionSort(int[] arr, int left, int right) {
+    for (int i = left + 1; i &lt;= right; i++) {
+        // 如果求第k小元素，将&gt;改为&lt;
+        for (int j = i; j &gt; left &amp;&amp; arr[j] &gt; arr[j-1]; j--) {
+            swap(arr, j-1, j);
+        }
+    }
+    return ((right - left) &gt;&gt; 1) + left;
+}
+</code></pre>
+
+<h3 id="0x03-测试与比较">0x03. 测试与比较</h3>
+
+<p>为了检验<code>BFPRT算法</code>与<code>QuickSelect算法</code>组合的效率，我将之与<code>单轴快排</code>和<code>Dual-Pivot Quick Sort</code>进行了比较，下面是测试代码，先创建<code>len</code>长的数组，数组的每个元素初值与其索引一致，然后使用《Algorithm》第二章中用到的的一个工具 <a href="https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/StdRandom.java">StdRandom.java</a> 对数组进行打乱重排，这样做主要是为了不予考虑数据重复的情况，因为当数据存在重复时，排序跟选择的结果很可能会不一致。接着将原数组拷贝一份，用于后面的单轴排序，因为和双轴快排一样，它也是一个原地算法。</p>
+
+<pre><code class="language-java">@Test
+public void compareEfficiency() {
+    int k = 10, len = 60000000; // 1 &lt;= k &lt;= arr.size
+    int[] arr = new int[len], arr1 = new int[len];
+
+    for (int i = 0; i &lt; len; i++) {
+        arr[i] = i;
+    }
+
+    StdRandom.shuffle(arr);
+    System.arraycopy(arr, 0, arr1, 0, len);
+
+    System.out.println(&quot;数组长度：&quot; + len + &quot;\t\tK：&quot; + k);
+    System.out.println(String.format(&quot;%-12s%-12s%-8s&quot;, &quot;算法&quot;, &quot;用时&quot;, &quot;第k大的数&quot;));
+    // 因为是以 k 为划分，所以还可以求出第 k 大值
+    long start1 = System.currentTimeMillis();
+    int topK1 = arr[QuickSelectWithBFPRT.select(arr, 0, len-1, k)];
+    long end1 = System.currentTimeMillis();
+    System.out.println(String.format(&quot;%-12s%-12s%-8s&quot;, &quot;快速选择&quot;, (end1 - start1), topK1));
+
+    long start2 = System.currentTimeMillis();
+    Arrays.sort(arr);
+    int topK2 = arr[arr.length - k];
+    long end2 = System.currentTimeMillis();
+    System.out.println(String.format(&quot;%-12s%-12s%-8s&quot;, &quot;双轴快排&quot;, (end2 - start2), topK2));
+
+    long start3 = System.currentTimeMillis();
+    SinglePivotQuick.sort(arr1);
+    int topK3 = arr1[k - 1];
+    long end3 = System.currentTimeMillis();
+    System.out.println(String.format(&quot;%-12s%-12s%-8s&quot;, &quot;单轴快排&quot;, (end3 - start3), topK3));
+}
+</code></pre>
+
+<p>下面是分别使用快速选择算法、双轴快排和单轴快排在100万、5000万和6000万条乱序数据中找到第k小元素的时间对比。</p>
+
+<pre><code>数组长度：1000000		K：3
+  算法         用时        第k大的数   
+快速选择        75          999997  
+双轴快排        211         999997  
+单轴快排        190         999997  
+
+数组长度：50000000		K：10
+  算法          用时        第k大的数   
+快速选择        1717        49999990
+双轴快排        5670        49999990
+单轴快排        7311        49999990
+
+数组长度：60000000		K：10
+ 算法          用时         第k大的数   
+快速选择        2395        59999990
+双轴快排        7067        59999990
+单轴快排        9214        59999990
+</code></pre>
+
+<p>通过比较上面的输出序列，可以看到两点</p>
+
+<ul>
+<li>相比于快速排序算法，结合了中位数的中位数的快速选择算法的效率明显更高。</li>
+<li>当待排序数组的元素个数较少时，双轴快排的效率往往会低于单轴快排，只有当待排序数组的元素个数提升到一定数量级时，双轴快排的优势才得以发挥。</li>
+</ul>
+
+<p>除了具有更高效率外，快速选择算法也具有较好的空间分配，下面是使用快速选择结合中位数的中枢算法提交解决 <a href="https://leetcode.com/problems/kth-largest-element-in-an-array/">215. Kth Largest Element in an Array</a> 的空间分配情况（当然机器在每个时刻处理速度存在差异）：</p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/aqs/selecting/leetcode_memory.png" alt="img" /></p>
+
+<h3 id="0x04-参考">0x04. 参考</h3>
+
+<ul>
+<li>Wikipedia : <a href="https://en.wikipedia.org/wiki/Quickselect">Quickselect</a>、<a href="https://en.wikipedia.org/wiki/Median_of_medians">Median of medians</a>、<a href="https://en.wikipedia.org/wiki/Quicksort">Quicksort</a></li>
+<li><a href="https://subetter.com/algorithm/bfprt-algorithm.html">BFPRT 算法 (TOP-K 问题)</a></li>
+<li>《算法》（第四版，Robert Sedgewick、Kevin Wayne 著，人民邮电出版社）</li>
+</ul>
+
+<h3 id="0x05-相关文章">0x05. 相关文章</h3>
+
+<ul>
+<li><a href="../../sorting/summary/#快速排序">排序算法总结之快速排序</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/"><h4>Memory Semantic and Lock Optimizing of Synchronized</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

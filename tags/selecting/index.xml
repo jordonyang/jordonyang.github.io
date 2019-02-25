@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Selecting on 临风博客</title>
+    <link>https://jordonyang.github.io/tags/selecting/</link>
+    <description>Recent content in Selecting on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Sun, 10 Feb 2019 19:32:16 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/tags/selecting/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>QuickSelect with BFPRT to Conquer Top-K Problem</title>
+      <link>https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/</link>
+      <pubDate>Sun, 10 Feb 2019 19:32:16 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/</guid>
+      <description>0x01. 简介 top-K问题：在一堆数中求其前 k 大或前 k 小的问题，简称 TOP-K 问题，例如在LeetCode上就有这么一道题：215. Kth Largest Element in an Array。在首次接触 TOP-K 问题时，第一反应估计是用快速排序对所有数据进行一次排序，然后取其前 k 即可，但是这么做有两个问题：
+ 快速排序的平均复杂度为 O(nlgn)，但最坏时间复杂度为 O(n2)，不能始终保证较好的复杂度； 我们只需要前 k 大的，而对其余不需要的数也进行了排序，浪费了大量排序时间。  除此之外，也可以选择堆排序，维护一个大小为 k 的堆，时间复杂度为 O(nlogk)。那是否还存在更有效的方法呢？目前用于解决TOP-K问题较为普遍的算法是带有BFPRT 算法的QuickSelect算法。
+QuickSelect算法：用于在一个乱序的集合中找到第k小的元素，即用于解决top-K问题。与快速排序算法一样，作者也是Tony Hoare，同时它在实际应用中也十分高效，有着良好的平均性能，不过也有着较差的最坏性能。
+大体上，quickselect算法使用了与快排一样的过程，选择一个集合元素作为中轴点，基于中轴点把数据分成相应地大于或小于中轴点的两块，然而不同于快排在两个分块中递归排序，quickselect算法在确定要查找的元素在哪一块后，会只在那一块中递归选择，这样就将平均复杂度从 O(log n) 降到了 O(n)，尽管最坏复杂度还是 O(n2)。
+与快排一样，quickselect算法通常也是被实现为原地算法，除了用于解决top-K问题，它还可以用于局部排序，本文不作讨论。
+BFPRT 算法：又称为中位数的中位数算法（Median of medians），该算法由 Blum、Floyd、Pratt、Rivest、Tarjan 提出，最坏时间复杂度为O(n)，是一种非精确的选择算法，主要用于为quickselect算法其他选择算法提供一个良好的中轴点，从而解决top-k问题。BFPRT 算法能在有限的线性级的时间内找到一个大致合适的中位数，当该中位数在quickselect算法中用作一个优化过的中轴点，quickselect算法在最坏情况下的复杂度将从平方级降到线性级。
+0x02. 实现与解决 为了保证算法的线性运行时间，我们需要设计另一种方法，使所选的主元保证“接近”给定数字的中值。通过选择一个接近中值的主元，我们可以保证，在每次迭代中，我们将元素的搜索数量减少(几乎)一半。
+ 将n个元素划为⌊n / 5⌋组，每组5个，至多只有一组由n mod 5个元素组成。 寻找这⌈n / 5⌉个组中每一个组的中位数，这个过程可以用插入排序。 对步骤2中的⌈n / 5⌉个中位数，重复步骤1和步骤2，递归下去，直到剩下一个数字。 最终剩下的数字即为pivot，把大于它的数全放左边，小于等于它的数全放右边。 判断pivot的位置与k的大小，有选择的对左边或右边递归。  上面的步骤中1~3步为BFPRT 算法的过程，用于为quickselect算法选择一个好的中轴点，而4~5步则是quickselect算法的内容，其实BFPRT 算法就相当于是quickselect算法的一个辅助插件一般。下面先介绍QuickSelect算法的分区与选择过程。</description>
+    </item>
+    
+  </channel>
+</rss>

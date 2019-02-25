@@ -253,7 +253,7 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>Construct Binary Heap with Java</title>
+      <title>Construction of Binary Heap and Heap Sort</title>
       <link>https://jordonyang.github.io/post/alg/heap/heap_construction/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       

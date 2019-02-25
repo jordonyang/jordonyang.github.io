@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Tue, 15 Jan 2019 09:18:23 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 20 Jan 2019 08:47:16 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/categories/concurrency/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Memory Semantic and Lock Optimizing of Synchronized</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/</link>
+      <pubDate>Sun, 20 Jan 2019 08:47:16 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/</guid>
+      <description>0x00. TOC  0x01.字节码分析 0x02.锁优化  1.自旋锁 2.锁消除 3.锁粗化 4.轻量级锁 4.1 加锁过程 4.2 解锁过程 5.偏向锁 6.锁的优缺点对比  0x03.参考 0x04.相关文章  0x01. 字节码分析 先来看下利用synchronized实现同步的基础：Java中的每一个对象都可以作为锁。具体表现为以下3种形式。
+ 普通同步方法：锁是当前实例对象。 静态同步方法：锁是当前类的Class对象。 同步方法块：锁是synchronized括号里配置的对象。  从JVM Spec中可以看到synchonized在 JVM 里的实现原理，JVM 基于进入和退出Monitor对象来实现方法同步和代码块同步，但两者的实现细节不一样。以下面代码为例：
+package org.jordon.sync; import java.util.ArrayList; import java.util.List; public class SyncByteCodeTest { private static List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;&amp;gt;(); //当前实例的锁 public synchronized void add1(String s){ list.add(s); } //SynTest.class 锁 public static synchronized void add2(String s){ list.add(s); } //SynTest.class 锁 public void add3(String s){ synchronized(SyncByteCodeTest.</description>
+    </item>
     
     <item>
       <title>Memory Semantics and Implementation of Volatile</title>

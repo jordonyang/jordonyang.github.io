@@ -7,21 +7,137 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Sat, 02 Feb 2019 22:54:44 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 10 Feb 2019 19:32:16 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/categories/algorithm/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>QuickSelect with BFPRT to Conquer Top-K Problem</title>
+      <link>https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/</link>
+      <pubDate>Sun, 10 Feb 2019 19:32:16 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/</guid>
+      <description>0x01. 简介 top-K问题：在一堆数中求其前 k 大或前 k 小的问题，简称 TOP-K 问题，例如在LeetCode上就有这么一道题：215. Kth Largest Element in an Array。在首次接触 TOP-K 问题时，第一反应估计是用快速排序对所有数据进行一次排序，然后取其前 k 即可，但是这么做有两个问题：
+ 快速排序的平均复杂度为 O(nlgn)，但最坏时间复杂度为 O(n2)，不能始终保证较好的复杂度； 我们只需要前 k 大的，而对其余不需要的数也进行了排序，浪费了大量排序时间。  除此之外，也可以选择堆排序，维护一个大小为 k 的堆，时间复杂度为 O(nlogk)。那是否还存在更有效的方法呢？目前用于解决TOP-K问题较为普遍的算法是带有BFPRT 算法的QuickSelect算法。
+QuickSelect算法：用于在一个乱序的集合中找到第k小的元素，即用于解决top-K问题。与快速排序算法一样，作者也是Tony Hoare，同时它在实际应用中也十分高效，有着良好的平均性能，不过也有着较差的最坏性能。
+大体上，quickselect算法使用了与快排一样的过程，选择一个集合元素作为中轴点，基于中轴点把数据分成相应地大于或小于中轴点的两块，然而不同于快排在两个分块中递归排序，quickselect算法在确定要查找的元素在哪一块后，会只在那一块中递归选择，这样就将平均复杂度从 O(log n) 降到了 O(n)，尽管最坏复杂度还是 O(n2)。
+与快排一样，quickselect算法通常也是被实现为原地算法，除了用于解决top-K问题，它还可以用于局部排序，本文不作讨论。
+BFPRT 算法：又称为中位数的中位数算法（Median of medians），该算法由 Blum、Floyd、Pratt、Rivest、Tarjan 提出，最坏时间复杂度为O(n)，是一种非精确的选择算法，主要用于为quickselect算法其他选择算法提供一个良好的中轴点，从而解决top-k问题。BFPRT 算法能在有限的线性级的时间内找到一个大致合适的中位数，当该中位数在quickselect算法中用作一个优化过的中轴点，quickselect算法在最坏情况下的复杂度将从平方级降到线性级。
+0x02. 实现与解决 为了保证算法的线性运行时间，我们需要设计另一种方法，使所选的主元保证“接近”给定数字的中值。通过选择一个接近中值的主元，我们可以保证，在每次迭代中，我们将元素的搜索数量减少(几乎)一半。
+ 将n个元素划为⌊n / 5⌋组，每组5个，至多只有一组由n mod 5个元素组成。 寻找这⌈n / 5⌉个组中每一个组的中位数，这个过程可以用插入排序。 对步骤2中的⌈n / 5⌉个中位数，重复步骤1和步骤2，递归下去，直到剩下一个数字。 最终剩下的数字即为pivot，把大于它的数全放左边，小于等于它的数全放右边。 判断pivot的位置与k的大小，有选择的对左边或右边递归。  上面的步骤中1~3步为BFPRT 算法的过程，用于为quickselect算法选择一个好的中轴点，而4~5步则是quickselect算法的内容，其实BFPRT 算法就相当于是quickselect算法的一个辅助插件一般。下面先介绍QuickSelect算法的分区与选择过程。</description>
+    </item>
+    
+    <item>
       <title>Summary of Sorting Algorithms</title>
       <link>https://jordonyang.github.io/post/alg/sorting/summary/</link>
-      <pubDate>Sat, 02 Feb 2019 22:54:44 +0800</pubDate>
+      <pubDate>Fri, 18 Jan 2019 22:54:44 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/alg/sorting/summary/</guid>
       <description>0x00. TOC  选择排序 冒泡排序 鸡尾酒排序 插入排序 希尔排序 归并排序 快速排序 堆排序 排序算法的复杂度 Happy Sorting 参考  选择排序 首先，找到数组中最小的那个元素，其次，将它和数组的第一个元素交换位置（如果第一个元素就是最小元素那么它就和自己交换）。再次，在剩下的元素中找到最小的元素，将它与数组的第二个元素交换位置。如此往复，直到将整个数组排序。因为它在不断地选择剩余元素之中的最小者，所以这种方法叫做选择排序。TOC
   
 代码实现如下所示，选择排序的内循环只是在比较当前元素与目前已知的最小元素（以及将当前索引加 1 和检查是否代码越界），这已经简单到了极点。交换元素的代码写在内循环之外，每次交换都能排定一个元素，因此交换的总次数是 N。所以算法的时间效率取决于比较的次数。对于长度为 N 的数组，选择排序需要大约 N2/2 次比较和 N 次交换。
 public static void sort(Comparable[] a) { int n = a.length; for (int i = 0; i &amp;lt; n; i++) { int min = i; for (int j = i+1; j &amp;lt; n; j++) { if (less(a[j], a[min])) min = j; } exchange(a, i, min); assert isSorted(a, 0, i); } assert isSorted(a); }  选择排序是一种很容易理解和实现的简单排序算法，它有两个很鲜明的特点。</description>
+    </item>
+    
+    <item>
+      <title>Rationale and Implementation of RSA Algorithm</title>
+      <link>https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/</link>
+      <pubDate>Sat, 10 Nov 2018 14:23:26 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/asymmetry/rsa/</guid>
+      <description>0x00. TOC  0x01.简介 0x02.应用 0x03.原理 0x04.实现  1.素数的选择与判断 2.实现模逆算法  2.1.欧几里得算法 2.2.扩展欧几里得算法 2.3.求解同余方程算法  3.实现快速模指运算 4.编程实现RSA算法 5.利用RSA进行数据加解密  6.实现对大数据进行加密  7.实现简单的GUI界面 8.分析总结  0x05.攻击方法 0x06.密钥分发 0x07.参考  0x01. 简介 最初的公钥方案是在1977年由Ron Rivest、Adi Shamir和Len Adleman在MIT提出的，并且于1978年首次发表[RIVE78]。 RSA方案从那时起便占据了绝对的统治地位，成为最广泛接受和实现的通用公钥加密方法。 RSA是分组密码，对于某个m它的明文和密文是0〜n - 1之间的整数。TOC
+0x02. 应用 用于在开放的网络环境（如Internet）上保护电子通信，而不依赖于隐藏或隐蔽的通道，甚至用于密钥交换。开放的网络环境容易受到各种通信安全问题的影响，比如中间人攻击和欺骗。通信安全通常包括要求通信不得在运输途中可读（保存保密），通信在运输途中不能修改（保证沟通完整性），沟通必须来自一个确定原（发送方真实性），和收件人必须不能否定或拒绝接收的通信。将非对称加密与Enveloped Public Key Encryption（EPKE）方法相结合，允许在开放的网络环境中安全发送通信。换句话说，即使密码分析者听了包括密钥交换在内的整个对话也无法解释对话。
+公钥密码术中使用的区别技术是使用非对称密钥算法，其中一方用于执行加密的密钥与另一方用于解密的密钥不同。每个用户都有一对加密密钥——一个公共加密密钥和一个私有解密密钥。例如，用于数字签名的密钥对（包括一个私有签名密钥和一个公共验证密钥）。公钥可以广泛分发，而私钥只有其所有者知道。它们在数学上是相关的，但是选择参数是为了从公钥计算私钥是不可行的。
+相反，对称密钥算法使用的是一个秘密密钥，它必须由发送方（用于加密)和接收方）用于解密)共享并保持私有。要使用对称加密方案，发送方和接收方必须事先安全地共享密钥。
+由于对称密钥算法几乎总是比非对称密钥算法计算量小得多，所以通常使用密钥交换算法交换密钥，然后使用该密钥和对称密钥算法传输数据。PGP和SSL/TLS方案家族使用这个过程，因此称为混合加密系统。综上非对称算法适用于 TOC
+ 密钥交换 数字签名 与对称加密算法混合使用（PGP, SSL, TLS）  0x03. 原理 对于某一明文块M和密文块C，加密和解密有如下的形式： $$C = M^e \ mod \ n$$ $$M = C^d \ mod \ n = (M^e)^d \ mod\ n = M^{ed} mod \ n$$</description>
+    </item>
+    
+    <item>
+      <title>Understand Stream Cipher and Implement RC4</title>
+      <link>https://jordonyang.github.io/post/security/crypto/symmetry/rc4/</link>
+      <pubDate>Wed, 07 Nov 2018 10:01:04 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/symmetry/rc4/</guid>
+      <description>前言 分组密码每次处理一个输入分组，并为每个输入分组产生一个输出分组。流密码连续处理输入元素，在运行过程中，一次产生一个输出元素。尽管分组密码普遍得多，但对于一些特定的应用，使用流密码更合适。
+0x00. 流密码结构 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;典型的流密码一次加密一个字节的明文，尽管流密码可能设计成一次操作一个比特或者比字节大的单位。图2.7是流密码结构的示意图。在这个结构里，密钥输入到一个伪随机字节生成器，产生一个表面随机的8比特数据流。如果不知道输入密钥，伪随机流就不可预测的，而且它具有表面上随机的性质。这个生成器的输出称为密钥流，使用位异或操作与明文流结合，一次一个字节。例如，如果生成器产生的下一字节是01101100，明文的下一字节是11001100，那么得到的密文字节是： $$11001100 ⊕ 01101100 \ = \ 10100000$$ 解密需要同一伪随机序列： $$10100000 ⊕ 01101100 \ = \ 11001100 $$
+[KUMA97]列出了下列设计流密码时需要重要考虑的因素：
+ 加密序列应该有一个长周期。伪随机数生成器使用一个函数产生一个实际上不断重复的确定比特流。这个重复的周期越长，密码破解就越困难。 密钥流应该尽可能地接近真随机数流的性质。例如， 1和0的数目应该近似相等。如果将密钥流视作字节流，那么字节的256种可能值出现的频率应该近似相等。密钥流表现得越随机，密文就越随机化，密码破译就越困难。 图2.6指出了伪随机数生成器的输出受输入密钥值控制。为了抵抗穷举攻击，这个密钥必须非常长。分组密码中的考虑因素在这里同样适用。因此，就当前的科技水平而言，需要至少128比特长度的密钥。  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果伪随机数生成器设计合理，对同样的密钥长度，流密码和分组密码一样安全。流密码的主要优点是流密码与分组密码相比几乎总是更快，使用更少的代码。本文中的示例RC4能用仅仅几行代码实现。最近几年，随着AES的引进，这个优势己经消失了，因为AES可以用软件方式高效实现。比如，Intel AES指令集含有一轮加解密和密钥产生过程使用的机器指令。使用硬件指令实现AES跟仅使用软件方式相比，速度提高了一个数M级。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;分组密码的优点是可以重复使用密钥。但是如果两个明文使用同一密钥进行流密码加密，密码破译常常会非常容易[DAWS96]。如果将这两个密文流进行异或，结果就是原始明文的异或值。如果明文是文本字符串、信用卡号或者其他己知其性质的字节流，密码破解可能会成功。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;对于需要加密/解密数据流的应用，比如在数据通信信道或者浏览器/网络链路上，流密码也许是更好的选择。对于处理数据分组的应用，比如文件传递、电子邮件和数据库，分组密码可能更合适。但是，这两种密码都可以在几乎所有的应用中使用。
+0x01. RC4算法 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;RC4是Ron Rivest在1987年为RSA Security公司设计的流密码。它是密钥大小可变的流密码，使用面向字节的操作。这个算法基于随机交换的使用。通过分析指出，这个密码的周期完全可能大于10100[ROBS95a]。每输出一个字节需要8~16个机器操作，并且此密码用软件实现运行速度非常快。为网络浏览器和服务器之间的通信定义的SS17TLS (安全套接字层/传输层安全）标准中使用了RC4。它也被用于属于IEEE 802.11无线LAN标准一部分的WEP (有线等效保密）协议及更新的Wi-Fi保护访问（WPA) 协议 。 RC4原本被RSA Security公司当作商业秘密。1994年9月，RC4算法通过Cypherpunks匿名邮件转发列表匿名地公布在因特网上。
+1. 算法细节 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;RC4算法非常简单，易于描述。用一个可变长度为1〜256字节(8-2048比特）的密钥来初始化256字节的状态向S，其元素为S[0], S[l] , …, S[255]。从始至终置换后的S包含从0到255的所有8位数。加密和解密时，字节k（见上图）是从S的255个元素中按一种系统的方式选出的。每次k值产生之后，要重新排列S的元素。
+2. 初始化S &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;开始时， S的元素按升序被置为0〜255；即S[0] = 0, S[l] = l, S[255] = 255。同时创建一个临时向量T。如果密钥K的长度为256字节，就把K直接赋给T，否则，对于keylen字节长度的密钥，将K赋值给T的前keylen个元素，并循环重复用K的值赋给T剩下的元素，直到T的所有元素都被赋值。这些预操作可被概括为
+/* 初始化 */ for i = 0 to 255 do S[i] = i； T[i] = K[i mod keylen];  然后用T产生S的初始置换，从S[0]〜S[255]，对每个S[i],根据由T[i]确定的方案，并将S[i]置换为S的另一字节：</description>
+    </item>
+    
+    <item>
+      <title>Theory-based Implementation of AES Algorithm</title>
+      <link>https://jordonyang.github.io/post/security/crypto/symmetry/aes/</link>
+      <pubDate>Thu, 18 Oct 2018 22:23:44 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/symmetry/aes/</guid>
+      <description>0x00. TOC  0x01.概述 0x02.AES算法的数学基础  1.有限域 2. AES在有限域上的表示 2. AES的字表示与运算 2.1. 字表示 2.2. 字运算  0x03.AES的加密过程  1.状态 2.加密过程概述 3.AES有限域上加加法 4.轮密钥的生成  4.1.密钥扩展 4.2.轮密钥的选择 4.3.代码实现  5.AES基本变换  5.1.S盒变换 5.2.行移位变换 5.3.列混合变换  6.对外加密接口 7.核心加密逻辑   0x04.解密过程  1.AES基本逆变换 2.对外解密接口 3.核心解密逻辑  0x05.测试 0x06.说明 0x07.参考  0x01. 概述 美国政府在1997年9月12日公开征集更高效更安全的替代DES加密算法，第一轮共有15种算法入选，其中5种算法入围了决赛，分别是MARS，RC6，Rijndael，Serpent和Twofish。又经过3年的验证、评测及公众讨论之后Rijndael算法最终入选。
+Rijndael算法之所以最终能够被选为AES的原因是其安全、性能好、效率高、实用灵活。
+Rijndael算法支持多种分组及密钥长度，介于128-256之间所有32的倍数均可，最小支持128位，最大256位，而AES标准支持的分组大小固定为128位，密钥长度有3种选择：128位、192位及256位。TOC
+0x02. AES算法的数学基础 Rijndaels算法中的许多运算是按字节和4字节的字来定义的。把一个字节看成是在有限域GF(2^8)上的一个元素。有限域（Finite Field）又名伽罗瓦域（Galois field），简单言之就是一个满足特定规则的集合，集合中的元素可以进行加减乘除运算，且运算结果也是属于此集合。 TOC
+1. 有限域 AES的基础域是有限域 GF(28) TOC
+ 一个字节的全体256种取值构成一个GF(28) 一个GF(2)上的8次既约多项式可生成一个 GF(28)
+ GF(28)的全体元素构成加法交换群、线性空间。 GF(28)的非零元素构成乘法循环群。  2.</description>
+    </item>
+    
+    <item>
+      <title>Raw Implementation of DES Algorithm</title>
+      <link>https://jordonyang.github.io/post/security/crypto/symmetry/des/</link>
+      <pubDate>Tue, 09 Oct 2018 22:06:42 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/security/crypto/symmetry/des/</guid>
+      <description>0x00. DES概述 数据加密标准（Data Encryption Standard），一种使用密钥加密的块算法，1977年被美国联邦政府的国家标准局确定为联邦资料处理标准（FIPS），并授权在非密级政府通信中使用，随后该算法在国际上广泛流传开来。需要注意的是，在某些文献中，作为算法的DES称为数据加密算法（Data Encryption Algorithm,DEA），已与作为标准的DES区分开来。
+1. 几个重要的历史时间  1973年美国国家标准局（NBS）向社会公开征集加 密算法，以制定加密算法标准； 1974年第二次征集； 1975年选中IBM的算法，并公布征求意见； 1977年1月15日正式颁布； 1998年底以后停用； 1999年颁布3DES为新标准。  2. 标准加密算法的目标  用于加密保护政府机构和商业部门的非机密的敏感 数据。 用于加密保护静态存储和传输信道中的数据。 安全使用10 ~ 15年。
+  3.密码的整体特点  分组密码，明文、密文和密钥的分组长度都是64位。 面向二进制的密码算法，因而能够加解密任何形式的计算机数据。 对合运算:
+ f = f–1 加密和解密共用同一算法，使工程实现的工作量减半。
+  综合运用了置换、代替、代数等基本密码技术。 基本结构属于Feistel结构。
+  4. 应用  在全世界范围得到广泛应用。 许多国际组织采用为标准。 产品形式：软件（嵌入式，应用软件） 硬件（芯片，插卡）  5. 结论  用于其设计目标是安全的。 设计精巧、实现容易、使用方便，堪称典范。 为国际信息安全发挥了重要作用。
+  0x01. 加密过程  64位密钥经子密钥产生算法产生出16个子密钥： K1, K2, &amp;hellip;, K16 ， 分别供第一次, 第二次, &amp;hellip;, 第十六次加密迭代使用。 64位明文经初始置换IP， 将数据打乱重排并分成左右两半。左边32位构成L0 ， 右边2位构成R0 。 第一次加密迭代：由加密函数f实现子密钥k1对R0的加密，得到32位的f(R0, K1)，然后L0⊕f(R0, K1)，32位的结果作为第二次加密迭代的R1，以R0作为第二次加密迭代的L1。</description>
+    </item>
+    
+    <item>
+      <title>Construction and Operations of AVL</title>
+      <link>https://jordonyang.github.io/post/alg/tree/bst/avl-bst_construction_operation/</link>
+      <pubDate>Fri, 10 Nov 2017 17:17:36 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/tree/bst/avl-bst_construction_operation/</guid>
+      <description>0x01. 定义 对于二叉查找树，当其高度最小时，其查找性能最优，虽然满二叉树和完全二叉树的高度都是最小的，但是在在插入或删除结点后维持其高度最小的代价较大。平衡二叉查找树是一种可兼顾查找与维护性能的折中方案。
+平衡二叉查找树又称AVL树，得名于它的发明者Adelson-Velsky和Landis，他们在1962年的论文《An algorithm for the organization of information》中公开了这一数据结构。
+平衡二叉树是具有以下性质的二叉查找树：它的左子树和右子树都是平衡二叉树，且左子树和右子树的高度差的绝对值不超过1。结点的平衡因子是它的左子树的高度减去它的右子树的高度（有时相反）。带有平衡因子1、0或 -1的结点被认为是平衡的。带有平衡因子-2或2的结点被认为是不平衡的，并需要重新平衡这棵树。平衡因子可以直接存储在每个结点中，或从可能存储在节点中的子树高度计算出来。
+平衡二叉树的结点类型如下所示，其中属性height表示子树的高度，用于计算平衡因子。
+private class Node { private final Key key; // the key private Value val; // the associated value private int height; // height of the subtree private int size; // number of nodes in subtree private Node left; // left subtree private Node right; // right subtree public Node(Key key, Value val, int height, int size) { this.</description>
+    </item>
+    
+    <item>
+      <title>Construction and Operatons of BST</title>
+      <link>https://jordonyang.github.io/post/alg/tree/bst/construction_common_operaton/</link>
+      <pubDate>Sat, 21 Oct 2017 21:52:45 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/tree/bst/construction_common_operaton/</guid>
+      <description>0x00. TOC  0x01.BST结构 0x02.基本操作  1.插入元素 2.判存 3.删除结点 4.求树的最大深度 5.搜索与遍历  0x03.参考  0x01. BST结构 二叉搜索树（BST, Binary Searching Tree）也称为二叉查找树、有序二叉树（ordered binary tree）或排序二叉树（sorted binary tree），是指一棵空树或者具有下列性质的二叉树：TOC
+ 若任意节点的左子树不空，则左子树上所有节点的值均小于它的根节点的值； 若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值； 任意节点的左、右子树也分别为二叉查找树； 没有键值相等的节点。  二叉查找树相比于其他数据结构的优势在于查找、插入的时间复杂度较低。为 O(log n)。二叉查找树是基础性数据结构，用于构建更为抽象的数据结构，如集合、多重集、关联数组等。
+二叉查找树的查找过程和次优二叉树类似，通常采取二叉链表作为二叉查找树的存储结构。中序遍历二叉查找树可得到一个关键字的有序序列，一个无序序列可以通过构造一棵二叉查找树变成一个有序序列，构造树的过程即为对无序序列进行查找的过程。每次插入的新的结点都是二叉查找树上新的叶子结点，在进行插入操作时，不必移动其它结点，只需改动某个结点的指针，由空变为非空即可。搜索、插入、删除的复杂度等于树高，期望 O(log n)，最坏 O(n)（数列有序，树退化成线性表）。
+虽然二叉查找树的最坏效率是 O(n)，但它支持动态查询，且有很多改进版的二叉查找树可以使树高为 O(log n)，从而将最坏效率降至 O(log n)，如AVL树、红黑树等。二叉搜索树的Java数据结构定义如下：
+// 根结点 private TreeNode root; // 二叉树结点类定义 private static class TreeNode { int val; TreeNode left; TreeNode right; TreeNode(int val) { this.val = val; } }  其中使用静态内部类TreeNode抽象表示二叉搜索树中的结点，同时将结点的数据定义为整型，当然如果要考虑扩展性，可以将之设定为Comparable类型，这样可以将任何一种的实现Comparable接口的类型数据作为val的类型，只需提供正确的compareTo()方法即可。</description>
+    </item>
+    
+    <item>
+      <title>Construction of Binary Heap and Heap Sort</title>
+      <link>https://jordonyang.github.io/post/alg/heap/heap_construction/</link>
+      <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/heap/heap_construction/</guid>
+      <description>前言 : 最近在看《算法导论》，从中感受到了算法世界的神奇，看完二叉堆后觉得实现起来应该不难，所以试着根据书中的伪代码用Java实现一遍。
+0x00. 概念 1. 基本定义 二叉堆是一个数组，可近似看成完全二叉树，表示堆的数组A通常包含两个属性：A.length（数组长度）和A.heap-size（堆的有效元素）
+private int[] heap; private int heapSize; public MyHeap(int[] array) { this.heap = array; this.heapSize = array.length; }  2. 通过下标定位亲属节点 由于堆可看做完全二叉树，所以可以通过某节点的下标获取其左右子节点和父节点
+private int left(int i) { return 2 * i + 1; } private int right(int i) { return 2 * i + 2; } private int parent(int i) { return (i - 1) / 2; }  3. 堆的一些性质  最大堆性质：A[PARENT[i] &amp;gt;= A[i]] 最小堆性质：A[PARENT[i] &amp;lt;= A[i]] 含有n个元素的堆的高为：小于等于lgn的最大整数 当用数组表示存储了n个元素的堆时，叶节点下标分别为 (n/2) + 1, (n / 2) + 2, &amp;hellip;, n（下标从１开始）  0x01.</description>
     </item>
     
   </channel>

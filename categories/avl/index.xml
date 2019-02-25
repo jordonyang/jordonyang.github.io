@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Avl on 临风博客</title>
+    <link>https://jordonyang.github.io/categories/avl/</link>
+    <description>Recent content in Avl on 临风博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <copyright>All rights reserved</copyright>
+    <lastBuildDate>Fri, 10 Nov 2017 17:17:36 +0800</lastBuildDate>
+    
+	<atom:link href="https://jordonyang.github.io/categories/avl/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Construction and Operations of AVL</title>
+      <link>https://jordonyang.github.io/post/alg/tree/bst/avl-bst_construction_operation/</link>
+      <pubDate>Fri, 10 Nov 2017 17:17:36 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/tree/bst/avl-bst_construction_operation/</guid>
+      <description>0x01. 定义 对于二叉查找树，当其高度最小时，其查找性能最优，虽然满二叉树和完全二叉树的高度都是最小的，但是在在插入或删除结点后维持其高度最小的代价较大。平衡二叉查找树是一种可兼顾查找与维护性能的折中方案。
+平衡二叉查找树又称AVL树，得名于它的发明者Adelson-Velsky和Landis，他们在1962年的论文《An algorithm for the organization of information》中公开了这一数据结构。
+平衡二叉树是具有以下性质的二叉查找树：它的左子树和右子树都是平衡二叉树，且左子树和右子树的高度差的绝对值不超过1。结点的平衡因子是它的左子树的高度减去它的右子树的高度（有时相反）。带有平衡因子1、0或 -1的结点被认为是平衡的。带有平衡因子-2或2的结点被认为是不平衡的，并需要重新平衡这棵树。平衡因子可以直接存储在每个结点中，或从可能存储在节点中的子树高度计算出来。
+平衡二叉树的结点类型如下所示，其中属性height表示子树的高度，用于计算平衡因子。
+private class Node { private final Key key; // the key private Value val; // the associated value private int height; // height of the subtree private int size; // number of nodes in subtree private Node left; // left subtree private Node right; // right subtree public Node(Key key, Value val, int height, int size) { this.</description>
+    </item>
+    
+  </channel>
+</rss>

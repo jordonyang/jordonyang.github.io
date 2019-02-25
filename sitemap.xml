@@ -3,8 +3,18 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/</loc>
+    <lastmod>2019-02-10T19:32:16+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/</loc>
+    <lastmod>2019-01-20T08:47:16+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jordonyang.github.io/post/alg/sorting/summary/</loc>
-    <lastmod>2019-02-02T22:54:44+08:00</lastmod>
+    <lastmod>2019-01-18T22:54:44+08:00</lastmod>
   </url>
   
   <url>
@@ -173,6 +183,16 @@
   </url>
   
   <url>
+    <loc>https://jordonyang.github.io/post/alg/tree/bst/avl-bst_construction_operation/</loc>
+    <lastmod>2017-11-10T17:17:36+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/post/alg/tree/bst/construction_common_operaton/</loc>
+    <lastmod>2017-10-21T21:52:45+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jordonyang.github.io/post/linux/tools/terminator/</loc>
     <lastmod>2017-10-01T11:22:17+08:00</lastmod>
   </url>
@@ -189,20 +209,32 @@
   </url>
   
   <url>
-    <loc>https://jordonyang.github.io/tags/algorithm/</loc>
-    <lastmod>2017-09-25T22:32:08+08:00</lastmod>
+    <loc>https://jordonyang.github.io/categories/algorithm/</loc>
+    <lastmod>2019-02-10T19:32:16+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jordonyang.github.io/categories/algorithm/</loc>
-    <lastmod>2019-02-02T22:54:44+08:00</lastmod>
+    <loc>https://jordonyang.github.io/categories/avl/</loc>
+    <lastmod>2017-11-10T17:17:36+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://jordonyang.github.io/tags/binary-tree/</loc>
     <lastmod>2018-09-18T20:25:43+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/tags/bst/</loc>
+    <lastmod>2017-11-10T17:17:36+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/categories/bst/</loc>
+    <lastmod>2017-11-10T17:17:36+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -220,7 +252,7 @@
   
   <url>
     <loc>https://jordonyang.github.io/categories/</loc>
-    <lastmod>2019-02-02T22:54:44+08:00</lastmod>
+    <lastmod>2019-02-10T19:32:16+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -238,7 +270,19 @@
   
   <url>
     <loc>https://jordonyang.github.io/categories/concurrency/</loc>
-    <lastmod>2019-01-15T09:18:23+08:00</lastmod>
+    <lastmod>2019-01-20T08:47:16+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/categories/data-structure/</loc>
+    <lastmod>2017-10-21T21:52:45+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/tags/des/</loc>
+    <lastmod>2018-10-09T22:06:42+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -251,6 +295,12 @@
   <url>
     <loc>https://jordonyang.github.io/categories/design-pattern/</loc>
     <lastmod>2018-12-06T19:42:27+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/tags/heap/</loc>
+    <lastmod>2017-09-25T22:32:08+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -268,7 +318,7 @@
   
   <url>
     <loc>https://jordonyang.github.io/categories/java/</loc>
-    <lastmod>2019-01-15T09:18:23+08:00</lastmod>
+    <lastmod>2019-01-20T08:47:16+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -287,6 +337,12 @@
   <url>
     <loc>https://jordonyang.github.io/categories/linux/</loc>
     <lastmod>2017-10-01T11:22:17+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/tags/memory-semantic/</loc>
+    <lastmod>2019-01-20T08:47:16+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -321,6 +377,12 @@
   </url>
   
   <url>
+    <loc>https://jordonyang.github.io/tags/optimized-lock/</loc>
+    <lastmod>2019-01-20T08:47:16+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://jordonyang.github.io/tags/os/</loc>
     <lastmod>2018-12-23T21:05:05+08:00</lastmod>
     <priority>0</priority>
@@ -334,7 +396,7 @@
   
   <url>
     <loc>https://jordonyang.github.io/post/</loc>
-    <lastmod>2019-02-02T22:54:44+08:00</lastmod>
+    <lastmod>2019-02-10T19:32:16+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -375,20 +437,38 @@
   </url>
   
   <url>
+    <loc>https://jordonyang.github.io/tags/selecting/</loc>
+    <lastmod>2019-02-10T19:32:16+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/categories/selecting/</loc>
+    <lastmod>2019-02-10T19:32:16+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://jordonyang.github.io/tags/sorting/</loc>
-    <lastmod>2019-02-02T22:54:44+08:00</lastmod>
+    <lastmod>2019-01-18T22:54:44+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://jordonyang.github.io/categories/sorting/</loc>
-    <lastmod>2019-02-02T22:54:44+08:00</lastmod>
+    <lastmod>2019-01-18T22:54:44+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://jordonyang.github.io/tags/ssl/</loc>
     <lastmod>2018-12-10T23:42:48+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jordonyang.github.io/tags/synchronized/</loc>
+    <lastmod>2019-01-20T08:47:16+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -418,7 +498,7 @@
   
   <url>
     <loc>https://jordonyang.github.io/</loc>
-    <lastmod>2019-02-02T22:54:44+08:00</lastmod>
+    <lastmod>2019-02-10T19:32:16+08:00</lastmod>
     <priority>0</priority>
   </url>
   

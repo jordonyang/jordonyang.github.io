@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        <meta name="twitter:card" content="summary"/>
+    
+
+
+
+<meta name="twitter:title" content="Memory Semantic and Lock Optimizing of Synchronized"/>
+<meta name="twitter:description" content="深入理解synchronized内存语义及锁优化"/>
+<meta name="twitter:site" content="@"/>
+
+
+
+  	<meta property="og:title" content="Memory Semantic and Lock Optimizing of Synchronized &middot; 临风博客" />
+  	<meta property="og:site_name" content="临风博客" />
+  	<meta property="og:url" content="https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/" />
+
+    
+        
+            <meta property="og:image" content="https://www.bing.com/ImageResolution.aspx?w=1366&h=768"/>
+        
+    
+
+    
+    <meta property="og:description" content="深入理解synchronized内存语义及锁优化" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2019-01-20T08:47:16&#43;08:00" />
+
+    
+    <meta property="article:tag" content="optimized-lock" />
+    
+    <meta property="article:tag" content="memory semantic" />
+    
+    <meta property="article:tag" content="synchronized" />
+    
+    
+
+    <title>Memory Semantic and Lock Optimizing of Synchronized &middot; 临风博客</title>
+
+    
+    <meta name="description" content="深入理解synchronized内存语义及锁优化" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1155590&size=64">
+
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="https://jordonyang.github.io/css/hugo.css" />
+    
+    
+    <script>
+	  	 var _hmt = _hmt || [];
+	     (function() {
+	         var hm = document.createElement("script");
+	         hm.src = "https://hm.baidu.com/hm.js?443ffc2fb7ecc22f8d3126f86579cc93";
+	         var s = document.getElementsByTagName("script")[0]; 
+	         s.parentNode.insertBefore(hm, s);
+	    })();
+   </script>
+
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/github-gist.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://jordonyang.github.io/index.xml" rel="alternate" type="application/rss+xml" title="临风博客" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.47.1" />
+
+    <link rel="canonical" href="https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://jordonyang.github.io/images/logo.jpg
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://jordonyang.github.io/images/logo.jpg,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://jordonyang.github.io/,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ]
+    },
+    "headline": Memory Semantic and Lock Optimizing of Synchronized,
+    "name": Memory Semantic and Lock Optimizing of Synchronized,
+    "wordCount": 355,
+    "timeRequired": "PT2M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/,
+    "datePublished": 2019-01-20T08:47Z,
+    "dateModified": 2019-01-20T08:47Z,
+    
+    "keywords": optimized-lock, memory semantic, synchronized,
+    "description": 深入理解synchronized内存语义及锁优化,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">临风博客</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/">首页</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/tags/">标签</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/">分类</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/about">关于我</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/timeline/">时间线</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/books/">书籍推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/windows_tools/">Windows工具推荐</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/linux_tools/">Linux工具推荐</a>
+            </li>
+        
+            </br></br><strong>归档</strong>
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/vm">JVM</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/java/concurrency">并发</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/mysql/base">MySQL</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/sec/crypto">密码学</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">架构</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://jordonyang.github.io/category/architecture/base">拆轮工</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://jordonyang.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  <header class="main-header post-head" style="background-image: url(https://www.bing.com/ImageResolution.aspx?w=1366&amp;h=768)">
+
+<nav class="main-nav overlay clearfix">
+
+  
+      <a class="blog-logo" href="https://jordonyang.github.io/"><img src="https://jordonyang.github.io/images/logo.jpg" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+  
+  <div class="vertical">
+        <div class="main-header-content inner">
+            <h1 class="page-title">Memory Semantic and Lock Optimizing of Synchronized</h1>
+            <br>
+            
+
+
+    <a class="bloglogo" href="https://github.com/jordonyang" target="_blank">
+    <span class="icon-github" style="color:white;font-size:2em"></span>
+    </a>
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</header>
+
+
+
+<main class="content" role="main">
+
+  <article class="post post">
+    
+    <header class="post-header">
+        <h1 class="post-title">Memory Semantic and Lock Optimizing of Synchronized</h1>
+        <em style="color: blue">深入理解synchronized内存语义及锁优化</em>
+
+        <section class="post-meta">
+        
+          
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/optimized-lock/">#optimized-lock</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/memory-semantic/">#memory semantic</a></span> &nbsp; &nbsp;  
+         
+          <span class="post-tag small"><a href="https://jordonyang.github.io//tags/synchronized/">#synchronized</a></span> &nbsp; &nbsp;  
+         
+        
+
+          <time class="post-date" datetime="2019-01-20T08:47:16&#43;08:00">
+            2019/Jan/20
+          </time>
+
+        
+         </section>
+    </header>
+      <br>
+    <section class="post-content">
+      
+
+<h3 id="0x00-toc">0x00. TOC</h3>
+
+<ul>
+<li><a href="./#0x01-字节码分析">0x01.字节码分析</a></li>
+<li><a href="./#0x02-锁优化">0x02.锁优化</a>
+
+<ul>
+<li><a href="./#1-自旋锁">1.自旋锁</a></li>
+<li><a href="./#2-锁消除">2.锁消除</a></li>
+<li><a href="./#3-锁粗化">3.锁粗化</a></li>
+<li><a href="./#4-轻量级锁">4.轻量级锁</a></li>
+<li><a href="./#4-1-加锁过程">4.1 加锁过程</a></li>
+<li><a href="./#4-2-解锁过程">4.2 解锁过程</a></li>
+<li><a href="./#5-偏向锁">5.偏向锁</a></li>
+<li><a href="./#6-锁的优缺点对比">6.锁的优缺点对比</a></li>
+</ul></li>
+<li><a href="./#0x03-参考">0x03.参考</a></li>
+<li><a href="./#0x04-相关文章">0x04.相关文章</a></li>
+</ul>
+
+<h3 id="0x01-字节码分析">0x01. 字节码分析</h3>
+
+<p>先来看下利用<code>synchronized</code>实现同步的基础：Java中的每一个对象都可以作为锁。具体表现为以下3种形式。</p>
+
+<ul>
+<li>普通同步方法：锁是<code>当前实例对象</code>。</li>
+<li>静态同步方法：锁是当前类的<code>Class对象</code>。</li>
+<li>同步方法块：锁是<code>synchronized</code>括号里配置的对象。</li>
+</ul>
+
+<p>从<code>JVM Spec</code>中可以看到<code>synchonized</code>在 JVM 里的实现原理，JVM 基于进入和退出<code>Monitor对象</code>来实现方法同步和代码块同步，但两者的实现细节不一样。以下面代码为例：</p>
+
+<pre><code class="language-java">package org.jordon.sync;
+import java.util.ArrayList;
+import java.util.List;
+public class SyncByteCodeTest {
+    private static List&lt;String&gt; list = new ArrayList&lt;&gt;();
+    //当前实例的锁
+    public synchronized void add1(String s){
+        list.add(s);
+    }
+    //SynTest.class 锁
+    public static synchronized void add2(String s){
+        list.add(s);
+    }
+    //SynTest.class 锁
+    public void add3(String s){
+        synchronized(SyncByteCodeTest.class){
+            list.add(s);
+        }
+    }
+    //当前实例的锁
+    public void add4(String s){
+        synchronized(this){
+            list.add(s);
+        }
+    }
+}
+</code></pre>
+
+<p><strong>代码块同步是使用<code>monitorenter</code>和<code>monitorexit</code>指令实现的</strong>，对于使用同步代码块进行同步的<code>add3</code>和<code>add4</code>两个方法，其中<code>add1</code>和<code>add4</code>均以当前实例作为锁，而<code>add2</code>和<code>add3</code>则均以<code>SyncByteCodeTest</code>的<code>Class对象</code>作为锁，下面看下同步代码块的字节码，可以见到<code>add3</code>和<code>add4</code>的字节码指令大致一样，差别主要在第一句：<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<ul>
+<li>在<code>add3</code>中使用同步代码块锁定<code>SyncByteCodeTest</code>的<code>Class对象</code>，所以对应操作先是<code>ldc #4</code>，对应的语义是将在第四个常量池项目中的<code>int</code>、<code>long</code>或<code>String</code>类型数据从常量池中推送到栈顶，而对应的数据经过<code>CONSTANT_Class_info</code>项目中<code>name_index</code>指向一个<code>bytes</code>为<code>org/jordon/sync/SyncByteCodeTest</code>的<code>CONSTANT_Utf8_info</code>，所以说了这么多是把字符串<code>org/jordon/sync/SyncByteCodeTest</code>，即当前类的全限定名推送到栈顶。接下来是<code>dup</code>指令，查询虚拟机字节码指令表可知，该指令意义是<code>复制栈顶数值并将复制值压入栈顶</code>，</li>
+<li>在<code>add4</code>中同样使用同步代码块，锁定的是<code>this</code>引用指向的<code>SyncByteCodeTest</code>对象，所以很自然地，将第一个引用类型的数据推送到栈顶，而一个非静态方法中默认的第零个引用变量用来存储的恰恰是<code>this</code>引用信息，即此处将<code>this</code>引用的数据推送到栈顶。</li>
+<li>在获取到待锁定的对象的相关信息后，<code>add3</code>和<code>add4</code>两个方法都是把锁信息复制一份存到一个本地变量中，估计是标记该方法的<code>monitor</code>为<code>SyncByteCodeTest</code>的<code>Class</code>对象或者<code>this</code>引用，下面的<code>monitorenter</code>指令则是某个线程尝试去获取该<code>monitor</code>的所有权。</li>
+<li>当线程咋临界区的操作结束后，将释放独占的<code>monitor</code>，这时先将方法的<code>monitor</code>信息推送到栈顶，即<code>aload_2</code>指令，留待<code>monitorexit</code>指令进行作一些判断。</li>
+</ul>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/sunc/bytecode2.png" alt="img" /></p>
+
+<p><code>monitorenter</code>指令是在编译后插入到同步代码块的开始位置，而<code>monitorexit</code>是插入到方法结束处和异常处，JVM 要保证每个<code>monitorenter</code>必须有对应的<code>monitorexit</code>与之配对。任何对象都有一个 monitor 与之关联，当且一个 monitor 被持有后，它将处于锁定状态。线程执行到<code>monitorenter</code>指令时，将会尝试获取对象所对应的<code>monitor</code>的所有权，即尝试获得对象的锁。下面基于 JVMS 更进一步阐述：<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<ul>
+<li><strong>monitorenter</strong>: 每个对象都与一个<code>monitor</code>类型的数据进行关联，为了实现某个临界区的同步需要各线程竞争与该临界区绑定的<code>monitor</code>，当某个临界区相应的<code>monitor</code>被某个线程占用后，<code>monitor</code>或者说临界区处于锁定状态，其他尝试获取该<code>monitor</code>的线程则必须遵循同步的<code>忙则等待原则</code>。获取<code>monitor</code>的过程大致如下
+
+<ul>
+<li>如果<code>monitor</code>的进入数为0，则该线程直接进入<code>monitor</code>，然后将进入数设置为1，该线程即为<code>monitor</code>的所有者和临界区的独占者。</li>
+<li>如果当前线程已经占有该<code>monitor</code>，即为重入，直接将<code>monitor</code>的进入数加1。</li>
+<li>如果其他线程已经占用了<code>monitor</code>，则该线程进入阻塞状态，直到<code>monitor</code>的进入数为0，再重新尝试获取<code>monitor</code>的所有权。</li>
+</ul></li>
+<li><strong>monitorexit</strong>: 执行该操作的线程必须是临界区<code>monitor</code>的持有者，指令执行时，<code>monitor</code>的进入数减1，如果减1后进入数为0，那线程退出<code>monitor</code>，不再是这个<code>monitor</code>的所有者。其他被这个<code>monitor</code>阻塞的线程可以尝试去获取这个<code>monitor</code>的所有权。</li>
+</ul>
+
+<p>通过看<code>add1</code>和<code>add2</code>这两个同步方法的字节码指令集可以发现，其中并没有使用<code>monitorenter</code>和<code>monitorexit</code>的指令对，而只是简单地设置方法访问标记<code>ACC_SYNCHRONIZED</code>和<code>ACC_STATIC</code>，即方法同步在虚拟机指令层面是使用另外一种不同于代码块同步的方式实现的，细节在JVM规范里并没有详细说明。但是，方法的同步同样可以使用这两个指令来实现，本质上都是对一个对象的监视器进行获取。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/sunc/bytecode1.png" alt="img" /></p>
+
+<p>需要注意的是<code>add1</code>和<code>add4</code>使用同一个对象作为锁，所以它们彼此互斥，同理<code>add2</code>和<code>add3</code>也彼此互斥，但是前两者中的任何一个与后两者中的任何一个都不互斥。有一个面试题是：当一个线程进入某个对象的<code>synchronized</code>实例方法后，其他线程能否进入此对象的其他方法？</p>
+
+<p>答案自然是可以的，如果此对象的其他方法没有使用<code>synchronized</code>的话。当然对于静态的同步方法，它们属于类，严格意义上并不在<code>对象的其他方法</code>这个定义范畴，若真要考虑，由于类同步方法锁住是类的<code>Class对象</code>，此时其他线程理所当然地可以尝试获取一个不同于<code>this</code>的锁。</p>
+
+<h3 id="0x02-锁优化">0x02. 锁优化</h3>
+
+<p>为了在线程间更高效地访问共享变量、以及解决竞争问题，从而提高程序执行效率，JDK1.6引入如适应性自旋（Adaptive Spinning）、锁消除（Lock Elimination）、锁粗化（Lock Coarsening）、轻量锁（Lightweight Locking）和偏向锁（Biased Locking）等锁优化技术。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<h4 id="1-自旋锁">1. 自旋锁</h4>
+
+<p>互斥同步进入阻塞状态的开销都很大，应该尽量避免。在许多应用中，共享数据的锁定状态只会持续很短的一段时间。自旋锁的思想是<strong>让一个线程在请求一个共享数据的锁时执行忙循环（自旋）一段时间，如果在这段时间内能获得锁，就可以避免进入阻塞状态</strong>。</p>
+
+<p>自旋锁虽然能避免进入阻塞状态从而减少开销，但是它需要进行忙循环操作占用 CPU 时间，它只适用于共享数据的锁定状态很短的场景。</p>
+
+<p>在 JDK 1.6 中引入了自适应的自旋锁。自适应意味着自旋的次数不再固定了，而是由前一次在同一个锁上的自旋次数及锁的拥有者的状态来决定。如果一个刚刚获得过锁的线程，第二次来自旋等待，此时另一个线程正在运行，则虚拟机认为这次自旋很可能再次成功，进而它将允许自旋等待持续更长的时间。</p>
+
+<h4 id="2-锁消除">2. 锁消除</h4>
+
+<p>锁消除是指虚拟机即时编译器对于被检测出不可能存在竞争的共享数据的锁进行消除。主要是通过<code>逃逸分析</code>来支持，如果堆上的共享数据不可能逃逸出去被其它线程访问到，那么就可以把它们当成私有数据对待，也就可以将它们的锁进行消除。对于一些看起来没有加锁的代码，其实隐式的加了很多锁。例如下面的字符串拼接代码就隐式加了锁：<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<pre><code class="language-java">public static String concatString(String s1, String s2, String s3) {
+    return s1 + s2 + s3;
+}
+</code></pre>
+
+<p>String 是一个不可变的类，编译器会对 String 的拼接自动优化。在 JDK 1.5 后，会转化为 StringBuffer 对象的连续 append() 操作：</p>
+
+<pre><code class="language-java">public static String concatString(String s1, String s2, String s3) {
+    StringBuffer sb = new StringBuffer();
+    sb.append(s1);
+    sb.append(s2);
+    sb.append(s3);
+    return sb.toString();
+}
+</code></pre>
+
+<p>因为 StringBuffer 每个 append() 方法使用 synchronized 修饰。虚拟机观察变量 sb，很快就会发现它的动态作用域被限制在 concatString() 方法内部。也就是说，sb 的所有引用永远不会逃逸到 concatString() 方法之外，其他线程无法访问到它，因此可以进行消除。</p>
+
+<h4 id="3-锁粗化">3. 锁粗化</h4>
+
+<p>尽管同步的使用原则之一是尽量限制其作用范围，但如果在小范围内一系列的连续操作都对同一个对象反复加锁和解锁，频繁的加锁操作就会导致性能损耗。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<p>上面有关锁消除的示例代码中连续的 append() 方法就属于这类情况。如果虚拟机探测到由这样的一串零碎的操作都对同一个对象加锁，将会把加锁的范围扩展（粗化）到整个操作序列的外部。对于上面关于锁消除的示例代码就是扩展到第一个 append() 操作之前直至最后一个 append() 操作之后，这样只需要加锁一次就可以了。</p>
+
+<h4 id="4-轻量级锁">4. 轻量级锁</h4>
+
+<p>JDK 1.6 引入了偏向锁和轻量级锁，从而让锁拥有了四个状态：<code>无锁状态（unlocked）</code>、<code>偏向锁状态（biasble）</code>、<code>轻量级锁状态（lightweight locked）</code>和<code>重量级锁状态（inflated）</code>。</p>
+
+<p>以下是 HotSpot 虚拟机对象头的内存布局，这些数据被称为<code>Mark Word</code>。其中 tag bits 对应了五个状态，这些状态在右侧的 state 表格中给出。</p>
+
+<p><img src="../../../../../images/concurrency/mark_word.png" alt="img" /></p>
+
+<h5 id="4-1-加锁过程">4.1 加锁过程</h5>
+
+<p>对于轻量级锁，当线程进入同步块时，如果同步对象没有被锁定（锁标记为 01），下图左侧所示，虚拟机将现在当前线程的栈帧上创建一个称为 Lock Record 的区域，用于存放锁对象的 Mark Word 的拷贝，而右侧是一个锁对象，包含了 Mark Word 和其它信息。</p>
+
+<p><img src="../../../../../images/concurrency/lock_record.png" alt="img" /></p>
+
+<p>轻量级锁是相对于传统的重量级锁而言，它使用 CAS 操作来避免重量级锁使用互斥量的开销。对于绝大部分的锁，在整个同步周期内都是不存在竞争的，因此也就不需要都使用互斥量进行同步，可以先采用 CAS 操作进行同步，如果 CAS 失败了再改用互斥量进行同步。</p>
+
+<p>当尝试获取一个锁对象时，如果锁对象标记为 01，说明锁对象的锁未锁定（unlocked）状态。此时虚拟机在当前线程的虚拟机栈中创建 Lock Record，然后使用 CAS 操作将对象的 Mark Word 更新为 Lock Record 指针。如果 CAS 操作成功了，那么线程就获取了该对象上的锁，并且对象的 Mark Word 的锁标记变为 00，表示该对象处于轻量级锁状态。</p>
+
+<p><img src="../../../../../images/concurrency/lightweight_lock.png" alt="img" /></p>
+
+<p>如果 CAS 操作失败了，虚拟机首先会检查锁对象的 Mark Word 是否指向当前线程的虚拟机栈，如果是的话说明当前线程已经拥有了这个锁对象，那就可以直接进入同步块继续执行，否则说明这个锁对象已经被其他线程线程抢占了。如果有两条以上的线程争用同一个锁，那轻量级锁就不再有效，要膨胀为重量级锁。</p>
+
+<h5 id="4-2-解锁过程">4.2 解锁过程</h5>
+
+<p>解锁过程也是通过 CAS 操作来进行的，如果对象的 Mark Word 仍然指向着线程的锁记录，那就用 CAS 操作把 Displaced Mark Word 替换回锁对象，如果替换成功，整个同步过程就完成了。如果替换失败，说明有其他线程尝试过获取该锁，那就要在释放锁的同时，唤醒被挂起的线程。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<p>轻量级锁能提升程序同步性能的依据是“对于绝大部分的锁，在整个同步周期内都是不存在竞争的”，这是一个经验数据。<strong>在没有锁竞争的情况下，轻量级锁使用 CAS 操作避免了使用互斥量的开销，但如果存在锁竞争，除了互斥量的开销外，还额外发生了CAS操作，因此在有竞争的情况下，轻量级锁会比传统的重量级锁更慢。</strong></p>
+
+<h4 id="5-偏向锁">5. 偏向锁</h4>
+
+<p>偏向锁也是JDK 1.6中引入的一项锁优化，它的目的是<strong>消除数据在无竞争情况下的同步原语，进一步提高程序的运行性能。 如果说轻量级锁是在无竞争的情况下使用 CAS操作去消除同步使用的互斥量，那偏向锁就是在无竞争的情况下把整个同步都消除掉，连CAS操作都不做了。</strong></p>
+
+<p>偏向锁的“偏”，有偏心、偏袒的意味，即该锁会<strong>偏向于第一个获得它的线程</strong>，如果在接下来的执行过程中，该锁没有被其他的线程获取，则持有偏向锁的线程将永远不需要再进行同步。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<p>对于偏向锁的原理理，假设当前虚拟机启用了偏向锁（启用参数-XX：+UseBiasedLocking，这是JDK 1.6的默认值），那么，当锁对象第一次被线程获取的时候，虚拟机将会把对象头中的标志位设为“01”，即偏向模式。 同时使用 CAS 操作把获取到这个锁的线程的ID记录在锁对象的 Mark Word 之中，如果 CAS 操作成功，持有偏向锁的线程以后每次进入这个锁相关的同步块时，虚拟机都可以不再进行任何同步操作（例如 Locking、 Unlocking 及对 Mark Word 的 Update 等）。</p>
+
+<p>当有另外一个线程去尝试获取这个锁时，偏向模式就宣告结束。根据锁对象目前是否处于被锁定的状态，撤销偏向（Revoke Bias）后恢复到未锁定（标志位为“01”）或轻量级锁定（标志位为“00”）的状态，后续的同步操作就如上面介绍的轻量级锁那样执行。偏向锁、轻量级锁的状态转化及锁对象 Mark Word 的关系如下图所示：</p>
+
+<p><img src="../../../../../images/concurrency/bias_loack.png" alt="bias_loack.png" /></p>
+
+<p>偏向锁可以提高带有同步但无竞争的程序性能，但<strong>如果程序中大多数的锁总是被多个不同的线程访问，那偏向模式就是多余的，且会带来额外的锁撤销的消耗</strong>。在具体问题具体分析的前提下，有时候使用参数<code>-XX：-UseBiasedLocking</code>来禁止偏向锁优化反而可以提升性能。<sup><a style="color:blue;text-decoration:none" href="#0x00-toc">TOC</a></sup></p>
+
+<h4 id="6-锁的优缺点对比">6. 锁的优缺点对比</h4>
+
+<table>
+<thead>
+<tr>
+<th>锁类型</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>偏向锁</td>
+<td>加锁和解锁不需要额外的消耗，和执行非同步方法比仅存在纳秒级的差距</td>
+<td>如果线程间存在锁竞争，会带来额外的锁撤销的消耗</td>
+<td>适用于只有一个线程访问同步块场景</td>
+</tr>
+
+<tr>
+<td>轻量级锁</td>
+<td>线程使用 CAS 获取，竞争的线程不会阻塞，提高了程序的响应速度</td>
+<td>在多线程竞争情况下将转换为重量级锁，加上自旋会消耗CPU，会显得更慢</td>
+<td>追求响应时间。同步块执行速度非常快</td>
+</tr>
+
+<tr>
+<td>重量级锁</td>
+<td>线程竞争时将阻塞而不使用自旋，不会消耗CPU</td>
+<td>线程阻塞，响应时间缓慢</td>
+<td>追求吞吐量。同步块执行速度较长</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="0x03-参考">0x03. 参考</h3>
+
+<ul>
+<li>Oracle: <a href="https://docs.oracle.com/javase/specs/jls/se7/html/index.html">Java Language Specification</a></li>
+<li>Oracle Blog: <a href="https://blogs.oracle.com/dave/biased-locking-in-hotspot">Biased Locking in HotSpot</a></li>
+<li>《Java并发编程的艺术》（方腾飞、魏鹏、程晓明著，机械工业出版社）</li>
+<li>《深入理解Java虚拟机》（第二版，周志明著，机械工业出版社）</li>
+<li>《Java并发编程实战》（Doug Lea 等著，童云兰等译，机械工业出版社）</li>
+<li>《Java编程思想》（Bruce Eckel 著，陈昊鹏译，机械工业出版社）</li>
+<li><a href="https://docs.oracle.com/javase/7/docs/technotes/guides/vm/performance-enhancements-7.html#compressedOop">Java HotSpot™ Virtual Machine Performance Enhancements</a></li>
+</ul>
+
+<h3 id="0x04-相关文章">0x04. 相关文章</h3>
+
+<ul>
+<li><a href="../../../vm/bytecode_base">Java字节码结构及解析过程</a></li>
+</ul>
+
+    </section>
+
+  <footer class="post-footer">
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://jordonyang.github.io/" style="background-image: url(/images/logo.jpg)"><span class="hidden">临风's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <div class="author-meta">
+    <span>                                         </span> 
+    <span class="author-location icon-location">Java, Security developer</span>
+    <span class="author-link icon-link"><a href="https://jordonyang.github.io/">https://jordonyang.github.io/</a></span>
+    <span class="author-location icon-location">Guangzhou, China</span>
+    <span class="author-profile" style="width:100%;line-height:1.5em;">本站所有文章如未说明均为原创，请勿随意转载，如需转载请联系我 (<a href="mailto:hujiawei090807@gmail.com">linfengit@qq.com</a>)</span>
+  </div>
+</section>
+
+
+
+  	
+  	
+<aside class="read-next">
+
+      
+      <span class="readmore-prev readmore-meta">PREV: <a href="https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/"><h4>QuickSelect with BFPRT to Conquer Top-K Problem</h4></a></span>
+      </a>
+     
+
+     
+ 
+     <span class="readmore-next readmore-meta">NEXT: <a href="https://jordonyang.github.io/post/alg/sorting/summary/"><h4>Summary of Sorting Algorithms</h4></a></span>
+  
+
+</aside>
+
+
+
+
+    
+
+
+
+
+    
+    
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjU2My8xMzA5OA==">
+<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+</script>
+<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+    
+  </footer>
+</article>
+
+
+
+	
+</main>
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">临风博客</a> All rights reserved</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://jordonyang.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

@@ -125,7 +125,7 @@
     },
     "headline": Memory Semantics and Implementation of Volatile,
     "name": Memory Semantics and Implementation of Volatile,
-    "wordCount": 335,
+    "wordCount": 334,
     "timeRequired": "PT2M",
     "inLanguage": {
       "@type": "Language",
@@ -459,8 +459,7 @@ public class VolatileBarrierExample {
 }
 </code></pre>
 
-<p>针对<code>readAndWrite()</code>方法，编译器在生成字节码时可以做如下的优化，即根据程序的实际情况省略一些冗余的内存屏障以加快执行效率，需要注意的是，最后的<code>StoreLoad屏障</code>不能省略。因为第二个<code>volatile写</code>之后，方法立即return。此时编
-译器可能无法准确断定后面是否会有<code>volatile读或写</code>，为了安全起见，编译器通常会在这里插入一个<code>StoreLoad屏障</code>。</p>
+<p>针对<code>readAndWrite()</code>方法，编译器在生成字节码时可以做如下的优化，即根据程序的实际情况省略一些冗余的内存屏障以加快执行效率，需要注意的是，最后的<code>StoreLoad屏障</code>不能省略。因为第二个<code>volatile写</code>之后，方法立即return。此时编译器可能无法准确断定后面是否会有<code>volatile读或写</code>，为了安全起见，编译器通常会在这里插入一个<code>StoreLoad屏障</code>。</p>
 
 <p><img src="https://pic-1254257477.cos.ap-chengdu.myqcloud.com/volatile/volatile_memory_barriers1.png" alt="img" /></p>
 

@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Tue, 15 Jan 2019 09:18:23 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 20 Jan 2019 08:47:16 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Memory Semantic and Lock Optimizing of Synchronized</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/</link>
+      <pubDate>Sun, 20 Jan 2019 08:47:16 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/</guid>
+      <description>0x00. TOC  0x01.字节码分析 0x02.锁优化  1.自旋锁 2.锁消除 3.锁粗化 4.轻量级锁 4.1 加锁过程 4.2 解锁过程 5.偏向锁 6.锁的优缺点对比  0x03.参考 0x04.相关文章  0x01. 字节码分析 先来看下利用synchronized实现同步的基础：Java中的每一个对象都可以作为锁。具体表现为以下3种形式。
+ 普通同步方法：锁是当前实例对象。 静态同步方法：锁是当前类的Class对象。 同步方法块：锁是synchronized括号里配置的对象。  从JVM Spec中可以看到synchonized在 JVM 里的实现原理，JVM 基于进入和退出Monitor对象来实现方法同步和代码块同步，但两者的实现细节不一样。以下面代码为例：
+package org.jordon.sync; import java.util.ArrayList; import java.util.List; public class SyncByteCodeTest { private static List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;&amp;gt;(); //当前实例的锁 public synchronized void add1(String s){ list.add(s); } //SynTest.class 锁 public static synchronized void add2(String s){ list.add(s); } //SynTest.class 锁 public void add3(String s){ synchronized(SyncByteCodeTest.</description>
+    </item>
     
     <item>
       <title>Memory Semantics and Implementation of Volatile</title>
@@ -266,7 +277,20 @@ package reversecompile; import java.util.ArrayList; import java.util.List; publi
     </item>
     
     <item>
-      <title>Construct Binary Heap with Java</title>
+      <title>Construction and Operatons of BST</title>
+      <link>https://jordonyang.github.io/post/alg/tree/bst/construction_common_operaton/</link>
+      <pubDate>Sat, 21 Oct 2017 21:52:45 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/tree/bst/construction_common_operaton/</guid>
+      <description>0x00. TOC  0x01.BST结构 0x02.基本操作  1.插入元素 2.判存 3.删除结点 4.求树的最大深度 5.搜索与遍历  0x03.参考  0x01. BST结构 二叉搜索树（BST, Binary Searching Tree）也称为二叉查找树、有序二叉树（ordered binary tree）或排序二叉树（sorted binary tree），是指一棵空树或者具有下列性质的二叉树：TOC
+ 若任意节点的左子树不空，则左子树上所有节点的值均小于它的根节点的值； 若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值； 任意节点的左、右子树也分别为二叉查找树； 没有键值相等的节点。  二叉查找树相比于其他数据结构的优势在于查找、插入的时间复杂度较低。为 O(log n)。二叉查找树是基础性数据结构，用于构建更为抽象的数据结构，如集合、多重集、关联数组等。
+二叉查找树的查找过程和次优二叉树类似，通常采取二叉链表作为二叉查找树的存储结构。中序遍历二叉查找树可得到一个关键字的有序序列，一个无序序列可以通过构造一棵二叉查找树变成一个有序序列，构造树的过程即为对无序序列进行查找的过程。每次插入的新的结点都是二叉查找树上新的叶子结点，在进行插入操作时，不必移动其它结点，只需改动某个结点的指针，由空变为非空即可。搜索、插入、删除的复杂度等于树高，期望 O(log n)，最坏 O(n)（数列有序，树退化成线性表）。
+虽然二叉查找树的最坏效率是 O(n)，但它支持动态查询，且有很多改进版的二叉查找树可以使树高为 O(log n)，从而将最坏效率降至 O(log n)，如AVL树、红黑树等。二叉搜索树的Java数据结构定义如下：
+// 根结点 private TreeNode root; // 二叉树结点类定义 private static class TreeNode { int val; TreeNode left; TreeNode right; TreeNode(int val) { this.val = val; } }  其中使用静态内部类TreeNode抽象表示二叉搜索树中的结点，同时将结点的数据定义为整型，当然如果要考虑扩展性，可以将之设定为Comparable类型，这样可以将任何一种的实现Comparable接口的类型数据作为val的类型，只需提供正确的compareTo()方法即可。</description>
+    </item>
+    
+    <item>
+      <title>Construction of Binary Heap and Heap Sort</title>
       <link>https://jordonyang.github.io/post/alg/heap/heap_construction/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       

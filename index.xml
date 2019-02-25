@@ -7,15 +7,42 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
     <copyright>All rights reserved</copyright>
-    <lastBuildDate>Sat, 02 Feb 2019 22:54:44 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 10 Feb 2019 19:32:16 +0800</lastBuildDate>
     
 	<atom:link href="https://jordonyang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>QuickSelect with BFPRT to Conquer Top-K Problem</title>
+      <link>https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/</link>
+      <pubDate>Sun, 10 Feb 2019 19:32:16 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/selecting/quickselect_bfprt/</guid>
+      <description>0x01. 简介 top-K问题：在一堆数中求其前 k 大或前 k 小的问题，简称 TOP-K 问题，例如在LeetCode上就有这么一道题：215. Kth Largest Element in an Array。在首次接触 TOP-K 问题时，第一反应估计是用快速排序对所有数据进行一次排序，然后取其前 k 即可，但是这么做有两个问题：
+ 快速排序的平均复杂度为 O(nlgn)，但最坏时间复杂度为 O(n2)，不能始终保证较好的复杂度； 我们只需要前 k 大的，而对其余不需要的数也进行了排序，浪费了大量排序时间。  除此之外，也可以选择堆排序，维护一个大小为 k 的堆，时间复杂度为 O(nlogk)。那是否还存在更有效的方法呢？目前用于解决TOP-K问题较为普遍的算法是带有BFPRT 算法的QuickSelect算法。
+QuickSelect算法：用于在一个乱序的集合中找到第k小的元素，即用于解决top-K问题。与快速排序算法一样，作者也是Tony Hoare，同时它在实际应用中也十分高效，有着良好的平均性能，不过也有着较差的最坏性能。
+大体上，quickselect算法使用了与快排一样的过程，选择一个集合元素作为中轴点，基于中轴点把数据分成相应地大于或小于中轴点的两块，然而不同于快排在两个分块中递归排序，quickselect算法在确定要查找的元素在哪一块后，会只在那一块中递归选择，这样就将平均复杂度从 O(log n) 降到了 O(n)，尽管最坏复杂度还是 O(n2)。
+与快排一样，quickselect算法通常也是被实现为原地算法，除了用于解决top-K问题，它还可以用于局部排序，本文不作讨论。
+BFPRT 算法：又称为中位数的中位数算法（Median of medians），该算法由 Blum、Floyd、Pratt、Rivest、Tarjan 提出，最坏时间复杂度为O(n)，是一种非精确的选择算法，主要用于为quickselect算法其他选择算法提供一个良好的中轴点，从而解决top-k问题。BFPRT 算法能在有限的线性级的时间内找到一个大致合适的中位数，当该中位数在quickselect算法中用作一个优化过的中轴点，quickselect算法在最坏情况下的复杂度将从平方级降到线性级。
+0x02. 实现与解决 为了保证算法的线性运行时间，我们需要设计另一种方法，使所选的主元保证“接近”给定数字的中值。通过选择一个接近中值的主元，我们可以保证，在每次迭代中，我们将元素的搜索数量减少(几乎)一半。
+ 将n个元素划为⌊n / 5⌋组，每组5个，至多只有一组由n mod 5个元素组成。 寻找这⌈n / 5⌉个组中每一个组的中位数，这个过程可以用插入排序。 对步骤2中的⌈n / 5⌉个中位数，重复步骤1和步骤2，递归下去，直到剩下一个数字。 最终剩下的数字即为pivot，把大于它的数全放左边，小于等于它的数全放右边。 判断pivot的位置与k的大小，有选择的对左边或右边递归。  上面的步骤中1~3步为BFPRT 算法的过程，用于为quickselect算法选择一个好的中轴点，而4~5步则是quickselect算法的内容，其实BFPRT 算法就相当于是quickselect算法的一个辅助插件一般。下面先介绍QuickSelect算法的分区与选择过程。</description>
+    </item>
+    
+    <item>
+      <title>Memory Semantic and Lock Optimizing of Synchronized</title>
+      <link>https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/</link>
+      <pubDate>Sun, 20 Jan 2019 08:47:16 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/java/concurrency/sync/memory_semantic_optimizing/</guid>
+      <description>0x00. TOC  0x01.字节码分析 0x02.锁优化  1.自旋锁 2.锁消除 3.锁粗化 4.轻量级锁 4.1 加锁过程 4.2 解锁过程 5.偏向锁 6.锁的优缺点对比  0x03.参考 0x04.相关文章  0x01. 字节码分析 先来看下利用synchronized实现同步的基础：Java中的每一个对象都可以作为锁。具体表现为以下3种形式。
+ 普通同步方法：锁是当前实例对象。 静态同步方法：锁是当前类的Class对象。 同步方法块：锁是synchronized括号里配置的对象。  从JVM Spec中可以看到synchonized在 JVM 里的实现原理，JVM 基于进入和退出Monitor对象来实现方法同步和代码块同步，但两者的实现细节不一样。以下面代码为例：
+package org.jordon.sync; import java.util.ArrayList; import java.util.List; public class SyncByteCodeTest { private static List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;&amp;gt;(); //当前实例的锁 public synchronized void add1(String s){ list.add(s); } //SynTest.class 锁 public static synchronized void add2(String s){ list.add(s); } //SynTest.class 锁 public void add3(String s){ synchronized(SyncByteCodeTest.</description>
+    </item>
+    
+    <item>
       <title>Summary of Sorting Algorithms</title>
       <link>https://jordonyang.github.io/post/alg/sorting/summary/</link>
-      <pubDate>Sat, 02 Feb 2019 22:54:44 +0800</pubDate>
+      <pubDate>Fri, 18 Jan 2019 22:54:44 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/post/alg/sorting/summary/</guid>
       <description>0x00. TOC  选择排序 冒泡排序 鸡尾酒排序 插入排序 希尔排序 归并排序 快速排序 堆排序 排序算法的复杂度 Happy Sorting 参考  选择排序 首先，找到数组中最小的那个元素，其次，将它和数组的第一个元素交换位置（如果第一个元素就是最小元素那么它就和自己交换）。再次，在剩下的元素中找到最小的元素，将它与数组的第二个元素交换位置。如此往复，直到将整个数组排序。因为它在不断地选择剩余元素之中的最小者，所以这种方法叫做选择排序。TOC
@@ -30,7 +57,7 @@ public static void sort(Comparable[] a) { int n = a.length; for (int i = 0; i &a
       <pubDate>Tue, 15 Jan 2019 10:36:00 +0800</pubDate>
       
       <guid>https://jordonyang.github.io/timeline/</guid>
-      <description>2019  01.15 深入理解volatile的内存语义及其实现 01.14 如何正确使用 volatile 变量 01.11 Java虚拟机类加载过程 01.10 编程实现及理解SSL协议交互过程  2018  12.28 MySQL存储引擎基础 12.23 操作系统期末考试考点整理 12.10 使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证 12.06 理解模板方法设计模式 11.25 理解比较并交换算法 11.20 从MESI理解缓存一致性协议 11.12 SSL - 握手协议详细过程 11.12 SSL - 协议架构和基本协议介绍 11.10 RSA公钥密码算法原理及实现过程 11.07 流密码原理及RC4算法的实现 11.05 理解素性测试及大素数生成过程 10.18 基于原理逐步实现AES加密算法 10.11 分组密码的工作模式 10.09 DES加密算法原理及实现 10.01 Java字节码结构及解析过程 09.18 基于二叉树数据结构的算术表达式生成器 09.14 基于责任链设计模式的代码文件分析统计器 08.27 基于JDK1.7的HashMap源码阅读 08.04 理解Java虚拟机垃圾收集机制 06.25 LinkedList源码阅读与分析 06.23 ArrayList源码阅读与分析 05.07 深入理解CPU高速缓存 04.17 理解HTTP协议 03.25 Thread类的run()方法执行过程跟踪和思考 02.25 通过反编译理解Java foreach语法糖  2017  11.</description>
+      <description>2019  【02.10】 使用QuickSelect结合BDPRT算法解决Top-K问题 【01.20】 深入理解synchronized内存语义及锁优化 【02.02】 基本排序算法总结 【01.15】 深入理解volatile的内存语义及其实现 【01.14】 如何正确使用volatile变量 【01.12】 自定义安全类加载器 【01.11】 Java虚拟机类加载过程 【01.10】 编程实现及理解SSL协议交互过程  2018  【12.28】 MySQL存储引擎基础 【12.23】 操作系统期末考试考点整理 【12.10】 使用Tomcat和OpenSSL自制证书和配置单向服务器身份验证 【12.06】 理解模板方法设计模式 【11.25】 理解比较并交换算法 【11.20】 从MESI理解缓存一致性协议 【11.12】 SSL - 握手协议详细过程 【11.12】 SSL - 协议架构和基本协议介绍 【11.10】 RSA公钥密码算法原理及实现过程 【11.07】 流密码原理及RC4算法的实现 【11.05】 理解素性测试及大素数生成过程 【10.18】 基于原理逐步实现AES加密算法 【10.11】 分组密码的工作模式 【10.09】 DES加密算法原理及实现 【10.01】 Java字节码结构及解析过程 【09.18】 基于二叉树数据结构的算术表达式生成器 【09.14】 基于责任链设计模式的代码文件分析统计器 【08.27】 基于JDK1.7的HashMap源码阅读 【08.04】 理解Java虚拟机垃圾收集机制 【06.25】 LinkedList源码阅读与分析 【06.23】 ArrayList源码阅读与分析 【05.07】 深入理解CPU高速缓存 【04.</description>
     </item>
     
     <item>
@@ -509,6 +536,32 @@ nginx-rtmp-module ：一个由俄罗斯人Roman Arutyunyan开发出来的支持r
     </item>
     
     <item>
+      <title>Construction and Operations of AVL</title>
+      <link>https://jordonyang.github.io/post/alg/tree/bst/avl-bst_construction_operation/</link>
+      <pubDate>Fri, 10 Nov 2017 17:17:36 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/tree/bst/avl-bst_construction_operation/</guid>
+      <description>0x01. 定义 对于二叉查找树，当其高度最小时，其查找性能最优，虽然满二叉树和完全二叉树的高度都是最小的，但是在在插入或删除结点后维持其高度最小的代价较大。平衡二叉查找树是一种可兼顾查找与维护性能的折中方案。
+平衡二叉查找树又称AVL树，得名于它的发明者Adelson-Velsky和Landis，他们在1962年的论文《An algorithm for the organization of information》中公开了这一数据结构。
+平衡二叉树是具有以下性质的二叉查找树：它的左子树和右子树都是平衡二叉树，且左子树和右子树的高度差的绝对值不超过1。结点的平衡因子是它的左子树的高度减去它的右子树的高度（有时相反）。带有平衡因子1、0或 -1的结点被认为是平衡的。带有平衡因子-2或2的结点被认为是不平衡的，并需要重新平衡这棵树。平衡因子可以直接存储在每个结点中，或从可能存储在节点中的子树高度计算出来。
+平衡二叉树的结点类型如下所示，其中属性height表示子树的高度，用于计算平衡因子。
+private class Node { private final Key key; // the key private Value val; // the associated value private int height; // height of the subtree private int size; // number of nodes in subtree private Node left; // left subtree private Node right; // right subtree public Node(Key key, Value val, int height, int size) { this.</description>
+    </item>
+    
+    <item>
+      <title>Construction and Operatons of BST</title>
+      <link>https://jordonyang.github.io/post/alg/tree/bst/construction_common_operaton/</link>
+      <pubDate>Sat, 21 Oct 2017 21:52:45 +0800</pubDate>
+      
+      <guid>https://jordonyang.github.io/post/alg/tree/bst/construction_common_operaton/</guid>
+      <description>0x00. TOC  0x01.BST结构 0x02.基本操作  1.插入元素 2.判存 3.删除结点 4.求树的最大深度 5.搜索与遍历  0x03.参考  0x01. BST结构 二叉搜索树（BST, Binary Searching Tree）也称为二叉查找树、有序二叉树（ordered binary tree）或排序二叉树（sorted binary tree），是指一棵空树或者具有下列性质的二叉树：TOC
+ 若任意节点的左子树不空，则左子树上所有节点的值均小于它的根节点的值； 若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值； 任意节点的左、右子树也分别为二叉查找树； 没有键值相等的节点。  二叉查找树相比于其他数据结构的优势在于查找、插入的时间复杂度较低。为 O(log n)。二叉查找树是基础性数据结构，用于构建更为抽象的数据结构，如集合、多重集、关联数组等。
+二叉查找树的查找过程和次优二叉树类似，通常采取二叉链表作为二叉查找树的存储结构。中序遍历二叉查找树可得到一个关键字的有序序列，一个无序序列可以通过构造一棵二叉查找树变成一个有序序列，构造树的过程即为对无序序列进行查找的过程。每次插入的新的结点都是二叉查找树上新的叶子结点，在进行插入操作时，不必移动其它结点，只需改动某个结点的指针，由空变为非空即可。搜索、插入、删除的复杂度等于树高，期望 O(log n)，最坏 O(n)（数列有序，树退化成线性表）。
+虽然二叉查找树的最坏效率是 O(n)，但它支持动态查询，且有很多改进版的二叉查找树可以使树高为 O(log n)，从而将最坏效率降至 O(log n)，如AVL树、红黑树等。二叉搜索树的Java数据结构定义如下：
+// 根结点 private TreeNode root; // 二叉树结点类定义 private static class TreeNode { int val; TreeNode left; TreeNode right; TreeNode(int val) { this.val = val; } }  其中使用静态内部类TreeNode抽象表示二叉搜索树中的结点，同时将结点的数据定义为整型，当然如果要考虑扩展性，可以将之设定为Comparable类型，这样可以将任何一种的实现Comparable接口的类型数据作为val的类型，只需提供正确的compareTo()方法即可。</description>
+    </item>
+    
+    <item>
       <title>Awesome Terminator for Ubuntu</title>
       <link>https://jordonyang.github.io/post/linux/tools/terminator/</link>
       <pubDate>Sun, 01 Oct 2017 11:22:17 +0800</pubDate>
@@ -523,7 +576,7 @@ exec gnome-terminal exec-arg -x  保存退出之后，就可以使用快捷键Ct
     </item>
     
     <item>
-      <title>Construct Binary Heap with Java</title>
+      <title>Construction of Binary Heap and Heap Sort</title>
       <link>https://jordonyang.github.io/post/alg/heap/heap_construction/</link>
       <pubDate>Mon, 25 Sep 2017 22:32:08 +0800</pubDate>
       
